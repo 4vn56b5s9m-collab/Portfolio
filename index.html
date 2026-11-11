@@ -14,12 +14,13 @@ a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.25em}
 a:focus-visible{outline:2px solid currentColor;outline-offset:.35rem}
 h1,h2,p,dl,dd{margin:0}
 header,footer{padding:1.25rem var(--space);display:flex;justify-content:space-between;align-items:center;gap:1rem 2rem;flex-wrap:wrap}
+header{background:var(--onix);color:var(--tiza)}
 header>a{font:400 clamp(1.45rem,2.5vw,2rem)/1 var(--display);text-decoration:none}
 nav{display:flex;gap:1.35rem;flex-wrap:wrap}
 nav a{font-size:.9rem;text-decoration:none}
 nav a:hover{text-decoration:underline}
 .hero,.story{background:var(--onix);color:var(--tiza)}
-.hero{margin:0 clamp(0rem,1.2vw,1.25rem);padding:clamp(2.5rem,6vw,6rem) var(--space);min-height: min(42rem,82svh);display:grid;grid-template-columns:1fr 1.12fr;align-items:center;gap:1rem}
+.hero{margin:0;padding:clamp(2.5rem,6vw,6rem) var(--space);min-height: min(42rem,82svh);display:grid;grid-template-columns:1fr 1.12fr;align-items:center;gap:1rem}
 h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .tagline{margin-top:.6rem;font:italic 400 clamp(2rem,4vw,4.2rem)/1 var(--display)}
 .stats{display:flex;gap:clamp(.8rem,2.3vw,2.5rem);margin-top:clamp(1.6rem,4vw,3.8rem)}
@@ -29,7 +30,14 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .reel{display:inline-block;height:1em;overflow:hidden;vertical-align:top}
 .reel span{display:block}
 .reel span span{height:1em;line-height:1em}
-canvas{display:block;width:100%;height:100%}
+#portfolio-art{position:fixed;inset:0;display:block;width:100%;height:100%;z-index:1;pointer-events:none}
+.hero-copy,.stage-copy{position:relative;z-index:2}
+.stage-copy{display:grid;justify-items:center;gap:.8rem}
+.stage-copy h2,.stage-copy p{margin:0}
+.stage.story-screen{grid-template-rows:auto minmax(0,1fr)}
+html.js{scroll-snap-type:y proximity}
+header,.notes,.story-track .step{scroll-snap-align:start}
+@media(prefers-reduced-motion:reduce){html.js{scroll-snap-type:none}}
 .hero-visual{height:clamp(15rem,38vw,31rem);min-width:0}
 .story{position:relative}
 .stage{min-height:100svh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;justify-items:center;align-content:center;text-align:center;padding:clamp(2.25rem,8svh,6rem) var(--space);gap:clamp(1.1rem,4svh,2.5rem);position:relative}
@@ -80,14 +88,14 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
         <div><dd data-count="6">6</dd><dt>países</dt></div>
       </dl>
     </div>
-    <div class="hero-visual"><canvas id="hero-art" aria-hidden="true"></canvas></div>
+    <div class="hero-visual" aria-hidden="true"></div>
   </section>
   <section class="story" id="especialidades" aria-label="Mis especialidades">
     <div class="story-screen stage" aria-hidden="true">
-      <h2></h2><div class="stage-visual"><canvas id="story-art"></canvas></div><p></p>
+      <div class="stage-copy"><h2></h2><p></p></div><div class="stage-visual"></div>
     </div>
     <div class="story-track" aria-hidden="true">
-      <div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div>
+      <div class="step"></div><div class="step" id="ui-behavioral-design"></div><div class="step" id="motion-e-inmersion"></div><div class="step" id="formaciones"></div><div class="step" id="direccion-y-sistemas"></div>
     </div>
     <div class="static-story">
       <article class="stage"><h2>Cada proyecto pide algo distinto.</h2></article>
@@ -106,6 +114,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   <span>Alejandro Sánchez Bretones</span>
   <nav aria-label="Contacto"><a href="https://www.linkedin.com/in/alejandrosanchezbretones/">LinkedIn</a></nav>
 </footer>
+<canvas id="portfolio-art" aria-hidden="true"></canvas>
 <script>
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const hero = document.querySelector(".hero");
@@ -117,8 +126,10 @@ const stages = [...document.querySelectorAll(".static-story article")].map(artic
 }));
 const stageTitle = stage.querySelector("h2");
 const stageDescription = stage.querySelector("p");
-const heroCanvas = document.querySelector("#hero-art");
-const storyCanvas = document.querySelector("#story-art");
+const heroSlot = document.querySelector(".hero-visual");
+const storySlot = stage.querySelector(".stage-visual");
+const stageCopy = stage.querySelector(".stage-copy");
+const art = document.querySelector("#portfolio-art");
 
 const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
 const smooth = value => {
@@ -137,101 +148,109 @@ function corners(width, depth, height) {
           [width/2,height,depth/2],[-width/2,height,depth/2]];
 }
 
-function buildMesh(piece, index) {
-  const top = corners(piece.width,piece.depth,.15);
-  const base = corners(piece.width,piece.depth,-.15);
-  const inner = pieces[index-1];
-  const faces = [];
-  const add = (vertices, tone) => faces.push({ vertices, tone });
-  const hole = inner && corners(inner.width+.045,inner.depth+.045,.15);
-  const holeBase = inner && corners(inner.width+.045,inner.depth+.045,-.15);
-  if (!hole) add(top,1);
-  for (let i=0;i<4;i++) {
+function buildMesh(piece,index) {
+  const top=corners(piece.width,piece.depth,.15);
+  const base=corners(piece.width,piece.depth,-.15);
+  const inner=pieces[index-1];
+  const hole=inner && corners(inner.width+.045,inner.depth+.045,.15);
+  const holeBase=inner && corners(inner.width+.045,inner.depth+.045,-.15);
+  const sides=top.map((_,i)=>{
     const j=(i+1)%4;
-    if (hole) {
-      add([top[i],top[j],hole[j],hole[i]],1);
-      add([hole[j],hole[i],holeBase[i],holeBase[j]],.48);
-    }
-    add([top[j],top[i],base[i],base[j]],[.51,.67,.65,.49][i]);
-  }
-  return faces;
+    return {outer:[top[j],top[i],base[i],base[j]],inner:hole && [hole[j],hole[i],holeBase[i],holeBase[j]]};
+  });
+  return {top,hole,sides,color:piece.color};
 }
 
-const meshes = pieces.map(buildMesh);
-function renderer(canvas) {
-  const ctx = canvas.getContext("2d");
-  let width=0, height=0;
-  function resize() {
-    const box=canvas.getBoundingClientRect();
-    width=box.width;
-    height=box.height;
-    if (!width || !height) return;
-    const ratio=Math.min(devicePixelRatio||1,2);
-    canvas.width=Math.round(width*ratio);
-    canvas.height=Math.round(height*ratio);
+const meshes=pieces.map(buildMesh);
+const ctx=art.getContext("2d");
+let width=0,height=0,pixelRatio=0;
+
+function clearArt() {
+  const ratio=Math.min(devicePixelRatio||1,2);
+  if (width!==art.clientWidth || height!==art.clientHeight || pixelRatio!==ratio) {
+    width=art.clientWidth;
+    height=art.clientHeight;
+    pixelRatio=ratio;
+    art.width=Math.round(width*ratio);
+    art.height=Math.round(height*ratio);
     ctx.setTransform(ratio,0,0,ratio,0,0);
   }
-  new ResizeObserver(resize).observe(canvas);
-  resize();
-  function render(poses,time) {
-    if (!width || !height) return;
-    ctx.clearRect(0,0,width,height);
-    const scale=Math.min(width/6.35,height/3.9);
-    const yaw=.63, pitch=.58;
-    const cy=Math.cos(yaw), sy=Math.sin(yaw);
-    const cp=Math.cos(pitch), sp=Math.sin(pitch);
-    const floorX=width*.5, floorY=height*.65;
-    ctx.save();
-    ctx.translate(floorX,floorY+scale*.66);
-    ctx.scale(scale*2.7,scale*.48);
-    const shadow=ctx.createRadialGradient(0,0,0,0,0,1);
-    shadow.addColorStop(0,"#0009");
-    shadow.addColorStop(1,"#0000");
-    ctx.fillStyle=shadow;
-    ctx.fillRect(-1,-1,2,2);
-    ctx.restore();
-    const faces=[];
-    meshes.forEach((mesh,index)=>{
-      const { lift, tilt }=poses[index];
-      const sin=Math.sin(tilt), cos=Math.cos(tilt);
-      mesh.forEach(({vertices,tone})=>{
-        const pts=vertices.map(([x,y,z])=>{
-          const tiltedX=x*cos-y*sin;
-          const tiltedY=x*sin+y*cos+lift;
-          const u=tiltedX*cy+z*sy;
-          const v=-tiltedX*sy+z*cy;
-          const depth=tiltedY*sp+v*cp;
-          const perspective=13/(13-depth);
-          return [floorX+u*scale*perspective,floorY+(-tiltedY*cp+v*sp)*scale*perspective,depth];
-        });
-        const [a,b,c]=pts;
-        if ((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) return;
-        faces.push({pts,tone,index,depth:pts.reduce((sum,p)=>sum+p[2],0)/pts.length});
-      });
-    });
-    faces.sort((a,b)=>a.depth-b.depth);
-    const lightShift=Math.sin(time*.52)*width*.13;
-    faces.forEach(({pts,tone,index})=>{
-      const gradient=ctx.createLinearGradient(width*.16+lightShift,height*.18,width*.86+lightShift,height*.82);
-      const color=(factor)=>"rgb("+pieces[index].color.map(c=>clamp(Math.round(c*factor),0,255)).join(",")+")";
-      gradient.addColorStop(0,color(tone*1.17));
-      gradient.addColorStop(.48,color(tone*1.04));
-      gradient.addColorStop(1,color(tone*.74));
-      ctx.beginPath();
-      pts.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));
-      ctx.closePath();
-      ctx.fillStyle=gradient;
-      ctx.fill();
-      ctx.strokeStyle=tone===1?"#ffffff24":"#00000024";
-      ctx.lineWidth=.65;
-      ctx.stroke();
-    });
-  }
-  return render;
+  ctx.clearRect(0,0,width,height);
 }
 
-const renderHero=renderer(heroCanvas);
-const renderStory=renderer(storyCanvas);
+function path(points) {
+  points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));
+  ctx.closePath();
+}
+
+function frontFacing([a,b,c]) {
+  return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])>0;
+}
+
+function render(box,poses,time) {
+  const scale=Math.min(box.width/6.4,box.height/4.25);
+  if (scale<=0) return;
+  const cy=Math.cos(.63),sy=Math.sin(.63),cp=Math.cos(.58),sp=Math.sin(.58);
+  const floorX=box.left+box.width*.5;
+  const floorY=box.top+box.height*.62;
+  ctx.save();
+  ctx.translate(floorX,floorY+scale*.9);
+  ctx.scale(scale*2.55,scale*.38);
+  const shadow=ctx.createRadialGradient(0,0,0,0,0,1);
+  shadow.addColorStop(0,"#0008");
+  shadow.addColorStop(1,"#0000");
+  ctx.fillStyle=shadow;
+  ctx.fillRect(-1,-1,2,2);
+  ctx.restore();
+
+  const order=meshes.map((_,i)=>i).sort((a,b)=>poses[a].lift-poses[b].lift||b-a);
+  for (const i of order) {
+    const {top,hole,sides,color}=meshes[i];
+    const {lift,tilt}=poses[i];
+    const sin=Math.sin(tilt),cos=Math.cos(tilt);
+    const project=([x,y,z])=>{
+      const tx=x*cos-y*sin,ty=x*sin+y*cos+lift;
+      const u=tx*cy+z*sy,v=-tx*sy+z*cy;
+      const perspective=13/(13-(ty*sp+v*cp));
+      return [floorX+u*scale*perspective,floorY+(-ty*cp+v*sp)*scale*perspective];
+    };
+    const projectedTop=top.map(project);
+    const projectedHole=hole?.map(project);
+    const shade=(tone)=>"rgb("+color.map(c=>clamp(Math.round(c*tone),0,255)).join(",")+")";
+    function wall(vertices,tone) {
+      const points=vertices.map(project);
+      if (!frontFacing(points)) return;
+      ctx.beginPath();
+      path(points);
+      ctx.fillStyle=shade(tone);
+      ctx.fill();
+    }
+    sides.forEach(({outer},j)=>wall(outer,[.49,.64,.66,.51][j]));
+    if (projectedHole) {
+      ctx.save();
+      ctx.beginPath();
+      path(projectedHole);
+      ctx.clip();
+      sides.forEach(({inner})=>wall(inner,.52));
+      ctx.restore();
+    }
+    const shift=Math.sin(time*.52)*box.width*.15;
+    const light=ctx.createLinearGradient(floorX-box.width*.36+shift,floorY-box.height*.3,floorX+box.width*.36+shift,floorY+box.height*.35);
+    light.addColorStop(0,shade(1.18));
+    light.addColorStop(.47,shade(1.04));
+    light.addColorStop(1,shade(.77));
+    ctx.beginPath();
+    path(projectedTop);
+    if (projectedHole) path(projectedHole);
+    ctx.fillStyle=light;
+    ctx.fill("evenodd");
+  }
+}
+
+function between(a,b,t) {
+  return Object.fromEntries(["left","top","width","height"].map(key=>[key,a[key]+(b[key]-a[key])*t]));
+}
+
 document.documentElement.classList.add("js");
 const heroPose=[2.14,1.42,.73,0];
 let activeStage=-1;
@@ -243,26 +262,36 @@ function update(now) {
   const storyBounds=story.getBoundingClientRect();
   const screenHeight=stage.offsetHeight||innerHeight;
   const position=clamp(-storyBounds.top/screenHeight,0,4);
-  const approach=smooth((screenHeight*.94-storyBounds.top)/(screenHeight*.94));
-  if (heroBounds.bottom>0 && heroBounds.top<innerHeight) {
-    renderHero(heroPose.map((height,i)=>({
-      lift:height*(1-approach)+Math.sin(time*1.05-i*.21)*.047*(1-approach),
-      tilt:Math.sin(time*.78-i*.29)*.012*(1-approach)
-    })),time);
-  }
-  if (motion && storyBounds.top<innerHeight && storyBounds.bottom>0) {
+  const approach=motion?smooth((screenHeight*.78-storyBounds.top)/(screenHeight*.78)):0;
+  const heroVisible=heroBounds.bottom>0 && heroBounds.top<innerHeight;
+  const storyVisible=motion && storyBounds.top<innerHeight && storyBounds.bottom>0;
+  clearArt();
+  if (storyVisible) {
     const chapter=Math.min(4,Math.floor(position+.5));
     if (chapter!==activeStage) {
       stageTitle.textContent=stages[chapter].title;
       stageDescription.textContent=stages[chapter].description;
       stage.classList.toggle("intro",chapter===0);
+      stageCopy.getAnimations().forEach(animation=>animation.cancel());
+      if (activeStage!==-1) {
+        stageCopy.animate([{opacity:0,transform:"translateY(5px)"},{opacity:1,transform:"translateY(0)"}],
+          {duration:340,easing:"ease-out"});
+      }
       activeStage=chapter;
     }
     stage.style.setProperty("--wipe",(approach*100).toFixed(2)+"%");
-    renderStory(pieces.map((_,i)=>{
-      const weight=1-smooth(Math.abs(position-i-1)*2);
-      const enter=heroPose[i]*(1-approach);
-      return {lift:enter+weight*(.91+Math.sin(time*1.32)*.055),tilt:weight*Math.sin(time*.97)*.031};
+  }
+  if (heroVisible||storyVisible) {
+    const box=storyVisible
+      ? between(heroSlot.getBoundingClientRect(),storySlot.getBoundingClientRect(),approach)
+      : heroSlot.getBoundingClientRect();
+    render(box,pieces.map((_,i)=>{
+      const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
+      const float=Math.sin(time*1.05-i*.21)*.047*(1-approach);
+      return {
+        lift:(heroPose[i]+(motion?float:0))*(1-approach)+weight*(.91+Math.sin(time*1.32)*.055),
+        tilt:motion?Math.sin(time*.78-i*.29)*.012*(1-approach)+weight*Math.sin(time*.97)*.031:0
+      };
     }),time);
   }
   requestAnimationFrame(update);
