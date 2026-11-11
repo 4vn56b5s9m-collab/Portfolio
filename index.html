@@ -20,7 +20,7 @@ nav{display:flex;gap:1.35rem;flex-wrap:wrap}
 nav a{font-size:.9rem;text-decoration:none}
 nav a:hover{text-decoration:underline}
 .hero,.story{background:var(--onix);color:var(--tiza)}
-.hero{margin:0;padding:clamp(2.5rem,6vw,6rem) var(--space);min-height: min(42rem,82svh);display:grid;grid-template-columns:1fr 1.12fr;align-items:center;gap:1rem}
+.hero{margin:0;padding:clamp(2.5rem,6vw,6rem) var(--space);min-height:calc(100svh - var(--nav-height,4.5rem));display:grid;grid-template-columns:1fr 1.12fr;align-items:center;gap:1rem}
 h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .tagline{margin-top:.6rem;font:italic 400 clamp(2rem,4vw,4.2rem)/1 var(--display)}
 .stats{display:flex;gap:clamp(.8rem,2.3vw,2.5rem);margin-top:clamp(1.6rem,4vw,3.8rem)}
@@ -61,7 +61,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(prefers-color-scheme:dark){:root{--page:#202022;--ink:var(--tiza);--line:#555357}}
 @media(max-width:700px){
   header{justify-content:center;text-align:center}nav{justify-content:center}
-  .hero{grid-template-columns:1fr;text-align:center;justify-items:center;gap:1.25rem;padding-top:3.25rem;padding-bottom:2.5rem}
+  .hero{grid-template-columns:1fr;align-content:center;text-align:center;justify-items:center;gap:1.25rem;padding-block:clamp(1.7rem,4svh,2.75rem)}
   .hero-copy{display:contents}.hero-title{order:0}.hero-visual{order:1;width:100%;height:min(70vw,21rem)}.stats{order:2;margin-top:0;text-align:left}
   h1{font-size:clamp(3.6rem,12.6vw,5.3rem)}.tagline{font-size:clamp(1.85rem,7vw,3rem)}
   .stage-visual{height:min(45svh,75vw)}
@@ -118,6 +118,10 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 <script>
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const hero = document.querySelector(".hero");
+const header=document.querySelector("header");
+const measureHeader=()=>document.documentElement.style.setProperty("--nav-height",header.getBoundingClientRect().height+"px");
+new ResizeObserver(measureHeader).observe(header);
+measureHeader();
 const story = document.querySelector(".story");
 const stage = document.querySelector(".story-screen");
 const stages = [...document.querySelectorAll(".static-story article")].map(article => ({
@@ -160,14 +164,18 @@ function buildMesh(piece,index) {
   const inner=pieces[index-1];
   const shape={width:piece.width,depth:piece.depth,radius:piece.depth*.19};
   const opening=inner
-    ? {width:inner.width+.045,depth:inner.depth+.045,radius:inner.depth*.19+.0225}
+    ? {width:inner.width+.012,depth:inner.depth+.012,radius:inner.depth*.19+.006}
     : {width:1.16,depth:.35,radius:.075};
   const vertices=[];
-  function quad(points,normal,level) {
-    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level);
+  function quad(points,normal,level,profile) {
+    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level,profile[i]);
   }
-  function rim(outside,inside,level) {
-    const bevel=.018;
+  function rim(outside,inside,level,rank) {
+    const bevel=.009;
+    const outer=rank/12,inner=(rank+1)/12;
+    const outerProfile=[outer,outer,outer,outer];
+    const innerProfile=[inner,inner,inner,inner];
+    const across=[outer,outer,inner,inner];
     const top=contour(outside.width-2*bevel,outside.depth-2*bevel,outside.radius-bevel,.15);
     const shoulder=contour(outside.width,outside.depth,outside.radius,.15-bevel);
     const base=contour(outside.width,outside.depth,outside.radius,-.15);
@@ -179,16 +187,16 @@ function buildMesh(piece,index) {
       const dx=shoulder[j][0]-shoulder[i][0],dz=shoulder[j][2]-shoulder[i][2];
       const length=Math.hypot(dx,dz);
       const nx=dz/length,nz=-dx/length;
-      quad([shoulder[i],shoulder[j],base[j],base[i]],[nx,0,nz],level);
-      quad([top[i],top[j],shoulder[j],shoulder[i]],[nx,.9,nz],level);
+      quad([shoulder[i],shoulder[j],base[j],base[i]],[nx,0,nz],level,outerProfile);
+      quad([top[i],top[j],shoulder[j],shoulder[i]],[nx,.9,nz],level,outerProfile);
       if (inside) {
-        quad([top[i],top[j],holeTop[j],holeTop[i]],[0,1,0],level);
-        quad([base[i],base[j],holeBase[j],holeBase[i]],[0,-1,0],level);
-        quad([holeTop[i],holeTop[j],holeShoulder[j],holeShoulder[i]],[-nx,.9,-nz],level);
-        quad([holeShoulder[i],holeShoulder[j],holeBase[j],holeBase[i]],[-nx,0,-nz],level);
+        quad([top[i],top[j],holeTop[j],holeTop[i]],[0,1,0],level,across);
+        quad([base[i],base[j],holeBase[j],holeBase[i]],[0,-1,0],level,across);
+        quad([holeTop[i],holeTop[j],holeShoulder[j],holeShoulder[i]],[-nx,.9,-nz],level,innerProfile);
+        quad([holeShoulder[i],holeShoulder[j],holeBase[j],holeBase[i]],[-nx,0,-nz],level,innerProfile);
       } else {
-        for (const point of [[0,.15,0],top[i],top[j]]) vertices.push(...point,0,1,0,level);
-        for (const point of [[0,-.15,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level);
+        vertices.push(0,.15,0,0,1,0,level,1,...top[i],0,1,0,level,outer,...top[j],0,1,0,level,outer);
+        for (const point of [[0,-.15,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level,outer);
       }
     }
   }
@@ -200,10 +208,10 @@ function buildMesh(piece,index) {
   const bands=inner?3:2;
   for (let band=0;band<bands;band++) {
     const level=band/(inner?bands-1:bands);
-    rim(interpolate(band/bands,band===0?0:-.009),
-      interpolate((band+1)/bands,band===bands-1?0:.009),level);
+    rim(interpolate(band/bands,band===0?0:-.002),
+      interpolate((band+1)/bands,band===bands-1?0:.002),level,(3-index)*3+band);
   }
-  if (!inner) rim(interpolate(1,-.018),null,1);
+  if (!inner) rim(interpolate(1,-.008),null,1,11);
   return new Float32Array(vertices);
 }
 
@@ -223,16 +231,19 @@ function createArt() {
     attribute vec3 vertex;
     attribute vec3 normal;
     attribute float band;
+    attribute float profile;
     uniform vec2 viewport;
     uniform vec2 origin;
-    uniform float scale, lift, stretch, bobAmount, bobPhase;
+    uniform float scale, pyramid, stretch, bobAmount, bobPhase;
     varying vec3 surfaceNormal, surfacePosition;
     void main() {
       float top=(vertex.y+0.15)/0.3;
       vec3 p=vertex;
       float rise=0.31+0.69*band*band;
-      float bob=bobAmount*sin(bobPhase-band*1.25);
-      p.y+=lift+top*stretch*rise+bob;
+      float wave=sin(bobPhase-profile*5.4);
+      float heroHeight=pyramid*(1.25*pow(profile,0.9)+0.047*wave);
+      float branchHeight=stretch*rise+bobAmount*sin(bobPhase-band*1.25);
+      p.y+=top*(heroHeight+branchHeight);
       float u=p.x*0.808027+p.z*0.589145;
       float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
@@ -267,18 +278,20 @@ function createArt() {
   const vertex=gl.getAttribLocation(program,"vertex");
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","stretch","bobAmount","bobPhase","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const profile=gl.getAttribLocation(program,"profile");
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","stretch","bobAmount","bobPhase","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
-    return {buffer,count:data.length/7,color:piece.color.map(channel=>channel/255)};
+    return {buffer,count:data.length/8,color:piece.color.map(channel=>channel/255)};
   });
   gl.enable(gl.DEPTH_TEST);
   gl.enableVertexAttribArray(vertex);
   gl.enableVertexAttribArray(normal);
   gl.enableVertexAttribArray(band);
+  gl.enableVertexAttribArray(profile);
   gl.clearColor(0,0,0,0);
   let width,height,ratio;
   return {
@@ -298,15 +311,16 @@ function createArt() {
     render(box,poses,time) {
       const scale=Math.min(box.width/6.4,box.height/4.25);
       if (scale<=0||!width||!height) return;
-      gl.uniform2f(uniforms.origin,box.left+box.width*.5,box.top+box.height*.62);
+      gl.uniform2f(uniforms.origin,box.left+box.width*.5,box.top+box.height*box.center);
       gl.uniform1f(uniforms.scale,scale);
       gl.uniform1f(uniforms.time,time);
       meshes.forEach(({buffer,count,color},index)=>{
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,28,0);
-        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,28,12);
-        gl.vertexAttribPointer(band,1,gl.FLOAT,false,28,24);
-        gl.uniform1f(uniforms.lift,poses[index].lift);
+        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,32,0);
+        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,32,12);
+        gl.vertexAttribPointer(band,1,gl.FLOAT,false,32,24);
+        gl.vertexAttribPointer(profile,1,gl.FLOAT,false,32,28);
+        gl.uniform1f(uniforms.pyramid,poses[index].pyramid);
         gl.uniform1f(uniforms.bobAmount,poses[index].bobAmount);
         gl.uniform1f(uniforms.bobPhase,poses[index].bobPhase);
         gl.uniform1f(uniforms.stretch,poses[index].stretch);
@@ -325,7 +339,6 @@ function between(a,b,t) {
 }
 
 document.documentElement.classList.add("js");
-const heroPose=[1.44,.96,.48,0];
 const steps=[...story.querySelectorAll(".step")];
 let activeStage=-1;
 
@@ -354,7 +367,8 @@ function glide(target) {
   const started=performance.now();
   const intro=documentTop(steps[0]);
   const entersStory=Math.abs(target-intro)<4&&from<intro*.6;
-  const duration=entersStory?1100:600;
+  const returnsToHero=target<4&&from<=intro+4;
+  const duration=entersStory||returnsToHero?1000:600;
   function move(now) {
     const progress=clamp((now-started)/duration);
     const ease=progress<.5?4*progress**3:1-((-2*progress+2)**3)/2;
@@ -479,7 +493,8 @@ function measure(motion) {
     }
   }
   const heroBox=heroSlot.getBoundingClientRect();
-  const box=storyVisible?between(heroBox,storySlot.getBoundingClientRect(),approach):heroBox;
+  const box=storyVisible?between(heroBox,storySlot.getBoundingClientRect(),approach):{left:heroBox.left,top:heroBox.top,width:heroBox.width,height:heroBox.height};
+  box.center=.55+approach*.07;
   hero.style.setProperty("--hero-opacity",(1-heroFade).toFixed(3));
   hero.style.setProperty("--hero-offset",(-heroFade*12).toFixed(1)+"px");
   stage.style.setProperty("--intro-opacity",introFade.toFixed(3));
@@ -513,9 +528,9 @@ function update(now) {
   renderer?.render(box,pieces.map((_,i)=>{
     const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
     return {
-      lift:heroPose[i]*(1-approach),
-      bobAmount:motion?((1-approach)*.044+weight*.035):0,
-      bobPhase:time*1.32-i*.28,
+      pyramid:1-approach,
+      bobAmount:motion?weight*.035:0,
+      bobPhase:time*1.32,
       stretch:weight*.58
     };
   }),time);
