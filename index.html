@@ -32,6 +32,7 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .reel span span{height:1em;line-height:1em}
 #portfolio-art{position:fixed;inset:0;display:block;width:100%;height:100%;z-index:1;pointer-events:none}
 .hero-copy,.stage-copy{position:relative;z-index:2}
+@media(min-width:701px){.hero-copy,.hero-visual{position:relative;top:calc(-1 * min(5svh,3.1rem))}}
 .stage-copy{display:grid;justify-items:center;gap:.8rem}
 .stage-copy h2,.stage-copy p{margin:0}
 .stage.story-screen{grid-template-rows:auto minmax(0,1fr)}
@@ -61,7 +62,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(prefers-color-scheme:dark){:root{--page:#202022;--ink:var(--tiza);--line:#555357}}
 @media(max-width:700px){
   header{justify-content:center;text-align:center}nav{justify-content:center}
-  .hero{grid-template-columns:1fr;align-content:center;text-align:center;justify-items:center;gap:1.25rem;padding-block:clamp(1.7rem,4svh,2.75rem)}
+  .hero{grid-template-columns:1fr;align-content:center;text-align:center;justify-items:center;gap:1.25rem;padding-block:clamp(1rem,2svh,1.75rem) clamp(2.4rem,6svh,4rem)}
   .hero-copy{display:contents}.hero-title{order:0}.hero-visual{order:1;width:100%;height:min(70vw,21rem)}.stats{order:2;margin-top:0;text-align:left}
   h1{font-size:clamp(3.6rem,12.6vw,5.3rem)}.tagline{font-size:clamp(1.85rem,7vw,3rem)}
   .stage-visual{height:min(45svh,75vw)}
@@ -234,17 +235,18 @@ function createArt() {
     attribute float profile;
     uniform vec2 viewport;
     uniform vec2 origin;
-    uniform float scale, pyramid, terrace, stretch, bobAmount, bobPhase;
+    uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
     varying vec3 surfaceNormal, surfacePosition;
     void main() {
       float top=(vertex.y+0.15)/0.3;
       vec3 p=vertex;
       float rise=0.31+0.69*band*band;
-      float wave=sin(bobPhase-profile*5.4);
+      float wave=sin(bobPhase+profile*6.8);
       float withinTerrace=clamp(profile*4.0-terrace,0.0,1.0);
-      float heroHeight=pyramid*(terrace*0.39+withinTerrace*0.105+0.038*wave);
-      float branchHeight=stretch*rise+bobAmount*sin(bobPhase-band*1.25);
-      p.y+=top*(heroHeight+branchHeight);
+      float heroHeight=pyramid*(terrace*0.39+withinTerrace*0.105);
+      float waveHeight=ripple*wave;
+      float branchHeight=stretch*rise;
+      p.y+=top*(heroHeight+branchHeight+waveHeight);
       float u=p.x*0.808027+p.z*0.589145;
       float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
@@ -280,7 +282,7 @@ function createArt() {
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
   const profile=gl.getAttribLocation(program,"profile");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobAmount","bobPhase","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -323,8 +325,8 @@ function createArt() {
         gl.vertexAttribPointer(profile,1,gl.FLOAT,false,32,28);
         gl.uniform1f(uniforms.pyramid,poses[index].pyramid);
         gl.uniform1f(uniforms.terrace,3-index);
-        gl.uniform1f(uniforms.bobAmount,poses[index].bobAmount);
         gl.uniform1f(uniforms.bobPhase,poses[index].bobPhase);
+        gl.uniform1f(uniforms.ripple,poses[index].ripple);
         gl.uniform1f(uniforms.stretch,poses[index].stretch);
         gl.uniform3fv(uniforms.color,color);
         gl.drawArrays(gl.TRIANGLES,0,count);
@@ -531,8 +533,8 @@ function update(now) {
     const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
     return {
       pyramid:1-approach,
-      bobAmount:motion?weight*.035:0,
-      bobPhase:time*1.32,
+      bobPhase:time*2.0,
+      ripple:motion?((1-approach)*.145+approach*smooth(position)*.075):0,
       stretch:weight*.58
     };
   }),time);
