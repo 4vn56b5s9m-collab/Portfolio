@@ -53,8 +53,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=fondo-continuo">
-<script defer src="portfolio-interactions.js?v=fondo-continuo"></script>
+<link rel="stylesheet" href="portfolio.css?v=progreso-hero">
+<script defer src="portfolio-interactions.js?v=progreso-hero"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -66,7 +66,18 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
         <p class="tagline">Experto en diseño de interfaces mediante
           <span class="hero-typed" aria-hidden="true">Behavioral Design</span>
           <span class="hero-specialties-reader">Behavioral Design, sistemas de diseño, motion e inmersión y formación de equipos.</span>
-        </p></div>
+        </p>
+        <div class="hero-progress" aria-hidden="true"><span></span></div>
+        <div class="hero-rotation" role="group" aria-label="Especialidades de la cabecera">
+          <div class="hero-pagination">
+            <button type="button" data-hero-page="0" aria-label="Behavioral Design" aria-current="true"></button>
+            <button type="button" data-hero-page="1" aria-label="Sistemas de diseño"></button>
+            <button type="button" data-hero-page="2" aria-label="Motion e inmersión"></button>
+            <button type="button" data-hero-page="3" aria-label="Formación de equipos"></button>
+          </div>
+          <button class="hero-rotation-toggle" type="button" aria-label="Pausar rotación automática"><span aria-hidden="true">Ⅱ</span></button>
+        </div>
+      </div>
       <dl class="stats">
         <div><dd data-count="81">81</dd><dt>proyectos</dt></div>
         <div><dd data-count="25">25</dd><dt>clientes</dt></div>
@@ -141,7 +152,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=fondo-continuo";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=progreso-hero";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
@@ -153,13 +164,24 @@ updateHeader();
 
 const branches=["Behavioral Design","Sistemas de diseño","Motion e inmersión","Formación de equipos"];
 const typed=hero.querySelector(".hero-typed");
-let active=0,hovered=-1,heroVisible=false,cycleTimer=0,typeTimer=0;
+const progress=hero.querySelector(".hero-progress span");
+const pages=[...hero.querySelectorAll("[data-hero-page]")];
+const toggle=hero.querySelector(".hero-rotation-toggle");
+const cycleDuration=3300;
+let active=0,hovered=-1,heroVisible=false,paused=false,cycleTimer=0,typeTimer=0;
+let progressAnimation;
+let requestHeroFrame=()=>{};
 hero.dataset.litPiece="0";
 
 function showBranch(index) {
   if (index===active) return;
   active=index;
   hero.dataset.litPiece=String(index);
+  pages.forEach((page,i)=>{
+    if (i===index) page.setAttribute("aria-current","true");
+    else page.removeAttribute("aria-current");
+  });
+  requestHeroFrame();
   clearTimeout(typeTimer);
   const label=branches[index];
   if (reduced.matches) {
@@ -177,12 +199,30 @@ function showBranch(index) {
 
 function scheduleCycle() {
   clearTimeout(cycleTimer);
-  if (reduced.matches||document.hidden||!heroVisible||hovered>=0) return;
+  progressAnimation?.cancel();
+  if (reduced.matches||paused||document.hidden||!heroVisible||hovered>=0) return;
+  progressAnimation=progress.animate(
+    [{transform:"scaleX(0)"},{transform:"scaleX(1)"}],
+    {duration:cycleDuration,fill:"forwards"}
+  );
   cycleTimer=setTimeout(()=>{
     showBranch((active+1)%branches.length);
     scheduleCycle();
-  },3300);
+  },cycleDuration);
 }
+
+pages.forEach((page,index)=>{
+  page.addEventListener("click",()=>{
+    showBranch(index);
+    scheduleCycle();
+  });
+});
+toggle.addEventListener("click",()=>{
+  paused=!paused;
+  toggle.setAttribute("aria-label",paused?"Reanudar rotación automática":"Pausar rotación automática");
+  toggle.firstElementChild.textContent=paused?"▶":"Ⅱ";
+  scheduleCycle();
+});
 
 new IntersectionObserver(([entry])=>{
   heroVisible=entry.isIntersecting;
@@ -203,6 +243,7 @@ if (renderer) {
   function queue() {
     if (visible&&!frame) frame=requestAnimationFrame(draw);
   }
+  requestHeroFrame=queue;
   function draw(now) {
     frame=0;
     if (!visible||!surface||document.hidden) return;
