@@ -53,12 +53,13 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=controles-hero">
-<script defer src="portfolio-interactions.js?v=canal-motion"></script>
+<link rel="stylesheet" href="portfolio.css?v=primer-vistazo">
+<script defer src="portfolio-interactions.js?v=primer-vistazo"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
 <main>
+  <div class="intro-fold">
   <section class="hero" aria-labelledby="saludo">
     <div class="hero-copy">
       <div class="hero-title"><h1 id="saludo">Hola, soy Álex</h1>
@@ -88,6 +89,10 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <div><dd data-count="6">6</dd><dt>países</dt></div>
     </dl>
   </section>
+    <div class="intro-next">
+      <a class="intro-next-link" href="#explorar-especialidades">Descubre cómo trabajo <span aria-hidden="true">↓</span></a>
+    </div>
+  </div>
   <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
     <h2 id="especialidades">Cada proyecto pide algo distinto.</h2>
@@ -105,18 +110,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     </div>
     <div class="accordion-visual" id="accordion-visual">
       <div class="accordion-panel" data-accordion-panel="0"></div>
-      <div class="accordion-panel light-panel" data-accordion-panel="1" hidden>
-        <div class="branch-scene motion-scene">
-          <svg class="scene-floor" aria-hidden="true">
-  <defs><radialGradient id="motion-shadow"><stop stop-color="#06090b" stop-opacity=".87"/><stop offset="1" stop-color="#06090b" stop-opacity="0"/></radialGradient></defs>
-  <ellipse class="scene-shadow" fill="url(#motion-shadow)"/><ellipse class="scene-shadow" fill="url(#motion-shadow)"/><ellipse class="scene-shadow" fill="url(#motion-shadow)"/>
-  <text class="scene-back" text-anchor="middle">Una microinteracción</text>
-  <text class="scene-front" text-anchor="middle">puede cambiar tu foco de atención</text>
-</svg>
-          <canvas data-branch-canvas="motion" role="img" aria-label="Una microinteracción puede cambiar tu foco de atención. Una esfera sigue un canal serpenteante hasta un punto luminoso."></canvas>
-          <svg class="system-connectors motion-path" aria-hidden="true"><path class="motion-guide"/><g class="motion-light"><circle class="system-halo" r="8"/><circle class="system-core" r="2.2"/></g></svg>
-        </div>
-      </div>
+      <div class="accordion-panel light-panel" data-accordion-panel="1" hidden><p class="motion-caption"><span class="motion-line">Una microinteracción<span class="motion-ink" aria-hidden="true">Una microinteracción</span><span class="motion-orbit" aria-hidden="true"><i></i></span></span> <span class="motion-continuation"><span class="motion-line">puede cambiar tu foco<span class="motion-ink" aria-hidden="true">puede cambiar tu foco</span><span class="motion-orbit" aria-hidden="true"><i></i></span></span> <span class="motion-line motion-line-final">de atención<span class="motion-period">.</span><span class="motion-ink" aria-hidden="true">de atención<span class="motion-period">.</span></span><span class="motion-orbit" aria-hidden="true"><i></i></span></span></span></p></div>
       <div class="accordion-panel growth-panel" data-accordion-panel="2" hidden>
         <div class="branch-scene training-scene">
           <svg class="scene-floor" aria-hidden="true">
@@ -174,7 +168,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=canal-motion";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=primer-vistazo";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");

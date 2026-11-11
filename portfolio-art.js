@@ -343,7 +343,6 @@ function trainingModels() {
 }
 
 const systemCenters=[-4.05,-1.9,.60,3.65];
-const systemWidths=[.58,.92,1.72,2];
 
 function systemModels() {
   const scene=[];
@@ -383,79 +382,37 @@ function systemModels() {
   return scene;
 }
 
-const motionFloor=-.71;
-const ballRadius=.09;
-
-function sphere(radius) {
-  const vertices=[];
-  function point(row,column) {
-    const latitude=Math.PI*row/12, longitude=2*Math.PI*column/20;
-    return [Math.sin(latitude)*Math.cos(longitude),Math.cos(latitude),Math.sin(latitude)*Math.sin(longitude)];
-  }
-  for (let row=0;row<12;row++) for (let column=0;column<20;column++) {
-    const corners=[point(row,column),point(row+1,column),point(row+1,column+1),point(row,column+1)];
-    for (const i of [0,1,2,0,2,3]) {
-      const normal=corners[i];
-      vertices.push(...normal.map(value=>value*radius),...normal,0,0);
+function systemFootprints(models) {
+  const groups=systemCenters.map((_,stage)=>models.filter(model=>model.stage===stage));
+  return groups.map(group=>{
+    let base=Infinity,left=Infinity,right=-Infinity;
+    const vertices=[];
+    for (const {mesh,position} of group) for (let i=0;i<mesh.length;i+=8) {
+      const x=mesh[i]+position[0], y=mesh[i+1]+position[1], z=mesh[i+2]+position[2];
+      const projectedX=x+z*.589145/.808027;
+      left=Math.min(left,projectedX);
+      right=Math.max(right,projectedX);
+      base=Math.min(base,y);
+      vertices.push([x,y,z]);
     }
-  }
-  return new Float32Array(vertices);
-}
-
-function motionRoute(progress) {
-  const phase=progress*2*Math.PI;
-  return [-2.9+5.8*progress,motionFloor+.24+ballRadius,.86*Math.sin(phase)];
-}
-
-function motionModels() {
-  const bed=[], walls=[];
-  function section(t,offset,height) {
-    const [x,,z]=motionRoute(t);
-    const slope=.86*2*Math.PI*Math.cos(t*2*Math.PI)/5.8;
-    const length=Math.hypot(slope,1);
-    return [x-offset*slope/length,motionFloor+height,z+offset/length];
-  }
-  function strip(buffer,t,next,from,to,heightFrom,heightTo,cavity=0) {
-    const vertices=[section(t,from,heightFrom),section(next,from,heightFrom),
-      section(next,to,heightTo),section(t,to,heightTo)];
-    const [p,q,r]=vertices;
-    const u=q.map((value,i)=>value-p[i]), v=r.map((value,i)=>value-p[i]);
-    const cross=[u[2]*v[1]-u[1]*v[2],u[0]*v[2]-u[2]*v[0],u[1]*v[0]-u[0]*v[1]];
-    const magnitude=Math.hypot(...cross);
-    const normal=cross.map(value=>value/magnitude);
-    for (const i of [0,1,2,0,2,3]) buffer.push(...vertices[i],...normal,0,cavity);
-  }
-  for (let i=0;i<64;i++) {
-    const t=i/64,next=(i+1)/64;
-    strip(bed,t,next,-.26,.26,.24,.24);
-    strip(walls,t,next,-.47,-.47,0,.38);
-    strip(walls,t,next,-.47,-.41,.38,.44);
-    strip(walls,t,next,-.41,-.30,.44,.44);
-    strip(walls,t,next,-.30,-.26,.44,.24,.75);
-    strip(walls,t,next,.26,.30,.24,.44,.75);
-    strip(walls,t,next,.30,.41,.44,.44);
-    strip(walls,t,next,.41,.47,.44,.38);
-    strip(walls,t,next,.47,.47,.38,0);
-  }
-  return [
-    {mesh:new Float32Array(bed),color:petrol,stage:0,origin:.5,position:[0,0,0]},
-    {mesh:new Float32Array(walls),color:chalk,stage:0,origin:.5,position:[0,0,0]},
-    {mesh:sphere(ballRadius),color:[186,241,248],stage:0,origin:.5,position:[0,0,0]}
-  ];
+    const bottom=vertices.filter(([,y])=>y<=base+.035);
+    const middle=axis=>{
+      const values=bottom.map(point=>point[axis]);
+      return (Math.min(...values)+Math.max(...values))/2;
+    };
+    return {left,right,center:[middle(0),base,middle(2)],radius:(right-left)*.44+.06};
+  });
 }
 
 for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
-  const kind=canvas.dataset.branchCanvas;
-  const training=kind==="training", motion=kind==="motion";
-  const models=training?trainingModels():motion?motionModels():systemModels();
+  const training=canvas.dataset.branchCanvas==="training";
+  const models=training?trainingModels():systemModels();
+  const footprints=training?null:systemFootprints(models);
   const parent=canvas.parentElement;
   const floor=parent.querySelector(".scene-floor");
   const shadows=[...floor.querySelectorAll(".scene-shadow")];
   const labels=[floor.querySelector(".scene-back"),floor.querySelector(".scene-front")];
-  const motionOverlay=parent.querySelector(".motion-path");
-  const guide=motionOverlay?.querySelector(".motion-guide");
-  const motionLight=motionOverlay?.querySelector(".motion-light");
-  const connectors=parent.querySelector(".system-connectors:not(.motion-path)");
+  const connectors=parent.querySelector(".system-connectors");
   const tracks=connectors?[...connectors.querySelectorAll(".system-track")]:[];
   const fills=connectors?[...connectors.querySelectorAll(".system-fill")]:[];
   const pulse=connectors?.querySelector(".system-pulse");
@@ -468,71 +425,57 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.9:motion?7.9:9.8),height/5.25);
+    const scale=Math.min(width/(training?6.9:9.8),height/5.25);
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
     ];
-    const routeProgress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-240)/2100));
-    const route=motion?motionRoute(routeProgress*routeProgress*(3-2*routeProgress)):null;
     renderer.clear({width,height});
-    renderer.render(scale,models.map((model,index)=>{
+    renderer.render(scale,models.map(model=>{
       const delay=model.stage*(training?190:370);
       const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/420));
       const opacity=1-(1-progress)**3;
-      const [x,y,z]=motion&&index===models.length-1?route:model.position;
+      const [x,y,z]=model.position;
       return {
         origin:model.origin,position:[x,y-(1-opacity)*.16,z],opacity,
         pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    floor.style.setProperty("--scene-type",Math.max(21,Math.min(74,width*(motion?.064:.092)))+"px");
+    floor.style.setProperty("--scene-type",Math.max(26,Math.min(110,width*.135))+"px");
     labels.forEach((label,index)=>{
-      const [x,y]=project(index===0?-.74:.74,-1.12,index===0?-2.05:1.96);
+      const [x,y]=project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
       label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
     });
-    const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]
-      :motion?[.16,.5,.84].map(t=>{const [x,,z]=motionRoute(t);return [x,motionFloor,z];})
-      :systemCenters.map((x,i)=>[x,[-.73,-.90,-.91,-1.22][i],0]);
+    const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]:footprints.map(item=>item.center);
     shadows.forEach((shadow,index)=>{
       const [x,y]=project(...ground[index]);
-      const radius=training?.88:motion?1.15:systemWidths[index]*.55+.13;
-      shadow.setAttribute("cx",x+.11*scale);
-      shadow.setAttribute("cy",y+.07*scale);
+      const radius=training?.88:footprints[index].radius;
+      shadow.setAttribute("cx",x+.05*scale);
+      shadow.setAttribute("cy",y+.04*scale);
       shadow.setAttribute("rx",radius*scale);
       shadow.setAttribute("ry",.23*scale);
       shadow.setAttribute("transform",`rotate(-18 ${x} ${y})`);
     });
-    if (motionOverlay) {
-      motionOverlay.setAttribute("viewBox",`0 0 ${width} ${height}`);
-      const points=Array.from({length:29},(_,i)=>{
-        const [x,y,z]=motionRoute(i/28);
-        return project(x,y-ballRadius,z);
-      });
-      guide.setAttribute("d",points.map(([x,y],i)=>`${i?"L":"M"}${x},${y}`).join(" "));
-      const [x,y]=project(...route);
-      motionLight.setAttribute("transform",`translate(${x} ${y})`);
-    }
     if (connectors) {
       connectors.setAttribute("viewBox",`0 0 ${width} ${height}`);
       pulse.style.visibility="hidden";
       tracks.forEach((track,index)=>{
-        const start=systemCenters[index]+systemWidths[index]/2+.12;
-        const end=systemCenters[index+1]-systemWidths[index+1]/2-.12;
+        const start=footprints[index].right+.17;
+        const end=footprints[index+1].left-.17;
         const [x1,y1]=project(start,-.44,0), [x2,y2]=project(end,-.44,0);
-        const path=`M${x1},${y1} L${x2},${y2}`;
+        const path=end>start?`M${x1},${y1} L${x2},${y2}`:"";
         const progress=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-125-index*370)/245));
         track.setAttribute("d",path);
         fills[index].setAttribute("d",path);
         fills[index].style.strokeDashoffset=1-progress;
-        if (progress>0&&progress<1) {
+        if (end>start&&progress>0&&progress<1) {
           pulse.setAttribute("transform",`translate(${x1+(x2-x1)*progress} ${y1+(y2-y1)*progress})`);
           pulse.style.visibility="visible";
         }
       });
     }
-    if (!reduced.matches&&elapsed<(training?800:motion?2360:1530)) frame=requestAnimationFrame(draw);
+    if (!reduced.matches&&elapsed<(training?800:1530)) frame=requestAnimationFrame(draw);
   }
   function queue() {
     if (visible&&renderer&&!frame) frame=requestAnimationFrame(draw);
