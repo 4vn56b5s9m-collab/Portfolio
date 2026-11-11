@@ -101,7 +101,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <article class="stage"><h2>Cada proyecto pide algo distinto.</h2></article>
       <article class="stage"><h2>UI y Behavioral Design</h2><p>Diseño interfaces que ayudan a decidir.</p></article>
       <article class="stage"><h2>Motion e inmersión</h2><p>Uso el movimiento para guiar la atención.</p></article>
-      <article class="stage"><h2>Formaciones</h2><p>Comparto el criterio para que el equipo pueda aplicarlo.</p></article>
+      <article class="stage"><h2>Experiencia formando equipos</h2><p>He formado a equipos de diseño en empresas y les he ayudado a definir flujos de trabajo y estándares para que todos trabajen con criterios compartidos.</p></article>
       <article class="stage"><h2>Dirección y sistemas de diseño</h2><p>Alineo alcance, componentes y entrega a desarrollo.</p></article>
     </div>
   </section>
@@ -143,35 +143,67 @@ const pieces = [
   { width:4.96, depth:2.76, color:[77,79,82] }
 ];
 
-function corners(width, depth, height) {
-  return [[-width/2,height,-depth/2],[width/2,height,-depth/2],
-          [width/2,height,depth/2],[-width/2,height,depth/2]];
+function contour(width,depth,radius,height) {
+  const points=[];
+  for (let corner=0;corner<4;corner++) {
+    const cx=(corner===0||corner===3?1:-1)*(width/2-radius);
+    const cz=(corner<2?1:-1)*(depth/2-radius);
+    for (let segment=0;segment<=8;segment++) {
+      const angle=(corner+segment/8)*Math.PI/2;
+      points.push([cx+Math.cos(angle)*radius,height,cz+Math.sin(angle)*radius]);
+    }
+  }
+  return points;
 }
 
 function buildMesh(piece,index) {
-  const top=corners(piece.width,piece.depth,.15);
-  const bottom=corners(piece.width,piece.depth,-.15);
   const inner=pieces[index-1];
-  const hole=inner&&corners(inner.width+.045,inner.depth+.045,.15);
-  const holeBottom=inner&&corners(inner.width+.045,inner.depth+.045,-.15);
-  const normals=[[0,0,-1],[1,0,0],[0,0,1],[-1,0,0]];
+  const shape={width:piece.width,depth:piece.depth,radius:piece.depth*.19};
+  const opening=inner
+    ? {width:inner.width+.045,depth:inner.depth+.045,radius:inner.depth*.19+.0225}
+    : {width:1.16,depth:.35,radius:.075};
   const vertices=[];
-  function quad(points,normal) {
-    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal);
+  function quad(points,normal,level) {
+    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level);
   }
-  if (!hole) {
-    quad(top,[0,1,0]);
-    quad(bottom,[0,-1,0]);
-  }
-  for (let i=0;i<4;i++) {
-    const j=(i+1)%4;
-    quad([top[i],top[j],bottom[j],bottom[i]],normals[i]);
-    if (hole) {
-      quad([top[i],top[j],hole[j],hole[i]],[0,1,0]);
-      quad([bottom[i],bottom[j],holeBottom[j],holeBottom[i]],[0,-1,0]);
-      quad([hole[i],hole[j],holeBottom[j],holeBottom[i]],normals[i].map(n=>-n));
+  function rim(outside,inside,level) {
+    const bevel=.018;
+    const top=contour(outside.width-2*bevel,outside.depth-2*bevel,outside.radius-bevel,.15);
+    const shoulder=contour(outside.width,outside.depth,outside.radius,.15-bevel);
+    const base=contour(outside.width,outside.depth,outside.radius,-.15);
+    const holeTop=inside&&contour(inside.width+2*bevel,inside.depth+2*bevel,inside.radius+bevel,.15);
+    const holeShoulder=inside&&contour(inside.width,inside.depth,inside.radius,.15-bevel);
+    const holeBase=inside&&contour(inside.width,inside.depth,inside.radius,-.15);
+    for (let i=0;i<top.length;i++) {
+      const j=(i+1)%top.length;
+      const dx=shoulder[j][0]-shoulder[i][0],dz=shoulder[j][2]-shoulder[i][2];
+      const length=Math.hypot(dx,dz);
+      const nx=dz/length,nz=-dx/length;
+      quad([shoulder[i],shoulder[j],base[j],base[i]],[nx,0,nz],level);
+      quad([top[i],top[j],shoulder[j],shoulder[i]],[nx,.9,nz],level);
+      if (inside) {
+        quad([top[i],top[j],holeTop[j],holeTop[i]],[0,1,0],level);
+        quad([base[i],base[j],holeBase[j],holeBase[i]],[0,-1,0],level);
+        quad([holeTop[i],holeTop[j],holeShoulder[j],holeShoulder[i]],[-nx,.9,-nz],level);
+        quad([holeShoulder[i],holeShoulder[j],holeBase[j],holeBase[i]],[-nx,0,-nz],level);
+      } else {
+        for (const point of [[0,.15,0],top[i],top[j]]) vertices.push(...point,0,1,0,level);
+        for (const point of [[0,-.15,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level);
+      }
     }
   }
+  const interpolate=(t,offset)=>({
+    width:shape.width+(opening.width-shape.width)*t+offset*2,
+    depth:shape.depth+(opening.depth-shape.depth)*t+offset*2,
+    radius:shape.radius+(opening.radius-shape.radius)*t+offset
+  });
+  const bands=inner?3:2;
+  for (let band=0;band<bands;band++) {
+    const level=band/(inner?bands-1:bands);
+    rim(interpolate(band/bands,band===0?0:-.009),
+      interpolate((band+1)/bands,band===bands-1?0:.009),level);
+  }
+  if (!inner) rim(interpolate(1,-.018),null,1);
   return new Float32Array(vertices);
 }
 
@@ -190,6 +222,7 @@ function createArt() {
   const vertexSource=`
     attribute vec3 vertex;
     attribute vec3 normal;
+    attribute float band;
     uniform vec2 viewport;
     uniform vec2 origin;
     uniform float scale, lift, tilt, stretch;
@@ -197,7 +230,8 @@ function createArt() {
     void main() {
       float top=(vertex.y+0.15)/0.3;
       vec3 p=vertex;
-      p.y+=lift+top*(stretch+tilt*vertex.x);
+      float rise=0.31+0.69*band*band;
+      p.y+=lift+top*(stretch*rise+tilt*vertex.x);
       float u=p.x*0.808027+p.z*0.589145;
       float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
@@ -232,17 +266,19 @@ function createArt() {
   gl.useProgram(program);
   const vertex=gl.getAttribLocation(program,"vertex");
   const normal=gl.getAttribLocation(program,"normal");
+  const band=gl.getAttribLocation(program,"band");
   const uniforms=Object.fromEntries(["viewport","origin","scale","lift","tilt","stretch","color","time","emphasis"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
-    return {buffer,count:data.length/6,color:piece.color.map(channel=>channel/255)};
+    return {buffer,count:data.length/7,color:piece.color.map(channel=>channel/255)};
   });
   gl.enable(gl.DEPTH_TEST);
   gl.enableVertexAttribArray(vertex);
   gl.enableVertexAttribArray(normal);
+  gl.enableVertexAttribArray(band);
   gl.clearColor(0,0,0,0);
   let width,height,ratio;
   return {
@@ -267,8 +303,9 @@ function createArt() {
       gl.uniform1f(uniforms.time,time);
       meshes.forEach(({buffer,count,color},index)=>{
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,24,0);
-        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,24,12);
+        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,28,0);
+        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,28,12);
+        gl.vertexAttribPointer(band,1,gl.FLOAT,false,28,24);
         gl.uniform1f(uniforms.lift,poses[index].lift);
         gl.uniform1f(uniforms.tilt,poses[index].tilt);
         gl.uniform1f(uniforms.stretch,poses[index].stretch);
