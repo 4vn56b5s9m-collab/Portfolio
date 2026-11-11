@@ -1,14 +1,297 @@
 <!doctype html>
 <html lang="es">
+<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alejandro Sánchez Bretones</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Alejandro Sánchez Bretones, experto en diseño. Interfaces, motion, formación y sistemas de diseño.">
+<title>Alejandro Sánchez Bretones · Portfolio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
 <style>
-:root { color-scheme: light dark; }
-body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: light-dark(#f4f2ed,#171719); color: light-dark(#171719,#f4f2ed); font-family: Georgia,serif; }
-main { padding: 2rem; }
-h1 { font-size: clamp(2rem,7vw,5rem); margin: 0; }
-p { color: light-dark(#124d56,#f4f2ed); }
+:root{color-scheme:light dark;--tiza:#f4f2ed;--onix:#171719;--petroleo:#124d56;--page:var(--tiza);--ink:var(--onix);--line:#bdb9af;--display:"Instrument Serif",Georgia,serif;--space:clamp(1.35rem,5vw,5rem)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"Instrument Sans",system-ui,sans-serif}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.25em}
+a:focus-visible{outline:2px solid currentColor;outline-offset:.35rem}
+h1,h2,p,dl,dd{margin:0}
+header,footer{padding:1.25rem var(--space);display:flex;justify-content:space-between;align-items:center;gap:1rem 2rem;flex-wrap:wrap}
+header>a{font:400 clamp(1.45rem,2.5vw,2rem)/1 var(--display);text-decoration:none}
+nav{display:flex;gap:1.35rem;flex-wrap:wrap}
+nav a{font-size:.9rem;text-decoration:none}
+nav a:hover{text-decoration:underline}
+.hero,.story{background:var(--onix);color:var(--tiza)}
+.hero{margin:0 clamp(0rem,1.2vw,1.25rem);padding:clamp(2.5rem,6vw,6rem) var(--space);min-height: min(42rem,82svh);display:grid;grid-template-columns:1fr 1.12fr;align-items:center;gap:1rem}
+h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
+.tagline{margin-top:.6rem;font:italic 400 clamp(2rem,4vw,4.2rem)/1 var(--display)}
+.stats{display:flex;gap:clamp(.8rem,2.3vw,2.5rem);margin-top:clamp(1.6rem,4vw,3.8rem)}
+.stats div+div{border-left:1px solid #817e77;padding-left:clamp(.8rem,2.3vw,2.5rem)}
+.stats dd{font:400 clamp(2.2rem,4vw,3.55rem)/.94 var(--display);font-variant-numeric:lining-nums tabular-nums}
+.stats dt{font-size:.88rem;margin-top:.45rem}
+.reel{display:inline-block;height:1em;overflow:hidden;vertical-align:top}
+.reel span{display:block}
+.reel span span{height:1em;line-height:1em}
+canvas{display:block;width:100%;height:100%}
+.hero-visual{height:clamp(15rem,38vw,31rem);min-width:0}
+.story{position:relative}
+.stage{min-height:100svh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;justify-items:center;align-content:center;text-align:center;padding:clamp(2.25rem,8svh,6rem) var(--space);gap:clamp(1.1rem,4svh,2.5rem);position:relative}
+.stage h2,.notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}
+.stage p{font-size:clamp(1.05rem,2vw,1.4rem);max-width:39ch;line-height:1.45;text-wrap:balance}
+.stage-visual{width:min(100%,46rem);height:min(47svh,25rem);align-self:center}
+.js .story-screen{position:sticky;top:0;height:100svh;min-height:0}
+.js .story-track{position:relative;margin-top:-100svh;pointer-events:none}
+.story-track .step{height:100svh}
+.js .static-story{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.story-screen,.story-track{display:none}
+.js .story-screen{display:grid}
+.js .story-track{display:block}
+.intro{background:linear-gradient(to bottom,var(--onix) 0 var(--wipe,0%),var(--tiza) var(--wipe,0%) 100%)}
+.intro h2{color:#fff;mix-blend-mode:difference}
+.stage.intro{grid-template-rows:auto minmax(0,1fr)}
+.stage.intro p{display:none}
+.notes{padding:clamp(4rem,11vw,9rem) var(--space);max-width:75rem;margin:auto}
+.notes p{font-size:clamp(1.15rem,2.25vw,1.6rem);line-height:1.5;max-width:42ch;margin-top:1.2rem}
+footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
+@media(prefers-color-scheme:dark){:root{--page:#202022;--ink:var(--tiza);--line:#555357}}
+@media(max-width:700px){
+  header{justify-content:center;text-align:center}nav{justify-content:center}
+  .hero{grid-template-columns:1fr;text-align:center;justify-items:center;gap:1.25rem;padding-top:3.25rem;padding-bottom:2.5rem}
+  .hero-copy{display:contents}.hero-title{order:0}.hero-visual{order:1;width:100%;height:min(70vw,21rem)}.stats{order:2;margin-top:0;text-align:left}
+  h1{font-size:clamp(3.6rem,12.6vw,5.3rem)}.tagline{font-size:clamp(1.85rem,7vw,3rem)}
+  .stage-visual{height:min(45svh,75vw)}
+}
+@media(prefers-reduced-motion:reduce){
+  .js .story-screen,.js .story-track{display:none}.js .static-story{position:static;width:auto;height:auto;overflow:visible;clip-path:none}
+  .static-story .stage{min-height:auto;display:block;padding-block:2.5rem;text-align:left}
+  .static-story .stage p{margin-top:1rem}
+}
 </style>
-<main><h1>Alejandro Sánchez Bretones</h1><p>Portfolio en preparación</p></main>
+</head>
+<body>
+<header id="inicio">
+  <a href="#inicio">Alejandro Sánchez Bretones</a>
+  <nav aria-label="Navegación principal"><a href="#especialidades">Especialidades</a><a href="#trayectoria">Trayectoria</a><a href="#contacto">Contacto</a></nav>
+</header>
+<main>
+  <section class="hero" aria-labelledby="saludo">
+    <div class="hero-copy">
+      <div class="hero-title"><h1 id="saludo">Hola, soy Alex</h1><p class="tagline">Interfaces con intención</p></div>
+      <dl class="stats">
+        <div><dd data-count="81">81</dd><dt>proyectos</dt></div>
+        <div><dd data-count="25">25</dd><dt>clientes</dt></div>
+        <div><dd data-count="6">6</dd><dt>países</dt></div>
+      </dl>
+    </div>
+    <div class="hero-visual"><canvas id="hero-art" aria-hidden="true"></canvas></div>
+  </section>
+  <section class="story" id="especialidades" aria-label="Mis especialidades">
+    <div class="story-screen stage" aria-hidden="true">
+      <h2></h2><div class="stage-visual"><canvas id="story-art"></canvas></div><p></p>
+    </div>
+    <div class="story-track" aria-hidden="true">
+      <div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+    <div class="static-story">
+      <article class="stage"><h2>Cada proyecto pide algo distinto.</h2></article>
+      <article class="stage"><h2>UI y Behavioral Design</h2><p>Diseño interfaces que ayudan a decidir.</p></article>
+      <article class="stage"><h2>Motion e inmersión</h2><p>Uso el movimiento para guiar la atención.</p></article>
+      <article class="stage"><h2>Formaciones</h2><p>Comparto el criterio para que el equipo pueda aplicarlo.</p></article>
+      <article class="stage"><h2>Dirección y sistemas de diseño</h2><p>Alineo alcance, componentes y entrega a desarrollo.</p></article>
+    </div>
+  </section>
+  <section class="notes" id="trayectoria">
+    <h2>Distintos proyectos, el mismo criterio.</h2>
+    <p>He trabajado en e-commerce, educación, plataformas de aprendizaje, gestión interna de tickets y servicio técnico, con clientes en España y fuera.</p>
+  </section>
+</main>
+<footer id="contacto">
+  <span>Alejandro Sánchez Bretones</span>
+  <nav aria-label="Contacto"><a href="https://www.linkedin.com/in/alejandrosanchezbretones/">LinkedIn</a></nav>
+</footer>
+<script>
+const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+const hero = document.querySelector(".hero");
+const story = document.querySelector(".story");
+const stage = document.querySelector(".story-screen");
+const stages = [...document.querySelectorAll(".static-story article")].map(article => ({
+  title: article.querySelector("h2").textContent,
+  description: article.querySelector("p")?.textContent ?? ""
+}));
+const stageTitle = stage.querySelector("h2");
+const stageDescription = stage.querySelector("p");
+const heroCanvas = document.querySelector("#hero-art");
+const storyCanvas = document.querySelector("#story-art");
+
+const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
+const smooth = value => {
+  const t = clamp(value);
+  return t * t * (3 - 2 * t);
+};
+const pieces = [
+  { width:2.26, depth:.87, color:[226,219,207] },
+  { width:3.18, depth:1.50, color:[21,91,101] },
+  { width:4.08, depth:2.13, color:[210,193,165] },
+  { width:4.96, depth:2.76, color:[77,79,82] }
+];
+
+function corners(width, depth, height) {
+  return [[-width/2,height,-depth/2],[width/2,height,-depth/2],
+          [width/2,height,depth/2],[-width/2,height,depth/2]];
+}
+
+function buildMesh(piece, index) {
+  const top = corners(piece.width,piece.depth,.15);
+  const base = corners(piece.width,piece.depth,-.15);
+  const inner = pieces[index-1];
+  const faces = [];
+  const add = (vertices, tone) => faces.push({ vertices, tone });
+  const hole = inner && corners(inner.width+.045,inner.depth+.045,.15);
+  const holeBase = inner && corners(inner.width+.045,inner.depth+.045,-.15);
+  if (!hole) add(top,1);
+  for (let i=0;i<4;i++) {
+    const j=(i+1)%4;
+    if (hole) {
+      add([top[i],top[j],hole[j],hole[i]],1);
+      add([hole[j],hole[i],holeBase[i],holeBase[j]],.48);
+    }
+    add([top[j],top[i],base[i],base[j]],[.51,.67,.65,.49][i]);
+  }
+  return faces;
+}
+
+const meshes = pieces.map(buildMesh);
+function renderer(canvas) {
+  const ctx = canvas.getContext("2d");
+  let width=0, height=0;
+  function resize() {
+    const box=canvas.getBoundingClientRect();
+    width=box.width;
+    height=box.height;
+    if (!width || !height) return;
+    const ratio=Math.min(devicePixelRatio||1,2);
+    canvas.width=Math.round(width*ratio);
+    canvas.height=Math.round(height*ratio);
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+  }
+  new ResizeObserver(resize).observe(canvas);
+  resize();
+  function render(poses,time) {
+    if (!width || !height) return;
+    ctx.clearRect(0,0,width,height);
+    const scale=Math.min(width/6.35,height/3.9);
+    const yaw=.63, pitch=.58;
+    const cy=Math.cos(yaw), sy=Math.sin(yaw);
+    const cp=Math.cos(pitch), sp=Math.sin(pitch);
+    const floorX=width*.5, floorY=height*.65;
+    ctx.save();
+    ctx.translate(floorX,floorY+scale*.66);
+    ctx.scale(scale*2.7,scale*.48);
+    const shadow=ctx.createRadialGradient(0,0,0,0,0,1);
+    shadow.addColorStop(0,"#0009");
+    shadow.addColorStop(1,"#0000");
+    ctx.fillStyle=shadow;
+    ctx.fillRect(-1,-1,2,2);
+    ctx.restore();
+    const faces=[];
+    meshes.forEach((mesh,index)=>{
+      const { lift, tilt }=poses[index];
+      const sin=Math.sin(tilt), cos=Math.cos(tilt);
+      mesh.forEach(({vertices,tone})=>{
+        const pts=vertices.map(([x,y,z])=>{
+          const tiltedX=x*cos-y*sin;
+          const tiltedY=x*sin+y*cos+lift;
+          const u=tiltedX*cy+z*sy;
+          const v=-tiltedX*sy+z*cy;
+          const depth=tiltedY*sp+v*cp;
+          const perspective=13/(13-depth);
+          return [floorX+u*scale*perspective,floorY+(-tiltedY*cp+v*sp)*scale*perspective,depth];
+        });
+        const [a,b,c]=pts;
+        if ((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) return;
+        faces.push({pts,tone,index,depth:pts.reduce((sum,p)=>sum+p[2],0)/pts.length});
+      });
+    });
+    faces.sort((a,b)=>a.depth-b.depth);
+    const lightShift=Math.sin(time*.52)*width*.13;
+    faces.forEach(({pts,tone,index})=>{
+      const gradient=ctx.createLinearGradient(width*.16+lightShift,height*.18,width*.86+lightShift,height*.82);
+      const color=(factor)=>"rgb("+pieces[index].color.map(c=>clamp(Math.round(c*factor),0,255)).join(",")+")";
+      gradient.addColorStop(0,color(tone*1.17));
+      gradient.addColorStop(.48,color(tone*1.04));
+      gradient.addColorStop(1,color(tone*.74));
+      ctx.beginPath();
+      pts.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));
+      ctx.closePath();
+      ctx.fillStyle=gradient;
+      ctx.fill();
+      ctx.strokeStyle=tone===1?"#ffffff24":"#00000024";
+      ctx.lineWidth=.65;
+      ctx.stroke();
+    });
+  }
+  return render;
+}
+
+const renderHero=renderer(heroCanvas);
+const renderStory=renderer(storyCanvas);
+document.documentElement.classList.add("js");
+const heroPose=[2.14,1.42,.73,0];
+let activeStage=-1;
+
+function update(now) {
+  const motion=!reduced.matches;
+  const time=motion?now/1000:0;
+  const heroBounds=hero.getBoundingClientRect();
+  const storyBounds=story.getBoundingClientRect();
+  const screenHeight=stage.offsetHeight||innerHeight;
+  const position=clamp(-storyBounds.top/screenHeight,0,4);
+  const approach=smooth((screenHeight*.94-storyBounds.top)/(screenHeight*.94));
+  if (heroBounds.bottom>0 && heroBounds.top<innerHeight) {
+    renderHero(heroPose.map((height,i)=>({
+      lift:height*(1-approach)+Math.sin(time*1.05-i*.21)*.047*(1-approach),
+      tilt:Math.sin(time*.78-i*.29)*.012*(1-approach)
+    })),time);
+  }
+  if (motion && storyBounds.top<innerHeight && storyBounds.bottom>0) {
+    const chapter=Math.min(4,Math.floor(position+.5));
+    if (chapter!==activeStage) {
+      stageTitle.textContent=stages[chapter].title;
+      stageDescription.textContent=stages[chapter].description;
+      stage.classList.toggle("intro",chapter===0);
+      activeStage=chapter;
+    }
+    stage.style.setProperty("--wipe",(approach*100).toFixed(2)+"%");
+    renderStory(pieces.map((_,i)=>{
+      const weight=1-smooth(Math.abs(position-i-1)*2);
+      const enter=heroPose[i]*(1-approach);
+      return {lift:enter+weight*(.91+Math.sin(time*1.32)*.055),tilt:weight*Math.sin(time*.97)*.031};
+    }),time);
+  }
+  requestAnimationFrame(update);
+}
+requestAnimationFrame(update);
+
+if (!reduced.matches) document.querySelectorAll("[data-count]").forEach(item=>{
+  const goal=item.dataset.count;
+  item.setAttribute("aria-label",goal);
+  const reels=[...goal].map((digit,index)=>{
+    const reel=document.createElement("span");
+    reel.className="reel";
+    reel.setAttribute("aria-hidden","true");
+    const strip=document.createElement("span");
+    const steps=Number(digit)+10;
+    for (let step=0;step<=steps;step++) {
+      const number=document.createElement("span");
+      number.textContent=step%10;
+      strip.append(number);
+    }
+    reel.append(strip);
+    requestAnimationFrame(()=>strip.animate(
+      [{transform:"translateY(0)"},{transform:"translateY(-"+steps+"em)"}],
+      {duration:1100+index*240,easing:"cubic-bezier(.18,.7,.25,1)",fill:"forwards"}
+    ));
+    return reel;
+  });
+  item.replaceChildren(...reels);
+});
+</script>
+</body>
 </html>
