@@ -83,12 +83,12 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .product-card .product-price{display:flex;align-items:baseline;gap:.45rem}
 .product-card .old-price{text-decoration:none}
 .product-card .product-cta{justify-self:start;font-size:.88rem}
-.product-card[data-step="1"],.product-card[data-step="2"]{padding:1rem;gap:.85rem}
-.product-card[data-step="1"] .product-name,.product-card[data-step="2"] .product-name{font-weight:600;font-size:1.16rem}
-.product-card[data-step="1"] .product-meta,.product-card[data-step="2"] .product-meta{font-size:.86rem;color:#4b5654}
-.product-card[data-step="2"] .current-price{font-size:1.55rem;font-weight:600;color:#124d56}
-.product-card[data-step="2"] .old-price{text-decoration:line-through;color:#515b59;font-size:.89rem}
-.product-card[data-step="2"] .product-cta{justify-self:stretch}
+.product-card[data-step="1"],.product-card:is([data-step="2"],[data-step="3"]){padding:1rem;gap:.85rem}
+.product-card[data-step="1"] .product-name,.product-card:is([data-step="2"],[data-step="3"]) .product-name{font-weight:600;font-size:1.16rem}
+.product-card[data-step="1"] .product-meta,.product-card:is([data-step="2"],[data-step="3"]) .product-meta{font-size:.86rem;color:#4b5654}
+.product-card:is([data-step="2"],[data-step="3"]) .current-price{font-size:1.55rem;font-weight:600;color:#124d56}
+.product-card:is([data-step="2"],[data-step="3"]) .old-price{text-decoration:line-through;color:#515b59;font-size:.89rem}
+.product-card:is([data-step="2"],[data-step="3"]) .product-cta{justify-self:stretch}
 .ui-demo-layout{align-items:start!important}
 .ui-demo-layout .demo-tool{position:sticky;top:calc(var(--nav-height,4rem) + 1rem)}
 .design-steps{display:grid;gap:.6rem;margin-top:1.15rem}
@@ -132,3 +132,28 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .site-footer .contact-status{margin:.55rem 0 0;font-size:.86rem}
 .contact-status:empty{display:none}
 @media(max-width:700px){.contact-item a{font-size:1rem}}
+
+.site-header nav a[aria-current=page]{text-decoration:underline;text-underline-offset:.35em}
+.specialty-selector{background:#171719;color:#f4f2ed;padding:clamp(3.5rem,8vw,7rem) var(--gutter)}
+.specialty-inner{width:min(100%,78rem);margin-inline:auto}
+.specialty-inner h2{font:400 clamp(2.8rem,6vw,5.8rem)/.95 var(--display);margin:0 0 1.65rem}
+.specialty-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.65rem}
+.specialty-cards .specialty-card{min-height:9.5rem;display:grid;align-content:start;gap:.52rem;position:relative;padding:1.05rem 2.35rem 1.05rem 1.05rem;border:1px solid #ffffff35;border-radius:.9rem;color:#f4f2ed;text-decoration:none;background:#232326;transition:background .22s,border-color .22s,transform .22s}
+.specialty-card strong{font:400 clamp(1.5rem,2.2vw,2.1rem)/1 var(--display)}
+.specialty-card span{font-size:.9rem;line-height:1.4}
+.specialty-card .specialty-arrow{position:absolute;right:1rem;top:1rem}
+.specialty-cards .specialty-card:is(:hover,:focus-visible,.is-previewed){background:#124d56;border-color:#a7cbc8;transform:translateY(-3px)}
+.selector-visual{display:grid;place-items:center;height:clamp(10rem,29vw,20rem);margin-top:1rem;overflow:hidden}
+.selector-visual[hidden]{display:none}
+.selector-visual canvas{display:block}
+.contact-item{transition:background .25s,border-color .25s,box-shadow .25s}
+.contact-blocks>a,.contact-item{position:relative}
+.contact-blocks>a:is(:hover,:focus-visible),.contact-item:is(:hover,:focus-within){background:#19606a;border-color:#b2ded8;box-shadow:0 0 18px #73c2b54d}
+.contact-item a:is(:hover,:focus-visible){background:transparent}
+@media(max-width:570px){.specialty-cards{grid-template-columns:1fr}.specialty-cards .specialty-card{min-height:6.8rem}}
+@media(prefers-reduced-motion:reduce){.specialty-cards .specialty-card,.contact-item{transition:none}}
+
+.product-card[data-step="3"] .product-meta,.product-card[data-step="3"] .old-price{color:#333b3a}
+.product-card[data-step="3"] .product-cta{min-height:48px;background:#124d56;color:#fff}
+.product-card[data-step="3"] .product-cta:focus-visible{outline:3px solid #171719;outline-offset:3px}
+.notes{background:var(--page);color:var(--home-ink)}

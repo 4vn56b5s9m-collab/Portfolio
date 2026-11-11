@@ -6,7 +6,7 @@ if (siteHeader && document.body.classList.contains("detail")) {
 }
 
 const captions={
-  ui:["Los datos compiten con la acción.","El espacio separa lo que la persona debe comparar.","El precio vigente y la acción tienen prioridad. El precio anterior queda como referencia."],
+  ui:["Los datos compiten con la acción.","El espacio separa lo que la persona debe comparar.","El precio vigente y la acción tienen prioridad. El precio anterior queda como referencia.","El botón gana superficie pulsable y muestra un foco visible al navegar con el teclado."],
   motion:["Al entrar en foco, la tarjeta crece un poco. Tras 1,5 segundos a la vista muestra más información.","La confirmación aparece junto a la solicitud y conserva el contexto.","La tarjeta mantiene su título y abre el detalle en el mismo lugar."],
   handoff:["Cada equipo prepara y revisa sus archivos con criterios distintos.","El componente llega, pero faltan estados y reglas que el equipo receptor necesita.","Los dos equipos comparten nombres, estados y criterios de revisión y entrega."],
   brands:["Petróleo, espaciado medio y tipografía sans.","Tonos cálidos, más espacio y una tipografía serif.","Azul intenso, espaciado compacto y esquinas más rectas."]

@@ -7,9 +7,9 @@
 <title>Alejandro Sánchez Bretones · Portfolio</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
 <style>
-:root{color-scheme:light dark;--tiza:#f4f2ed;--onix:#171719;--petroleo:#124d56;--page:var(--tiza);--ink:var(--onix);--line:#bdb9af;--display:"Instrument Serif",Georgia,serif;--space:clamp(1.35rem,5vw,5rem)}
+:root{color-scheme:light dark;--tiza:#f4f2ed;--onix:#171719;--petroleo:#124d56;--page:var(--tiza);--home-ink:var(--onix);--line:#bdb9af;--display:"Instrument Serif",Georgia,serif;--space:clamp(1.35rem,5vw,5rem)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);font-family:"Instrument Sans",system-ui,sans-serif}
+body{margin:0;background:var(--page);color:var(--home-ink);font-family:"Instrument Sans",system-ui,sans-serif}
 a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.25em}
 a:focus-visible{outline:2px solid currentColor;outline-offset:.35rem}
 h1,h2,p,dl,dd{margin:0}
@@ -33,13 +33,13 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 #portfolio-art{position:fixed;top:0;left:0;display:block;width:0;height:0;z-index:1;pointer-events:none;visibility:hidden}
 .hero-copy,.stage-copy{position:relative;z-index:2}
 @media(min-width:701px){.hero-copy,.hero-visual{position:relative;top:calc(-1 * min(5svh,3.1rem))}}
-.stage-copy{display:grid;justify-items:center;gap:.8rem}
+.stage-copy{display:grid;justify-items:center;gap:clamp(.8rem,2svh,1.3rem)}
 .stage-copy h2,.stage-copy p{margin:0}
 .stage .stage-copy h2{font-size:clamp(2.2rem,4.3vw,4.4rem);max-width:24ch}
-.branch-card{width:min(100%,36rem);display:grid;justify-items:center;gap:.7rem;color:var(--tiza)}
+.branch-card{width:min(100%,36rem);display:grid;justify-items:center;gap:clamp(.85rem,2.3svh,1.35rem);color:var(--tiza)}
 .branch-card[hidden]{display:none}
 .stage .branch-card p{font-size:clamp(.94rem,1.35vw,1.12rem);max-width:54ch;line-height:1.42;text-wrap:pretty}
-.branch-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.32rem}
+.branch-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.48rem}
 .branch-tags li{font-size:.76rem;line-height:1.15;border:1px solid #ffffff36;border-radius:999px;padding:.3rem .57rem}
 .branch-link{display:inline-flex;align-items:center;min-height:44px;padding:.55rem 1.1rem;border-radius:999px;background:var(--petroleo);color:var(--tiza);font-weight:600;font-size:.89rem;text-decoration:none}
 .branch-link:hover{text-decoration:underline}
@@ -50,7 +50,7 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 @media(max-width:700px){
   .stage-copy{gap:.55rem}
   .stage .stage-copy h2{font-size:clamp(2.05rem,8vw,3.3rem)}
-  .branch-card{gap:.4rem}
+  .branch-card{gap:clamp(.65rem,1.8svh,1rem)}
   .branch-tags li{font-size:.7rem}
 }
 .stage.story-screen{grid-template-rows:auto minmax(0,1fr)}
@@ -77,7 +77,7 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .notes{padding:clamp(4rem,11vw,9rem) var(--space);max-width:75rem;margin:auto}
 .notes p{font-size:clamp(1.15rem,2.25vw,1.6rem);line-height:1.5;max-width:42ch;margin-top:1.2rem}
 footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
-@media(prefers-color-scheme:dark){:root{--page:#202022;--ink:var(--tiza);--line:#555357}}
+@media(prefers-color-scheme:dark){:root{--page:#202022;--home-ink:var(--tiza);--line:#555357}}
 @media(max-width:700px){
   header{justify-content:center;text-align:center}nav{justify-content:center}
   .hero{grid-template-columns:1fr;align-content:center;text-align:center;justify-items:center;gap:1.25rem;padding-block:clamp(1rem,2svh,1.75rem) clamp(2.4rem,6svh,4rem)}
@@ -95,11 +95,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .career-list strong{font-weight:600}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=contacto">
-<script defer src="portfolio-interactions.js?v=contacto"></script>
+<link rel="stylesheet" href="portfolio.css?v=selectores">
+<script defer src="portfolio-interactions.js?v=selectores"></script>
 </head>
 <body>
-<header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#especialidades">Especialidades</a><a href="#trayectoria">Trayectoria</a><a href="#contacto">Contacto</a></nav></header>
+<header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
 <main>
   <section class="hero" aria-labelledby="saludo">
     <div class="hero-copy">
@@ -127,6 +127,13 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <article class="stage"><h2>Sistemas de diseño para múltiples marcas</h2><div class="branch-card"><p>Estructuro componentes y patrones que pueden compartirse entre productos y unidades de negocio. Defino qué se mantiene en común y qué puede adaptar cada marca.</p><ul class="branch-tags"><li>Componentes compartidos</li><li>Variantes por marca</li><li>Entrega a desarrollo</li></ul><a class="branch-link" href="especialidades/sistemas-de-diseno/">Explorar sistemas de diseño</a></div></article>
     </div>
   </section>
+  <section class="specialty-selector" id="explorar-especialidades" data-specialty-selector>
+  <div class="specialty-inner">
+    <h2>Cada proyecto pide algo distinto.</h2>
+    <div class="specialty-cards"><a class="specialty-card" href="especialidades/ui-behavioral-design/" data-piece="0"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/motion-e-inmersion/" data-piece="1"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/liderazgo-y-formacion/" data-piece="2"><strong>Liderazgo y formación de equipos</strong><span>Criterios y formas de trabajar que el equipo comparte.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/sistemas-de-diseno/" data-piece="3"><strong>Sistemas de diseño para múltiples marcas</strong><span>Componentes comunes que cada marca puede adaptar.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a></div>
+    <div class="selector-visual" aria-hidden="true"><canvas></canvas></div>
+  </div>
+</section>
   <section class="notes" id="trayectoria">
     <h2>Distintos proyectos, el mismo criterio.</h2>
     <p>He diseñado productos para e-commerce, seguros, aprendizaje y servicio técnico. Combino diseño de interfaz, prototipado y trabajo con equipos para que lo que se decide pueda llegar a producción.</p>
@@ -149,11 +156,12 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <div class="contact-item"><a href="tel:+34648246290"><span class="contact-value">+34 648 246 290</span><span aria-hidden="true">↗</span></a><button type="button" class="contact-copy" data-copy-contact aria-label="Copiar número de teléfono" hidden>Copiar</button></div>
     </nav>
     <p class="contact-status" role="status" aria-live="polite"></p>
-    <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="./#inicio">Volver al inicio ↑</a></div>
+    <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="#inicio">Volver al inicio ↑</a></div>
   </div>
 </footer>
 <canvas id="portfolio-art" aria-hidden="true"></canvas>
-<script>
+<script type="module">
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const hero = document.querySelector(".hero");
 const header=document.querySelector("header");
@@ -178,192 +186,8 @@ const smooth = value => {
   const t = clamp(value);
   return t * t * (3 - 2 * t);
 };
-const pieces = [
-  { width:2.26, depth:.87, color:[226,219,207] },
-  { width:3.18, depth:1.50, color:[21,91,101] },
-  { width:4.08, depth:2.13, color:[210,193,165] },
-  { width:4.96, depth:2.76, color:[77,79,82] }
-];
-
-function contour(width,depth,radius,height) {
-  const points=[];
-  for (let corner=0;corner<4;corner++) {
-    const cx=(corner===0||corner===3?1:-1)*(width/2-radius);
-    const cz=(corner<2?1:-1)*(depth/2-radius);
-    for (let segment=0;segment<=8;segment++) {
-      const angle=(corner+segment/8)*Math.PI/2;
-      points.push([cx+Math.cos(angle)*radius,height,cz+Math.sin(angle)*radius]);
-    }
-  }
-  return points;
-}
-
-function buildMesh(piece,index) {
-  const inner=pieces[index-1];
-  const shape={width:piece.width,depth:piece.depth,radius:piece.depth*.19};
-  const opening=inner
-    ? {width:inner.width+.012,depth:inner.depth+.012,radius:inner.depth*.19+.006}
-    : {width:1.16,depth:.35,radius:.075};
-  const vertices=[];
-  function quad(points,normal,level) {
-    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level);
-  }
-  function rim(outside,inside,level) {
-    const bevel=.009;
-    const top=contour(outside.width-2*bevel,outside.depth-2*bevel,outside.radius-bevel,.15);
-    const shoulder=contour(outside.width,outside.depth,outside.radius,.15-bevel);
-    const base=contour(outside.width,outside.depth,outside.radius,-.15);
-    const holeTop=inside&&contour(inside.width+2*bevel,inside.depth+2*bevel,inside.radius+bevel,.15);
-    const holeShoulder=inside&&contour(inside.width,inside.depth,inside.radius,.15-bevel);
-    const holeBase=inside&&contour(inside.width,inside.depth,inside.radius,-.15);
-    for (let i=0;i<top.length;i++) {
-      const j=(i+1)%top.length;
-      const dx=shoulder[j][0]-shoulder[i][0],dz=shoulder[j][2]-shoulder[i][2];
-      const length=Math.hypot(dx,dz);
-      const nx=dz/length,nz=-dx/length;
-      quad([shoulder[i],shoulder[j],base[j],base[i]],[nx,0,nz],level);
-      quad([top[i],top[j],shoulder[j],shoulder[i]],[nx,.9,nz],level);
-      if (inside) {
-        quad([top[i],top[j],holeTop[j],holeTop[i]],[0,1,0],level);
-        quad([base[i],base[j],holeBase[j],holeBase[i]],[0,-1,0],level);
-        quad([holeTop[i],holeTop[j],holeShoulder[j],holeShoulder[i]],[-nx,.9,-nz],level);
-        quad([holeShoulder[i],holeShoulder[j],holeBase[j],holeBase[i]],[-nx,0,-nz],level);
-      } else {
-        vertices.push(0,.15,0,0,1,0,level,...top[i],0,1,0,level,...top[j],0,1,0,level);
-        for (const point of [[0,-.15,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level);
-      }
-    }
-  }
-  const interpolate=(t,offset)=>({
-    width:shape.width+(opening.width-shape.width)*t+offset*2,
-    depth:shape.depth+(opening.depth-shape.depth)*t+offset*2,
-    radius:shape.radius+(opening.radius-shape.radius)*t+offset
-  });
-  const bands=inner?3:2;
-  for (let band=0;band<bands;band++) {
-    const level=band/(inner?bands-1:bands);
-    rim(interpolate(band/bands,band===0?0:-.002),
-      interpolate((band+1)/bands,band===bands-1?0:.002),level);
-  }
-  if (!inner) rim(interpolate(1,-.008),null,1);
-  return new Float32Array(vertices);
-}
-
-const coarse=matchMedia("(pointer: coarse)");
-
-function createArt() {
-  const gl=art.getContext("webgl",{alpha:true,antialias:true,depth:true});
-  if (!gl) return null;
-  function shader(type,source) {
-    const shader=gl.createShader(type);
-    gl.shaderSource(shader,source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader,gl.COMPILE_STATUS)) throw Error(gl.getShaderInfoLog(shader));
-    return shader;
-  }
-  const vertexSource=`
-    attribute vec3 vertex;
-    attribute vec3 normal;
-    attribute float band;
-    uniform vec2 viewport;
-    uniform vec2 origin;
-    uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
-    varying vec3 surfaceNormal, surfacePosition;
-    void main() {
-      vec3 p=vertex;
-      float rise=0.31+0.69*band*band;
-      float radialPosition=(terrace*3.0+band*2.0)/11.0;
-      float waveHeight=ripple*sin(bobPhase+radialPosition*5.4);
-      float heroOffset=pyramid*(terrace*0.39+band*0.105);
-      p.y+=heroOffset+stretch*rise+waveHeight;
-      float u=p.x*0.808027+p.z*0.589145;
-      float v=-p.x*0.589145+p.z*0.808027;
-      float depth=p.y*0.548024+v*0.836463;
-      float w=1.0-depth/13.0;
-      vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
-      vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
-      gl_Position=vec4(center*w+offset,-depth/10.0,w);
-      surfaceNormal=normal;
-      surfacePosition=p;
-    }
-  `;
-  const fragmentSource=`
-    precision mediump float;
-    uniform vec3 color;
-    uniform float time;
-    varying vec3 surfaceNormal, surfacePosition;
-    void main() {
-      vec3 n=normalize(surfaceNormal);
-      vec3 light=normalize(vec3(-0.45+0.30*sin(time*0.64),0.84,0.35));
-      float diffuse=max(0.0,dot(n,light));
-      float sweep=smoothstep(-0.95,0.95,sin(surfacePosition.x*0.93+surfacePosition.z*0.52+sin(time*0.71)*1.5));
-      float glint=sweep*(0.04+0.12*max(n.y,0.0));
-      gl_FragColor=vec4(color*(0.46+diffuse*0.67)+glint*vec3(0.54,0.62,0.65),1.0);
-    }
-  `;
-  const program=gl.createProgram();
-  gl.attachShader(program,shader(gl.VERTEX_SHADER,vertexSource));
-  gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fragmentSource));
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program,gl.LINK_STATUS)) throw Error(gl.getProgramInfoLog(program));
-  gl.useProgram(program);
-  const vertex=gl.getAttribLocation(program,"vertex");
-  const normal=gl.getAttribLocation(program,"normal");
-  const band=gl.getAttribLocation(program,"band");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
-  const meshes=pieces.map((piece,index)=>{
-    const data=buildMesh(piece,index);
-    const buffer=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-    gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
-    return {buffer,count:data.length/7,color:piece.color.map(channel=>channel/255)};
-  });
-  gl.enable(gl.DEPTH_TEST);
-  gl.enableVertexAttribArray(vertex);
-  gl.enableVertexAttribArray(normal);
-  gl.enableVertexAttribArray(band);
-  gl.clearColor(0,0,0,0);
-  let width,height,ratio;
-  return {
-    clear(surface) {
-      const currentRatio=Math.min(devicePixelRatio||1,coarse.matches?1.25:2);
-      if (width!==surface.width||height!==surface.height||ratio!==currentRatio) {
-        width=surface.width;
-        height=surface.height;
-        art.style.width=width+"px";
-        art.style.height=height+"px";
-        ratio=currentRatio;
-        art.width=Math.round(width*ratio);
-        art.height=Math.round(height*ratio);
-        gl.viewport(0,0,art.width,art.height);
-        gl.uniform2f(uniforms.viewport,width,height);
-      }
-      gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-    },
-    render(scale,poses,time) {
-      if (scale<=0||!width||!height) return;
-      gl.uniform2f(uniforms.origin,width*.5,height*.5);
-      gl.uniform1f(uniforms.scale,scale);
-      gl.uniform1f(uniforms.time,time);
-      meshes.forEach(({buffer,count,color},index)=>{
-        gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,28,0);
-        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,28,12);
-        gl.vertexAttribPointer(band,1,gl.FLOAT,false,28,24);
-        gl.uniform1f(uniforms.pyramid,poses[index].pyramid);
-        gl.uniform1f(uniforms.terrace,3-index);
-        gl.uniform1f(uniforms.bobPhase,poses[index].bobPhase);
-        gl.uniform1f(uniforms.ripple,poses[index].ripple);
-        gl.uniform1f(uniforms.stretch,poses[index].stretch);
-        gl.uniform3fv(uniforms.color,color);
-        gl.drawArrays(gl.TRIANGLES,0,count);
-      });
-    }
-  };
-}
-
 let renderer;
-try { renderer=createArt(); } catch (error) { console.warn("Portfolio WebGL:",error); }
+try { renderer=createArt(art); } catch (error) { console.warn("Portfolio WebGL:",error); }
 
 function between(a,b,t) {
   return Object.fromEntries(["left","top","width","height"].map(key=>[key,a[key]+(b[key]-a[key])*t]));
@@ -382,6 +206,7 @@ let rest=null;
 let timer=0;
 let scrollingFrame=0;
 let animating=false;
+let glideOrigin=0,glideDestination=0;
 
 function anchors() {
   return geometry?.anchors||[0,...steps.map(anchorTop)];
@@ -398,6 +223,8 @@ function glide(target) {
   const from=scrollY;
   if (Math.abs(from-target)<2) { rest=target; return; }
   animating=true;
+  glideOrigin=anchors().reduce((a,b)=>Math.abs(a-from)<=Math.abs(b-from)?a:b);
+  glideDestination=target;
   const started=performance.now();
   const intro=anchors()[1];
   const entersStory=Math.abs(target-intro)<4&&from<intro*.6;
@@ -427,7 +254,7 @@ function settle() {
   const index=rest===null?-1:points.findIndex(point=>Math.abs(point-rest)<4);
   if (index<0) { glide(closest); return; }
   const delta=y-rest;
-  const threshold=index===0?58:Math.min(78,chapterHeight()*.21);
+  const threshold=delta<0?18:index===0?35:Math.min(44,chapterHeight()*.15);
   if (Math.abs(delta)<threshold) { glide(rest); return; }
   const next=points[index+Math.sign(delta)];
   if (next===undefined) { rest=null; return; }
@@ -443,7 +270,7 @@ addEventListener("scroll",()=>{
 function adjacent(direction) {
   if (!direction||reduced.matches) return null;
   const points=anchors();
-  const index=points.findIndex(point=>Math.abs(point-scrollY)<4);
+  const index=points.findIndex(point=>Math.abs(point-scrollY)<10);
   return index>=0 ? points[index+direction]??null : null;
 }
 
@@ -458,12 +285,22 @@ addEventListener("wheel",event=>{
   }
   wheelTime=now;
   wheelDirection=direction;
-  if (animating||wheelCommitted) { event.preventDefault(); return; }
+  if (animating) {
+    event.preventDefault();
+    if (direction===Math.sign(glideOrigin-glideDestination) && Math.abs(event.deltaY)>10) {
+      const returnTo=glideOrigin;
+      cancelGlide();
+      wheelCommitted=true;
+      glide(returnTo);
+    }
+    return;
+  }
+  if (wheelCommitted) { event.preventDefault(); return; }
   const target=adjacent(direction);
   if (target===null) return;
   event.preventDefault();
   wheelAmount+=Math.abs(event.deltaY)*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
-  if (wheelAmount>=14) {
+  if (wheelAmount>=(direction<0?8:12)) {
     wheelCommitted=true;
     glide(target);
   }
@@ -483,7 +320,7 @@ addEventListener("touchmove",event=>{
   const target=delta>0?touch.down:touch.up;
   if (!touch.committed&&!animating&&target===null) return;
   event.preventDefault();
-  if (!touch.committed&&!animating&&Math.abs(delta)>=17) {
+  if (!touch.committed&&!animating&&Math.abs(delta)>=(delta<0?10:14)) {
     touch.committed=true;
     glide(target);
   }
@@ -513,6 +350,14 @@ rest=anchors().reduce((a,b)=>Math.abs(a-scrollY)<=Math.abs(b-scrollY)?a:b);
 
 let layout=null,lastFrame=-Infinity,lastY,lastWidth,lastHeight,wasReduced;
 let sceneDrawn=false;
+let heroPiece=-1;
+const heroHeights=pieces.map(()=>0);
+heroSlot.addEventListener("pointermove",event=>{
+  if (!layout||layout.approach>.18||event.pointerType==="touch"||reduced.matches) return;
+  const {x,top,surface,scale,approach}=layout;
+  heroPiece=pickHeroPiece(event.clientX-x-surface.width*.5,event.clientY-top-surface.height*.5,scale,1-approach);
+});
+heroSlot.addEventListener("pointerleave",()=>{heroPiece=-1;});
 
 function sizeFor(box) {
   return Math.min(box.width/6.4,box.height/4.25);
@@ -612,11 +457,12 @@ function update(now) {
   renderer?.clear(surface);
   renderer?.render(scale,pieces.map((_,i)=>{
     const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
+    heroHeights[i]+=((heroPiece===i?.55:0)-heroHeights[i])*.16;
     return {
       pyramid:1-approach,
       bobPhase:time*.78,
       ripple:motion?((1-approach)*.10+approach*.065):0,
-      stretch:weight*.58
+      stretch:weight*.58+heroHeights[i]*(1-approach)
     };
   }),time);
   if (!sceneDrawn) art.style.visibility="visible";
