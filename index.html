@@ -19,7 +19,7 @@ header>a{font:400 clamp(1.45rem,2.5vw,2rem)/1 var(--display);text-decoration:non
 nav{display:flex;gap:1.35rem;flex-wrap:wrap}
 nav a{font-size:.9rem;text-decoration:none}
 nav a:hover{text-decoration:underline}
-.hero,.story{background:var(--onix);color:var(--tiza)}
+.hero{background:var(--onix);color:var(--tiza)}
 .hero{margin:0;padding:clamp(2.5rem,6vw,6rem) var(--space);min-height:calc(100svh - var(--nav-height,4.5rem));display:grid;grid-template-columns:1fr 1.12fr;align-items:center;gap:1rem}
 h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .tagline{margin-top:.6rem;font:italic 400 clamp(2rem,4vw,4.2rem)/1 var(--display)}
@@ -30,50 +30,12 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .reel{display:inline-block;height:1em;overflow:hidden;vertical-align:top}
 .reel span{display:block}
 .reel span span{height:1em;line-height:1em}
-#portfolio-art{position:fixed;top:0;left:0;display:block;width:0;height:0;z-index:1;pointer-events:none;visibility:hidden}
-.hero-copy,.stage-copy{position:relative;z-index:2}
+#portfolio-art{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);display:block;width:0;height:0;z-index:1;pointer-events:none}
+.hero-copy{position:relative;z-index:2}
 @media(min-width:701px){.hero-copy,.hero-visual{position:relative;top:calc(-1 * min(5svh,3.1rem))}}
-.stage-copy{display:grid;justify-items:center;gap:clamp(.8rem,2svh,1.3rem)}
-.stage-copy h2,.stage-copy p{margin:0}
-.stage .stage-copy h2{font-size:clamp(2.2rem,4.3vw,4.4rem);max-width:24ch}
-.branch-card{width:min(100%,36rem);display:grid;justify-items:center;gap:clamp(.85rem,2.3svh,1.35rem);color:var(--tiza)}
-.branch-card[hidden]{display:none}
-.stage .branch-card p{font-size:clamp(.94rem,1.35vw,1.12rem);max-width:54ch;line-height:1.42;text-wrap:pretty}
-.branch-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.48rem}
-.branch-tags li{font-size:.76rem;line-height:1.15;border:1px solid #ffffff36;border-radius:999px;padding:.3rem .57rem}
-.branch-link{display:inline-flex;align-items:center;min-height:44px;padding:.55rem 1.1rem;border-radius:999px;background:var(--petroleo);color:var(--tiza);font-weight:600;font-size:.89rem;text-decoration:none}
-.branch-link:hover{text-decoration:underline}
-.story-screen:not(.intro){padding-block:clamp(1rem,4svh,2.75rem);gap:clamp(.3rem,1.4svh,1rem)}
-.story-screen .stage-visual{height:100%;max-height:min(40svh,25rem);min-height:0}
-.static-story .branch-card{justify-items:start}
-.static-story .branch-tags{justify-content:start}
-@media(max-width:700px){
-  .stage-copy{gap:.55rem}
-  .stage .stage-copy h2{font-size:clamp(2.05rem,8vw,3.3rem)}
-  .branch-card{gap:clamp(.65rem,1.8svh,1rem)}
-  .branch-tags li{font-size:.7rem}
-}
-.stage.story-screen{grid-template-rows:auto minmax(0,1fr)}
+
 .hero-copy{opacity:var(--hero-opacity,1);transform:translateY(var(--hero-offset,0px))}
-.stage.intro h2{opacity:var(--intro-opacity,0);transform:translateY(var(--intro-offset,12px))}
 .hero-visual{height:clamp(15rem,38vw,31rem);min-width:0}
-.story{position:relative}
-.stage{min-height:100svh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;justify-items:center;align-content:center;text-align:center;padding:clamp(2.25rem,8svh,6rem) var(--space);gap:clamp(1.1rem,4svh,2.5rem);position:relative}
-.stage h2,.notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}
-.stage p{font-size:clamp(1.05rem,2vw,1.4rem);max-width:39ch;line-height:1.45;text-wrap:balance}
-.stage-visual{width:min(100%,46rem);height:min(47svh,25rem);align-self:center}
-.js .story-screen{position:sticky;top:var(--nav-height);height:calc(100svh - var(--nav-height));min-height:0}
-.js .story-track{position:relative;margin-top:calc(var(--nav-height) - 100svh);pointer-events:none}
-.story-track .step{height:48svh}
-.story-track .step:last-child{height:calc(100svh - var(--nav-height))}
-.js .static-story{display:none}
-.story-screen,.story-track{display:none}
-.js .story-screen{display:grid}
-.js .story-track{display:block}
-.intro{background:linear-gradient(to bottom,var(--onix) 0 var(--wipe,0%),var(--tiza) var(--wipe,0%) 100%)}
-.intro h2{color:#fff;mix-blend-mode:difference}
-.stage.intro{grid-template-rows:auto minmax(0,1fr)}
-.stage.intro p{display:none}
 .notes{padding:clamp(4rem,11vw,9rem) var(--space);max-width:75rem;margin:auto}
 .notes p{font-size:clamp(1.15rem,2.25vw,1.6rem);line-height:1.5;max-width:42ch;margin-top:1.2rem}
 footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
@@ -83,18 +45,14 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .hero{grid-template-columns:1fr;align-content:center;text-align:center;justify-items:center;gap:1.25rem;padding-block:clamp(1rem,2svh,1.75rem) clamp(2.4rem,6svh,4rem)}
   .hero-copy{display:contents}.hero-title{order:0}.hero-visual{order:1;width:100%;height:min(70vw,21rem)}.stats{order:2;margin-top:0;text-align:left}
   h1{font-size:clamp(3.6rem,12.6vw,5.3rem)}.tagline{font-size:clamp(1.85rem,7vw,3rem)}
-  .stage-visual{height:min(45svh,75vw)}
 }
-@media(prefers-reduced-motion:reduce){
-  .js .story-screen,.js .story-track{display:none}.js .static-story{display:block}
-  .static-story .stage{min-height:auto;display:block;padding-block:2.5rem;text-align:left}
-  .static-story .stage p{margin-top:1rem}
-}
+
 .career-list{list-style:none;margin:2rem 0 0;padding:0;max-width:52rem}
 .career-list li{display:grid;grid-template-columns:minmax(6rem,.35fr) 1fr;gap:.8rem 1.3rem;padding:.9rem 0;border-top:1px solid var(--line)}
 .career-list strong{font-weight:600}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
-</style>
+
+.notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
 <link rel="stylesheet" href="portfolio.css?v=acordeon">
 <script defer src="portfolio-interactions.js?v=acordeon"></script>
 </head>
@@ -110,26 +68,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
         <div><dd data-count="6">6</dd><dt>países</dt></div>
       </dl>
     </div>
-    <div class="hero-visual" aria-hidden="true"></div>
-  </section>
-  <section class="story" id="especialidades" aria-label="Mis especialidades">
-    <div class="story-screen stage">
-      <div class="stage-copy"><h2></h2><div class="branch-card" hidden><p></p><ul class="branch-tags"></ul><a class="branch-link"></a></div></div><div class="stage-visual" aria-hidden="true"></div>
-    </div>
-    <div class="story-track" aria-hidden="true">
-      <div class="step"></div><div class="step" id="ui-behavioral-design"></div><div class="step" id="motion-e-inmersion"></div><div class="step" id="formaciones"></div><div class="step" id="direccion-y-sistemas"></div>
-    </div>
-    <div class="static-story">
-      <article class="stage"><h2>Cada proyecto pide algo distinto.</h2></article>
-      <article class="stage"><h2>UI y Behavioral Design</h2><div class="branch-card"><p>Diseño interfaces para decisiones complejas. En un flujo de devolución, por ejemplo, pongo las opciones y sus condiciones donde la persona decide qué hacer.</p><ul class="branch-tags"><li>Flujos de decisión</li><li>Jerarquía visual</li></ul><a class="branch-link" href="especialidades/ui-behavioral-design/">Explorar UI y Behavioral Design</a></div></article>
-      <article class="stage"><h2>Motion e inmersión</h2><div class="branch-card"><p>Diseño microinteracciones que hacen visible un cambio de estado y ayudan a mantener el contexto. También llevo estas decisiones a experiencias web interactivas.</p><ul class="branch-tags"><li>Microinteracciones</li><li>Prototipos interactivos</li><li>Webflow</li></ul><a class="branch-link" href="especialidades/motion-e-inmersion/">Explorar motion e inmersión</a></div></article>
-      <article class="stage"><h2>Liderazgo y formación de equipos de diseño</h2><div class="branch-card"><p>He formado a equipos de diseño en empresas y les he ayudado a acordar flujos de trabajo, estándares y criterios para revisar y entregar diseño con coherencia.</p><ul class="branch-tags"><li>Formación de equipos</li><li>Flujos de trabajo</li><li>Estándares</li></ul><a class="branch-link" href="especialidades/liderazgo-y-formacion/">Explorar liderazgo y formación</a></div></article>
-      <article class="stage"><h2>Sistemas de diseño para múltiples marcas</h2><div class="branch-card"><p>Estructuro componentes y patrones que pueden compartirse entre productos y unidades de negocio. Defino qué se mantiene en común y qué puede adaptar cada marca.</p><ul class="branch-tags"><li>Componentes compartidos</li><li>Variantes por marca</li><li>Entrega a desarrollo</li></ul><a class="branch-link" href="especialidades/sistemas-de-diseno/">Explorar sistemas de diseño</a></div></article>
-    </div>
+    <div class="hero-visual" aria-hidden="true"><canvas id="portfolio-art"></canvas></div>
   </section>
   <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion>
   <div class="specialty-inner">
-    <h2>Cada proyecto pide algo distinto.</h2>
+    <h2 id="especialidades">Cada proyecto pide algo distinto.</h2>
     <div class="accordion-branches" aria-label="Vistas de especialidades" role="group">
       <button type="button" data-accordion-branch="0" aria-pressed="true" aria-controls="accordion-visual"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></button>
       <button type="button" data-accordion-branch="1" aria-pressed="false" aria-controls="accordion-visual"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></button>
@@ -186,324 +129,69 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="#inicio">Volver al inicio ↑</a></div>
   </div>
 </footer>
-<canvas id="portfolio-art" aria-hidden="true"></canvas>
 <script type="module">
 import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=acordeon";
-const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-const hero = document.querySelector(".hero");
-const header=document.querySelector("header");
-const measureHeader=()=>document.documentElement.style.setProperty("--nav-height",header.getBoundingClientRect().height+"px");
-new ResizeObserver(measureHeader).observe(header);
-measureHeader();
-const story = document.querySelector(".story");
-const stage = document.querySelector(".story-screen");
-const stages = [...document.querySelectorAll(".static-story article")].map(article => ({
-  title: article.querySelector("h2").textContent,
-  card: article.querySelector(".branch-card")
-}));
-const stageTitle = stage.querySelector("h2");
-const stageCard = stage.querySelector(".branch-card");
-const heroSlot = document.querySelector(".hero-visual");
-const storySlot = stage.querySelector(".stage-visual");
-const stageCopy = stage.querySelector(".stage-copy");
-const art = document.querySelector("#portfolio-art");
+const reduced=matchMedia("(prefers-reduced-motion: reduce)");
+const header=document.querySelector(".site-header");
+const hero=document.querySelector(".hero");
+const slot=hero.querySelector(".hero-visual");
+const canvas=slot.querySelector("canvas");
+const updateHeader=()=>document.documentElement.style.setProperty("--nav-height",header.offsetHeight+"px");
+new ResizeObserver(updateHeader).observe(header);
+updateHeader();
 
-const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
-const smooth = value => {
-  const t = clamp(value);
-  return t * t * (3 - 2 * t);
-};
 let renderer;
-try { renderer=createArt(art); } catch (error) { console.warn("Portfolio WebGL:",error); }
-
-function between(a,b,t) {
-  return Object.fromEntries(["left","top","width","height"].map(key=>[key,a[key]+(b[key]-a[key])*t]));
-}
-
-document.documentElement.classList.add("js");
-const steps=[...story.querySelectorAll(".step")];
-let activeStage=-1;
-
-let geometry=null;
-const chapterHeight=()=>geometry?.stepHeight||steps[0].offsetHeight||innerHeight*.48;
-const documentTop=element=>element.getBoundingClientRect().top+scrollY;
-const navHeight=()=>header.offsetHeight;
-const anchorTop=element=>Math.max(0,documentTop(element)-navHeight());
-let rest=null;
-let timer=0;
-let scrollingFrame=0;
-let animating=false;
-let glideOrigin=0,glideDestination=0;
-
-function anchors() {
-  return geometry?.anchors||[0,...steps.map(anchorTop)];
-}
-
-function cancelGlide() {
-  if (!animating) return;
-  cancelAnimationFrame(scrollingFrame);
-  animating=false;
-  rest=scrollY;
-}
-
-function glide(target) {
-  const from=scrollY;
-  if (Math.abs(from-target)<2) { rest=target; return; }
-  animating=true;
-  glideOrigin=anchors().reduce((a,b)=>Math.abs(a-from)<=Math.abs(b-from)?a:b);
-  glideDestination=target;
-  const started=performance.now();
-  const intro=anchors()[1];
-  const entersStory=Math.abs(target-intro)<4&&from<intro*.6;
-  const returnsToHero=target<4&&from<=intro+12;
-  const duration=entersStory||returnsToHero?1600:600;
-  function move(now) {
-    const progress=clamp((now-started)/duration);
-    const ease=progress<.5?4*progress**3:1-((-2*progress+2)**3)/2;
-    window.scrollTo(0,from+(target-from)*ease);
-    if (progress<1) {
-      scrollingFrame=requestAnimationFrame(move);
-    } else {
-      rest=target;
-      animating=false;
+try { renderer=createArt(canvas); } catch(error) { console.warn("Portfolio WebGL:",error); }
+if (renderer) {
+  const heights=pieces.map(()=>0);
+  let frame=0,last=0,active=-1,visible=false,scale=0,surface;
+  function queue() {
+    if (visible&&!frame) frame=requestAnimationFrame(draw);
+  }
+  function draw(now) {
+    frame=0;
+    if (!visible||!surface||document.hidden) return;
+    const elapsed=last?now-last:16;
+    if (reduced.matches||!last||elapsed>=(coarse.matches?30:15)) {
+      last=now;
+      const time=reduced.matches?0:now/1000;
+      const blend=reduced.matches?1:1-Math.exp(-elapsed/105);
+      renderer.clear(surface);
+      renderer.render(scale,pieces.map((_,i)=>{
+        heights[i]+=((active===i?.55:0)-heights[i])*blend;
+        return {pyramid:1,stretch:heights[i],bobPhase:time*.78,ripple:reduced.matches?0:.10};
+      }),time);
     }
+    if (!reduced.matches) queue();
   }
-  scrollingFrame=requestAnimationFrame(move);
-}
-
-function settle() {
-  if (reduced.matches||animating) return;
-  const points=anchors();
-  const y=scrollY;
-  const last=points.at(-1);
-  if (y>last+Math.min(115,chapterHeight()*.34)) { rest=null; return; }
-  const closest=points.reduce((a,b)=>Math.abs(a-y)<=Math.abs(b-y)?a:b);
-  const index=rest===null?-1:points.findIndex(point=>Math.abs(point-rest)<4);
-  if (index<0) { glide(closest); return; }
-  const delta=y-rest;
-  const threshold=delta<0?18:index===0?35:Math.min(44,chapterHeight()*.15);
-  if (Math.abs(delta)<threshold) { glide(rest); return; }
-  const next=points[index+Math.sign(delta)];
-  if (next===undefined) { rest=null; return; }
-  const target=delta>0?Math.max(next,closest):Math.min(next,closest);
-  glide(target);
-}
-
-addEventListener("scroll",()=>{
-  if (animating||reduced.matches) return;
-  clearTimeout(timer);
-  timer=setTimeout(settle,130);
-},{passive:true});
-function adjacent(direction) {
-  if (!direction||reduced.matches) return null;
-  const points=anchors();
-  const index=points.findIndex(point=>Math.abs(point-scrollY)<10);
-  return index>=0 ? points[index+direction]??null : null;
-}
-
-let wheelAmount=0,wheelDirection=0,wheelTime=0,wheelCommitted=false;
-addEventListener("wheel",event=>{
-  if (event.ctrlKey||Math.abs(event.deltaX)>Math.abs(event.deltaY)||!event.cancelable) return;
-  const direction=Math.sign(event.deltaY);
-  const now=performance.now();
-  if (now-wheelTime>125||direction!==wheelDirection) {
-    wheelAmount=0;
-    wheelCommitted=false;
+  function highlight(index) {
+    if(index===active) return;
+    active=index;
+    if(index<0) hero.removeAttribute("data-lit-piece");
+    else hero.dataset.litPiece=String(index);
+    queue();
   }
-  wheelTime=now;
-  wheelDirection=direction;
-  if (animating) {
-    event.preventDefault();
-    if (direction===Math.sign(glideOrigin-glideDestination) && Math.abs(event.deltaY)>10) {
-      const returnTo=glideOrigin;
-      cancelGlide();
-      wheelCommitted=true;
-      glide(returnTo);
-    }
-    return;
-  }
-  if (wheelCommitted) { event.preventDefault(); return; }
-  const target=adjacent(direction);
-  if (target===null) return;
-  event.preventDefault();
-  wheelAmount+=Math.abs(event.deltaY)*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
-  if (wheelAmount>=(direction<0?8:12)) {
-    wheelCommitted=true;
-    glide(target);
-  }
-},{passive:false});
-
-let touch=null;
-addEventListener("touchstart",event=>{
-  if (event.touches.length!==1) { touch=null; return; }
-  const point=event.touches[0];
-  touch={x:point.clientX,y:point.clientY,up:adjacent(-1),down:adjacent(1),committed:false};
-},{passive:true});
-addEventListener("touchmove",event=>{
-  if (!touch||event.touches.length!==1||!event.cancelable) return;
-  const point=event.touches[0];
-  const delta=touch.y-point.clientY;
-  if (!touch.committed&&Math.abs(delta)<Math.abs(touch.x-point.clientX)) return;
-  const target=delta>0?touch.down:touch.up;
-  if (!touch.committed&&!animating&&target===null) return;
-  event.preventDefault();
-  if (!touch.committed&&!animating&&Math.abs(delta)>=(delta<0?10:14)) {
-    touch.committed=true;
-    glide(target);
-  }
-},{passive:false});
-for (const event of ["touchend","touchcancel"]) {
-  addEventListener(event,()=>{touch=null;},{passive:true});
+  slot.addEventListener("pointermove",event=>{
+    if (event.pointerType==="touch"||!surface) return;
+    const box=canvas.getBoundingClientRect();
+    highlight(pickHeroPiece(event.clientX-box.left-box.width*.5,event.clientY-box.top-box.height*.5,scale,1));
+  });
+  slot.addEventListener("pointerleave",()=>highlight(-1));
+  new ResizeObserver(([entry])=>{
+    const {width,height}=entry.contentRect;
+    scale=Math.min(width/6.4,height/4.25);
+    surface={width:Math.max(1,Math.ceil(scale*6.7)),height:Math.max(1,Math.ceil(scale*4.85))};
+    last=0;
+    queue();
+  }).observe(slot);
+  new IntersectionObserver(([entry])=>{
+    visible=entry.isIntersecting;
+    last=0;
+    queue();
+  }).observe(slot);
+  reduced.addEventListener("change",()=>{last=0;queue();});
+  document.addEventListener("visibilitychange",queue);
 }
-addEventListener("keydown",cancelGlide);
-header.addEventListener("click",event=>{
-  const link=event.target.closest('a[href="#inicio"],a[href="#especialidades"]');
-  if (!link||reduced.matches||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey) return;
-  event.preventDefault();
-  clearTimeout(timer);
-  cancelGlide();
-  wheelCommitted=false;
-  wheelAmount=0;
-  const id=link.getAttribute("href");
-  if (location.hash!==id) history.pushState(null,"",id);
-  glide(id==="#inicio"?0:anchors()[1]);
-});
-addEventListener("hashchange",()=>{
-  cancelGlide();
-  const target=document.getElementById(location.hash.slice(1));
-  rest=target?anchorTop(target):null;
-});
-rest=anchors().reduce((a,b)=>Math.abs(a-scrollY)<=Math.abs(b-scrollY)?a:b);
-
-let layout=null,lastFrame=-Infinity,lastY,lastWidth,lastHeight,wasReduced;
-let sceneDrawn=false;
-let heroPiece=-1;
-const heroHeights=pieces.map(()=>0);
-heroSlot.addEventListener("pointermove",event=>{
-  if (!layout||layout.approach>.18||event.pointerType==="touch"||reduced.matches) return;
-  const {x,top,surface,scale,approach}=layout;
-  const nextPiece=pickHeroPiece(event.clientX-x-surface.width*.5,event.clientY-top-surface.height*.5,scale,1-approach);
-  if(nextPiece===heroPiece)return;
-  heroPiece=nextPiece;
-  if(heroPiece<0) hero.removeAttribute("data-lit-piece");
-  else hero.dataset.litPiece=String(heroPiece);
-});
-heroSlot.addEventListener("pointerleave",()=>{
-  heroPiece=-1;
-  hero.removeAttribute("data-lit-piece");
-});
-
-function sizeFor(box) {
-  return Math.min(box.width/6.4,box.height/4.25);
-}
-
-function measureGeometry() {
-  const y=scrollY;
-  const nav=navHeight();
-  const heroBounds=hero.getBoundingClientRect();
-  const storyBounds=story.getBoundingClientRect();
-  const heroBox=heroSlot.getBoundingClientRect();
-  const stageBounds=stage.getBoundingClientRect();
-  const slot=storySlot.getBoundingClientRect();
-  const storyBox={left:slot.left,top:slot.top-stageBounds.top,width:slot.width,height:slot.height};
-  const maxScale=sizeFor({width:Math.max(heroBox.width,storyBox.width),height:Math.max(heroBox.height,storyBox.height)});
-  return {
-    nav,heroTop:heroBounds.top+y,heroBottom:heroBounds.bottom+y,
-    storyTop:storyBounds.top+y,storyBottom:storyBounds.bottom+y,
-    heroBox:{left:heroBox.left,top:heroBox.top+y,width:heroBox.width,height:heroBox.height},
-    storyBox,screenHeight:stageBounds.height||innerHeight,
-    stepHeight:steps[0].offsetHeight||innerHeight*.48,
-    anchors:[0,...steps.map(anchorTop)],
-    surface:{width:Math.max(1,Math.ceil(maxScale*6.7)),height:Math.max(1,Math.ceil(maxScale*4.85))}
-  };
-}
-
-const invalidateGeometry=()=>{geometry=null;};
-const resizeObserver=new ResizeObserver(invalidateGeometry);
-[header,hero,heroSlot,story,stage,storySlot].forEach(element=>resizeObserver.observe(element));
-
-function layoutAt(y,motion) {
-  let {heroTop,heroBottom,storyTop,storyBottom,screenHeight,stepHeight,nav}=geometry;
-  const storyOffset=storyTop-y-nav;
-  const position=clamp(-storyOffset/stepHeight,0,4);
-  const approach=motion?smooth((screenHeight*.58-storyOffset)/(screenHeight*.58)):0;
-  const heroFade=motion?smooth((screenHeight*.76-storyOffset)/(screenHeight*.48)):0;
-  const introFade=smooth((approach-.58)/.42);
-  const heroVisible=heroBottom>y && heroTop<y+innerHeight;
-  const storyVisible=motion && storyTop<y+innerHeight && storyBottom>y;
-  if (storyVisible) {
-    const chapter=Math.min(4,Math.floor(position+.5));
-    if (chapter!==activeStage) {
-      stageTitle.textContent=stages[chapter].title;
-      const card=stages[chapter].card;
-      stageCard.hidden=!card;
-      stageCard.replaceChildren(...(card?Array.from(card.children,node=>node.cloneNode(true)):[]));
-      stage.classList.toggle("intro",chapter===0);
-      stageCopy.getAnimations().forEach(animation=>animation.cancel());
-      if (activeStage!==-1) {
-        stageCopy.animate([{opacity:0,transform:"translateY(5px)"},{opacity:1,transform:"translateY(0)"}],
-          {duration:340,easing:"ease-out"});
-      }
-      activeStage=chapter;
-      geometry=measureGeometry();
-    }
-  }
-  const heroBox={...geometry.heroBox,top:geometry.heroBox.top-y};
-  const stickyTop=Math.min(Math.max(geometry.storyTop-y,geometry.nav),geometry.storyBottom-y-geometry.screenHeight);
-  const storyBox={...geometry.storyBox,top:geometry.storyBox.top+stickyTop};
-  const box=storyVisible?between(heroBox,storyBox,approach):heroBox;
-  hero.style.setProperty("--hero-opacity",(1-heroFade).toFixed(3));
-  hero.style.setProperty("--hero-offset",(-heroFade*12).toFixed(1)+"px");
-  stage.style.setProperty("--intro-opacity",introFade.toFixed(3));
-  stage.style.setProperty("--intro-offset",((1-introFade)*12).toFixed(1)+"px");
-  stage.style.setProperty("--wipe",(approach*100).toFixed(2)+"%");
-  const visible=heroVisible||storyVisible;
-  const {surface}=geometry;
-  const x=box.left+(box.width-surface.width)*.5;
-  const top=box.top+box.height*(.55+approach*.07)-surface.height*.5;
-  return {visible,storyVisible,position,approach,surface,scale:sizeFor(box),x,top};
-}
-
-function update(now) {
-  requestAnimationFrame(update);
-  if (document.hidden) return;
-  const motion=!reduced.matches;
-  const viewportChanged=innerWidth!==lastWidth||innerHeight!==lastHeight||wasReduced!==reduced.matches;
-  const changed=!geometry||!layout||scrollY!==lastY||viewportChanged;
-  if (!changed && (!motion||now-lastFrame<(coarse.matches?31:15))) return;
-  if (changed) {
-    lastY=scrollY;
-    lastWidth=innerWidth;
-    lastHeight=innerHeight;
-    wasReduced=reduced.matches;
-    if (!geometry||viewportChanged) geometry=measureGeometry();
-    layout=layoutAt(lastY,motion);
-    if (layout.visible) art.style.transform="translate3d("+layout.x+"px,"+layout.top+"px,0)";
-  }
-  if (!layout.visible) {
-    if (sceneDrawn) art.style.visibility="hidden";
-    sceneDrawn=false;
-    return;
-  }
-  lastFrame=now;
-  const {surface,scale,storyVisible,position,approach}=layout;
-  const time=motion?now/1000:0;
-  renderer?.clear(surface);
-  renderer?.render(scale,pieces.map((_,i)=>{
-    const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
-    heroHeights[i]+=((heroPiece===i?.55:0)-heroHeights[i])*.16;
-    return {
-      pyramid:1-approach,
-      bobPhase:time*.78,
-      ripple:motion?((1-approach)*.10+approach*.065):0,
-      stretch:weight*.58+heroHeights[i]*(1-approach)
-    };
-  }),time);
-  if (!sceneDrawn) art.style.visibility="visible";
-  sceneDrawn=true;
-}
-document.fonts.ready.then(invalidateGeometry);
-requestAnimationFrame(update);
 
 if (!reduced.matches) document.querySelectorAll("[data-count]").forEach(item=>{
   const goal=item.dataset.count;
