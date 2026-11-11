@@ -225,13 +225,14 @@ function createArt() {
     attribute float band;
     uniform vec2 viewport;
     uniform vec2 origin;
-    uniform float scale, lift, tilt, stretch;
+    uniform float scale, lift, stretch, bobAmount, bobPhase;
     varying vec3 surfaceNormal, surfacePosition;
     void main() {
       float top=(vertex.y+0.15)/0.3;
       vec3 p=vertex;
       float rise=0.31+0.69*band*band;
-      p.y+=lift+top*(stretch*rise+tilt*vertex.x);
+      float bob=bobAmount*sin(bobPhase-band*1.25);
+      p.y+=lift+top*stretch*rise+bob;
       float u=p.x*0.808027+p.z*0.589145;
       float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
@@ -239,7 +240,7 @@ function createArt() {
       vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
       vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
       gl_Position=vec4(center*w+offset,-depth/10.0,w);
-      surfaceNormal=vec3(normal.x-tilt*normal.y,normal.y,normal.z);
+      surfaceNormal=normal;
       surfacePosition=p;
     }
   `;
@@ -267,7 +268,7 @@ function createArt() {
   const vertex=gl.getAttribLocation(program,"vertex");
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","tilt","stretch","color","time","emphasis"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","stretch","bobAmount","bobPhase","color","time","emphasis"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -307,7 +308,8 @@ function createArt() {
         gl.vertexAttribPointer(normal,3,gl.FLOAT,false,28,12);
         gl.vertexAttribPointer(band,1,gl.FLOAT,false,28,24);
         gl.uniform1f(uniforms.lift,poses[index].lift);
-        gl.uniform1f(uniforms.tilt,poses[index].tilt);
+        gl.uniform1f(uniforms.bobAmount,poses[index].bobAmount);
+        gl.uniform1f(uniforms.bobPhase,poses[index].bobPhase);
         gl.uniform1f(uniforms.stretch,poses[index].stretch);
         gl.uniform1f(uniforms.emphasis,poses[index].emphasis);
         gl.uniform3fv(uniforms.color,color);
@@ -352,7 +354,7 @@ function glide(target) {
   if (Math.abs(from-target)<2) { rest=target; return; }
   animating=true;
   const started=performance.now();
-  const duration=clamp(Math.abs(target-from)*.52,320,620);
+  const duration=600;
   function move(now) {
     const progress=clamp((now-started)/duration);
     const ease=progress<.5?4*progress**3:1-((-2*progress+2)**3)/2;
@@ -510,11 +512,11 @@ function update(now) {
   renderer?.clear();
   renderer?.render(box,pieces.map((_,i)=>{
     const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
-    const float=motion?Math.sin(time*1.05-i*.32)*.063:0;
     return {
-      lift:(heroPose[i]+float)*(1-approach),
-      tilt:motion?Math.sin(time*.85-i*.31)*.027*(1-approach)+weight*Math.sin(time*1.07)*.048:0,
-      stretch:weight*(.58+Math.sin(time*1.17)*.037),
+      lift:heroPose[i]*(1-approach),
+      bobAmount:motion?((1-approach)*.044+weight*.035):0,
+      bobPhase:time*1.32-i*.28,
+      stretch:weight*.58,
       emphasis:weight
     };
   }),time);
