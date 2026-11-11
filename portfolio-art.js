@@ -494,10 +494,10 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
     floor.style.setProperty("--scene-type",Math.max(26,Math.min(110,width*.135))+"px");
     labels.forEach((label,index)=>{
-      const [x,y]=project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
+      const [x,y]=focus&&index===1?project(-.42,-.72,1.44):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
       label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
       if (focus) {
-        const length=width*(index===0?.64:.94);
+        const length=width*(index===0?.64:.80);
         const size=Math.max(22,Math.min(110,width*.135));
         for (const text of label.querySelectorAll("text")) {
           text.setAttribute("textLength",length);
