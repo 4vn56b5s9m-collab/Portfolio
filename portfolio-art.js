@@ -369,11 +369,20 @@ function systemModels() {
   card(3,-.23,.15,.18,.8);
   plate(3,.36,.40,.12,chalk,.74,.19,.21,.08);
   plate(3,1.62,.24,.12,petrol,0,-.53,.18,.08);
+  for (let stage=0;stage<systemCenters.length;stage++) {
+    const group=scene.filter(model=>model.stage===stage);
+    let front=-Infinity,back=Infinity;
+    for (const {mesh,position} of group) for (let i=2;i<mesh.length;i+=8) {
+      const z=mesh[i]+position[2];
+      front=Math.max(front,z);
+      back=Math.min(back,z);
+    }
+    const middle=(front+back)/2;
+    group.forEach(model=>{model.position[2]-=middle;});
+  }
   return scene;
 }
 
-const motionCenters=[-1.58,0,1.58];
-const motionHeights=[.25,.53,.81];
 const motionFloor=-.71;
 const ballRadius=.09;
 
@@ -393,20 +402,46 @@ function sphere(radius) {
   return new Float32Array(vertices);
 }
 
-function motionModels() {
-  const models=motionCenters.map((x,stage)=>{
-    const height=motionHeights[stage];
-    return {mesh:solid(1.63,1.12,height,.40),color:[petrol,[129,153,149],chalk][stage],
-      stage:0,origin:.5,position:[x,motionFloor+height/2,0]};
-  });
-  return [...models,{mesh:sphere(ballRadius),color:[186,241,248],stage:0,origin:.5,position:[0,0,0]}];
+function motionRoute(progress) {
+  const phase=progress*2*Math.PI;
+  return [-2.9+5.8*progress,motionFloor+.24+ballRadius,.86*Math.sin(phase)];
 }
 
-function motionRoute(progress) {
-  const x=-2.12+4.28*progress;
-  const smooth=value=>{const t=Math.max(0,Math.min(1,value));return t*t*(3-2*t);};
-  const rise=.28*(smooth((x+1.09)/.38)+smooth((x-.49)/.38));
-  return [x,motionFloor+.25+rise+ballRadius+.025,Math.sin(progress*Math.PI*2)*.21];
+function motionModels() {
+  const bed=[], walls=[];
+  function section(t,offset,height) {
+    const [x,,z]=motionRoute(t);
+    const slope=.86*2*Math.PI*Math.cos(t*2*Math.PI)/5.8;
+    const length=Math.hypot(slope,1);
+    return [x-offset*slope/length,motionFloor+height,z+offset/length];
+  }
+  function strip(buffer,t,next,from,to,heightFrom,heightTo,cavity=0) {
+    const vertices=[section(t,from,heightFrom),section(next,from,heightFrom),
+      section(next,to,heightTo),section(t,to,heightTo)];
+    const [p,q,r]=vertices;
+    const u=q.map((value,i)=>value-p[i]), v=r.map((value,i)=>value-p[i]);
+    const cross=[u[2]*v[1]-u[1]*v[2],u[0]*v[2]-u[2]*v[0],u[1]*v[0]-u[0]*v[1]];
+    const magnitude=Math.hypot(...cross);
+    const normal=cross.map(value=>value/magnitude);
+    for (const i of [0,1,2,0,2,3]) buffer.push(...vertices[i],...normal,0,cavity);
+  }
+  for (let i=0;i<64;i++) {
+    const t=i/64,next=(i+1)/64;
+    strip(bed,t,next,-.26,.26,.24,.24);
+    strip(walls,t,next,-.47,-.47,0,.38);
+    strip(walls,t,next,-.47,-.41,.38,.44);
+    strip(walls,t,next,-.41,-.30,.44,.44);
+    strip(walls,t,next,-.30,-.26,.44,.24,.75);
+    strip(walls,t,next,.26,.30,.24,.44,.75);
+    strip(walls,t,next,.30,.41,.44,.44);
+    strip(walls,t,next,.41,.47,.44,.38);
+    strip(walls,t,next,.47,.47,.38,0);
+  }
+  return [
+    {mesh:new Float32Array(bed),color:petrol,stage:0,origin:.5,position:[0,0,0]},
+    {mesh:new Float32Array(walls),color:chalk,stage:0,origin:.5,position:[0,0,0]},
+    {mesh:sphere(ballRadius),color:[186,241,248],stage:0,origin:.5,position:[0,0,0]}
+  ];
 }
 
 for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
@@ -433,7 +468,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.9:motion?6.35:9.8),height/5.25);
+    const scale=Math.min(width/(training?6.9:motion?7.9:9.8),height/5.25);
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
@@ -452,17 +487,17 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    floor.style.setProperty("--scene-type",Math.max(15,Math.min(37,scale*.49))+"px");
+    floor.style.setProperty("--scene-type",Math.max(21,Math.min(74,width*(motion?.064:.092)))+"px");
     labels.forEach((label,index)=>{
-      const [x,y]=project(index===0?-.64:.64,-1.12,index===0?-1.55:1.63);
+      const [x,y]=project(index===0?-.74:.74,-1.12,index===0?-2.05:1.96);
       label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
     });
     const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]
-      :motion?motionCenters.map(x=>[x,motionFloor,0])
+      :motion?[.16,.5,.84].map(t=>{const [x,,z]=motionRoute(t);return [x,motionFloor,z];})
       :systemCenters.map((x,i)=>[x,[-.73,-.90,-.91,-1.22][i],0]);
     shadows.forEach((shadow,index)=>{
       const [x,y]=project(...ground[index]);
-      const radius=training?.88:motion?.90:systemWidths[index]*.55+.13;
+      const radius=training?.88:motion?1.15:systemWidths[index]*.55+.13;
       shadow.setAttribute("cx",x+.11*scale);
       shadow.setAttribute("cy",y+.07*scale);
       shadow.setAttribute("rx",radius*scale);

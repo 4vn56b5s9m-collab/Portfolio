@@ -53,8 +53,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=escenas-editoriales">
-<script defer src="portfolio-interactions.js?v=escenas-editoriales"></script>
+<link rel="stylesheet" href="portfolio.css?v=canal-motion">
+<script defer src="portfolio-interactions.js?v=canal-motion"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -92,10 +92,10 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   <div class="specialty-inner">
     <h2 id="especialidades">Cada proyecto pide algo distinto.</h2>
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
-      <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></a>
-      <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></a>
-      <a href="especialidades/liderazgo-y-formacion/" data-accordion-branch="2"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span></a>
-      <a href="especialidades/sistemas-de-diseno/" data-accordion-branch="3"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span></a>
+      <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">UI y Behavioral Design <b>↗</b></span></a>
+      <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><div class="branch-card-copy"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Motion e inmersión <b>↗</b></span></a>
+      <a href="especialidades/liderazgo-y-formacion/" data-accordion-branch="2"><div class="branch-card-copy"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Formación de equipos de diseño <b>↗</b></span></a>
+      <a href="especialidades/sistemas-de-diseno/" data-accordion-branch="3"><div class="branch-card-copy"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Sistemas de diseño para múltiples marcas <b>↗</b></span></a>
     </div>
     <div class="branch-pagination" role="group" aria-label="Elegir especialidad">
       <button type="button" aria-label="UI y Behavioral Design" data-branch-page="0" aria-controls="specialty-gallery accordion-visual" aria-current="true"></button>
@@ -113,7 +113,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   <text class="scene-back" text-anchor="middle">Una microinteracción</text>
   <text class="scene-front" text-anchor="middle">puede cambiar tu foco de atención</text>
 </svg>
-          <canvas data-branch-canvas="motion" role="img" aria-label="Una microinteracción puede cambiar tu foco de atención. Una esfera asciende por tres plataformas hacia un punto luminoso."></canvas>
+          <canvas data-branch-canvas="motion" role="img" aria-label="Una microinteracción puede cambiar tu foco de atención. Una esfera sigue un canal serpenteante hasta un punto luminoso."></canvas>
           <svg class="system-connectors motion-path" aria-hidden="true"><path class="motion-guide"/><g class="motion-light"><circle class="system-halo" r="8"/><circle class="system-core" r="2.2"/></g></svg>
         </div>
       </div>
@@ -146,7 +146,6 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
         </div>
       </div>
     </div>
-    <a class="mobile-branch-link" href="especialidades/ui-behavioral-design/" data-mobile-branch-link>Explorar especialidad</a>
   </div>
 </section>
   <section class="notes" id="trayectoria">
@@ -175,7 +174,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=escenas-editoriales";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=canal-motion";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");

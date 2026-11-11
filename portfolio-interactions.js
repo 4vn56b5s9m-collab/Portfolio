@@ -147,7 +147,6 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   const gallery = accordion.querySelector(".accordion-branches");
   const cards = [...gallery.querySelectorAll("[data-accordion-branch]")];
   const panels = [...accordion.querySelectorAll("[data-accordion-panel]")];
-  const link = accordion.querySelector("[data-mobile-branch-link]");
   const dots = [...accordion.querySelectorAll("[data-branch-page]")];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width: 700px)");
@@ -164,8 +163,6 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       if (i === index) dot.setAttribute("aria-current", "true");
       else dot.removeAttribute("aria-current");
     });
-    link.href = cards[index].href;
-    link.setAttribute("aria-label", "Explorar " + cards[index].querySelector("strong").textContent);
   }
 
   function previewCenteredCard() {
@@ -214,6 +211,29 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   gallery.addEventListener("scroll", () => {
     if (mobile.matches && !frame) frame = requestAnimationFrame(previewCenteredCard);
   }, { passive: true });
-  mobile.addEventListener("change", previewCenteredCard);
+  function sizeGallery() {
+    if (!mobile.matches) return;
+    const tallest = Math.max(...cards.map(card => {
+      const style = getComputedStyle(card);
+      const copy = card.querySelector(".branch-card-copy").getBoundingClientRect().height;
+      const cta = card.querySelector(".branch-card-cta").getBoundingClientRect().height;
+      const extra = ["paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth", "rowGap"]
+        .reduce((sum, name) => sum + (parseFloat(style[name]) || 0), 0);
+      return Math.max(parseFloat(style.minHeight)||0, copy + cta + extra);
+    }));
+    const style = getComputedStyle(gallery);
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    gallery.style.setProperty("--gallery-height", Math.ceil(tallest + padding) + "px");
+  }
+  const galleryObserver = new ResizeObserver(sizeGallery);
+  cards.forEach(card => {
+    galleryObserver.observe(card.querySelector(".branch-card-copy"));
+    galleryObserver.observe(card.querySelector(".branch-card-cta"));
+  });
+  mobile.addEventListener("change", () => {
+    sizeGallery();
+    previewCenteredCard();
+  });
+  sizeGallery();
   previewCenteredCard();
 }
