@@ -36,12 +36,12 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .stage-copy{display:grid;justify-items:center;gap:.8rem}
 .stage-copy h2,.stage-copy p{margin:0}
 .stage .stage-copy h2{font-size:clamp(2.2rem,4.3vw,4.4rem);max-width:24ch}
-.branch-card{width:min(100%,36rem);display:grid;justify-items:center;gap:.7rem;padding:clamp(.85rem,2vw,1.25rem);border:1px solid #ffffff29;border-radius:1rem;background:#ffffff08;color:var(--tiza)}
+.branch-card{width:min(100%,36rem);display:grid;justify-items:center;gap:.7rem;color:var(--tiza)}
 .branch-card[hidden]{display:none}
 .stage .branch-card p{font-size:clamp(.94rem,1.35vw,1.12rem);max-width:54ch;line-height:1.42;text-wrap:pretty}
 .branch-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.32rem}
 .branch-tags li{font-size:.76rem;line-height:1.15;border:1px solid #ffffff36;border-radius:999px;padding:.3rem .57rem}
-.branch-link{display:inline-flex;align-items:center;min-height:44px;padding:.45rem .9rem;border-radius:.65rem;background:var(--petroleo);color:var(--tiza);font-weight:600;font-size:.89rem;text-decoration:none}
+.branch-link{display:inline-flex;align-items:center;min-height:44px;padding:.55rem 1.1rem;border-radius:999px;background:var(--petroleo);color:var(--tiza);font-weight:600;font-size:.89rem;text-decoration:none}
 .branch-link:hover{text-decoration:underline}
 .story-screen:not(.intro){padding-block:clamp(1rem,4svh,2.75rem);gap:clamp(.3rem,1.4svh,1rem)}
 .story-screen .stage-visual{height:100%;max-height:min(40svh,25rem);min-height:0}
@@ -62,10 +62,10 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .stage h2,.notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}
 .stage p{font-size:clamp(1.05rem,2vw,1.4rem);max-width:39ch;line-height:1.45;text-wrap:balance}
 .stage-visual{width:min(100%,46rem);height:min(47svh,25rem);align-self:center}
-.js .story-screen{position:sticky;top:0;height:100svh;min-height:0}
-.js .story-track{position:relative;margin-top:-100svh;pointer-events:none}
+.js .story-screen{position:sticky;top:var(--nav-height);height:calc(100svh - var(--nav-height));min-height:0}
+.js .story-track{position:relative;margin-top:calc(var(--nav-height) - 100svh);pointer-events:none}
 .story-track .step{height:48svh}
-.story-track .step:last-child{height:100svh}
+.story-track .step:last-child{height:calc(100svh - var(--nav-height))}
 .js .static-story{display:none}
 .story-screen,.story-track{display:none}
 .js .story-screen{display:grid}
@@ -98,10 +98,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 <link rel="stylesheet" href="portfolio.css">
 </head>
 <body>
-<header id="inicio">
-  <a href="#inicio">Alejandro Sánchez Bretones</a>
-  <nav aria-label="Navegación principal"><a href="#especialidades">Especialidades</a><a href="#trayectoria">Trayectoria</a><a href="#contacto">Contacto</a></nav>
-</header>
+<header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#especialidades">Especialidades</a><a href="#trayectoria">Trayectoria</a><a href="#contacto">Contacto</a></nav></header>
 <main>
   <section class="hero" aria-labelledby="saludo">
     <div class="hero-copy">
@@ -377,13 +374,15 @@ let activeStage=-1;
 let geometry=null;
 const chapterHeight=()=>geometry?.stepHeight||steps[0].offsetHeight||innerHeight*.48;
 const documentTop=element=>element.getBoundingClientRect().top+scrollY;
+const navHeight=()=>header.offsetHeight;
+const anchorTop=element=>Math.max(0,documentTop(element)-navHeight());
 let rest=null;
 let timer=0;
 let scrollingFrame=0;
 let animating=false;
 
 function anchors() {
-  return geometry?.anchors||[0,...steps.map(documentTop)];
+  return geometry?.anchors||[0,...steps.map(anchorTop)];
 }
 
 function cancelGlide() {
@@ -400,7 +399,7 @@ function glide(target) {
   const started=performance.now();
   const intro=anchors()[1];
   const entersStory=Math.abs(target-intro)<4&&from<intro*.6;
-  const returnsToHero=target<4&&from<=intro+4;
+  const returnsToHero=target<4&&from<=intro+12;
   const duration=entersStory||returnsToHero?1600:600;
   function move(now) {
     const progress=clamp((now-started)/duration);
@@ -451,7 +450,7 @@ addEventListener("wheel",event=>{
   if (event.ctrlKey||Math.abs(event.deltaX)>Math.abs(event.deltaY)||!event.cancelable) return;
   const direction=Math.sign(event.deltaY);
   const now=performance.now();
-  if (now-wheelTime>180||direction!==wheelDirection) {
+  if (now-wheelTime>125||direction!==wheelDirection) {
     wheelAmount=0;
     wheelCommitted=false;
   }
@@ -462,7 +461,7 @@ addEventListener("wheel",event=>{
   if (target===null) return;
   event.preventDefault();
   wheelAmount+=Math.abs(event.deltaY)*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
-  if (wheelAmount>=25) {
+  if (wheelAmount>=14) {
     wheelCommitted=true;
     glide(target);
   }
@@ -482,7 +481,7 @@ addEventListener("touchmove",event=>{
   const target=delta>0?touch.down:touch.up;
   if (!touch.committed&&!animating&&target===null) return;
   event.preventDefault();
-  if (!touch.committed&&!animating&&Math.abs(delta)>=27) {
+  if (!touch.committed&&!animating&&Math.abs(delta)>=17) {
     touch.committed=true;
     glide(target);
   }
@@ -491,10 +490,22 @@ for (const event of ["touchend","touchcancel"]) {
   addEventListener(event,()=>{touch=null;},{passive:true});
 }
 addEventListener("keydown",cancelGlide);
+header.addEventListener("click",event=>{
+  const link=event.target.closest('a[href="#inicio"],a[href="#especialidades"]');
+  if (!link||reduced.matches||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey) return;
+  event.preventDefault();
+  clearTimeout(timer);
+  cancelGlide();
+  wheelCommitted=false;
+  wheelAmount=0;
+  const id=link.getAttribute("href");
+  if (location.hash!==id) history.pushState(null,"",id);
+  glide(id==="#inicio"?0:anchors()[1]);
+});
 addEventListener("hashchange",()=>{
   cancelGlide();
   const target=document.getElementById(location.hash.slice(1));
-  rest=target?documentTop(target):null;
+  rest=target?anchorTop(target):null;
 });
 rest=anchors().reduce((a,b)=>Math.abs(a-scrollY)<=Math.abs(b-scrollY)?a:b);
 
@@ -507,6 +518,7 @@ function sizeFor(box) {
 
 function measureGeometry() {
   const y=scrollY;
+  const nav=navHeight();
   const heroBounds=hero.getBoundingClientRect();
   const storyBounds=story.getBoundingClientRect();
   const heroBox=heroSlot.getBoundingClientRect();
@@ -515,12 +527,12 @@ function measureGeometry() {
   const storyBox={left:slot.left,top:slot.top-stageBounds.top,width:slot.width,height:slot.height};
   const maxScale=sizeFor({width:Math.max(heroBox.width,storyBox.width),height:Math.max(heroBox.height,storyBox.height)});
   return {
-    heroTop:heroBounds.top+y,heroBottom:heroBounds.bottom+y,
+    nav,heroTop:heroBounds.top+y,heroBottom:heroBounds.bottom+y,
     storyTop:storyBounds.top+y,storyBottom:storyBounds.bottom+y,
     heroBox:{left:heroBox.left,top:heroBox.top+y,width:heroBox.width,height:heroBox.height},
     storyBox,screenHeight:stageBounds.height||innerHeight,
     stepHeight:steps[0].offsetHeight||innerHeight*.48,
-    anchors:[0,...steps.map(documentTop)],
+    anchors:[0,...steps.map(anchorTop)],
     surface:{width:Math.max(1,Math.ceil(maxScale*6.7)),height:Math.max(1,Math.ceil(maxScale*4.85))}
   };
 }
@@ -530,8 +542,8 @@ const resizeObserver=new ResizeObserver(invalidateGeometry);
 [header,hero,heroSlot,story,stage,storySlot].forEach(element=>resizeObserver.observe(element));
 
 function layoutAt(y,motion) {
-  let {heroTop,heroBottom,storyTop,storyBottom,screenHeight,stepHeight}=geometry;
-  const storyOffset=storyTop-y;
+  let {heroTop,heroBottom,storyTop,storyBottom,screenHeight,stepHeight,nav}=geometry;
+  const storyOffset=storyTop-y-nav;
   const position=clamp(-storyOffset/stepHeight,0,4);
   const approach=motion?smooth((screenHeight*.58-storyOffset)/(screenHeight*.58)):0;
   const heroFade=motion?smooth((screenHeight*.76-storyOffset)/(screenHeight*.48)):0;
@@ -556,7 +568,7 @@ function layoutAt(y,motion) {
     }
   }
   const heroBox={...geometry.heroBox,top:geometry.heroBox.top-y};
-  const stickyTop=Math.min(Math.max(geometry.storyTop-y,0),geometry.storyBottom-y-geometry.screenHeight);
+  const stickyTop=Math.min(Math.max(geometry.storyTop-y,geometry.nav),geometry.storyBottom-y-geometry.screenHeight);
   const storyBox={...geometry.storyBox,top:geometry.storyBox.top+stickyTop};
   const box=storyVisible?between(heroBox,storyBox,approach):heroBox;
   hero.style.setProperty("--hero-opacity",(1-heroFade).toFixed(3));

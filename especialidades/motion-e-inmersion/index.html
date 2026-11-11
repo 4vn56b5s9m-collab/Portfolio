@@ -7,13 +7,14 @@
   <title>Motion e inmersión · Alejandro Sánchez Bretones</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
   <link rel="stylesheet" href="../../portfolio.css">
+<script defer src="../../portfolio-interactions.js"></script>
 </head>
 <body class="detail">
-<header id="inicio" class="detail-header"><div class="wrap"><a class="name" href="../../">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="../../#motion-e-inmersion">Volver al recorrido</a><a href="#contacto">Contacto</a></nav></div></header>
+<header id="inicio" class="site-header"><a class="site-name" href="../../#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="../../#especialidades">Especialidades</a><a href="../../#trayectoria">Trayectoria</a><a href="../../#contacto">Contacto</a></nav></header>
 <main>
   <section class="detail-hero"><div class="wrap"><p class="category">Motion e inmersión</p><h1>Movimiento que ayuda a orientarse</h1><p class="lead">Diseño microinteracciones y experiencias web que muestran qué ha cambiado y dónde seguir. Trabajo desde el prototipo hasta la implementación, con especial atención al ritmo, el scroll y el comportamiento en móvil.</p><ul class="tags"><li>Microinteracciones</li><li>Prototipos</li><li>Webflow</li></ul></div></section>
   <section class="detail-section"><div class="wrap"><h2>Cómo trabajo</h2><div class="story-grid"><article><h3>Doy continuidad a la acción</h3><p>Si una tarjeta cambia de estado, mantengo visible la información que permite reconocerla. La transición conecta el antes y el después y la confirmación sigue siendo legible cuando termina.</p></article><article><h3>Pruebo el ritmo con la interacción real</h3><p>Prototipo la entrada, la salida y los casos en que alguien interrumpe o repite un gesto. En esta web, el relieve señala la rama activa y la misma geometría acompaña el paso entre secciones.</p></article><article><h3>Lo llevo al navegador</h3><p>He desarrollado experiencias en Webflow y trabajado el comportamiento responsive. Ajusto la densidad, la duración y el movimiento según el dispositivo y la preferencia de movimiento reducido.</p></article></div></div></section>
-  <section class="detail-section example"><div class="wrap"><div><h2>El pedido se queda a la vista</h2><p>Demo ilustrativa. Al enviar la solicitud, cambia el estado en su propio lugar.</p></div><div class="motion-demo" data-motion-demo><div class="demo-row"><span>Reparación del dispositivo</span><span class="status" data-state aria-live="polite">Lista para enviar</span></div><button type="button" class="action" data-motion-button>Enviar solicitud</button></div></div></section>
+  <section class="detail-section example"><div class="wrap "><div><h2>Enfoca la atención con motion</h2><p>Prueba cómo el movimiento señala contenido relevante, confirma una acción o mantiene el contexto al abrir un detalle.</p></div><div class="demo-tool" data-demo="motion"><div class="demo-controls" role="group" aria-label="Estados de la demostración"><button type="button" data-select="0" aria-pressed="true">Contenido en foco</button><button type="button" data-select="1" aria-pressed="false">Confirmación</button><button type="button" data-select="2" aria-pressed="false">Abrir detalle</button></div><div class="focus-scene" data-motion-panel="0"><article class="focus-card"><h3>Entrega del dispositivo</h3><p>Elige cuándo podemos recogerlo.</p><div class="extra"><div><p>Disponible de lunes a viernes. Podrás cambiar la franja desde el seguimiento.</p></div></div><button class="demo-action" type="button" data-focus>Mostrar detalle</button></article></div><div data-motion-panel="1" hidden><div class="motion-status-row"><strong>Solicitud de reparación</strong><span class="status" aria-live="polite" data-confirm-state>Lista para enviar</span></div><button class="demo-action" type="button" data-confirm>Enviar solicitud</button></div><div data-motion-panel="2" hidden><article class="focus-card is-near"><h3>Seguimiento de la reparación</h3><div class="extra"><div><p>El dispositivo está en revisión. Te avisaremos cuando esté listo.</p></div></div><button class="demo-action" type="button" data-detail aria-expanded="false">Abrir detalle</button></article></div><p class="demo-caption" data-caption aria-live="polite">Al entrar en foco, la tarjeta crece un poco. Tras 1,5 segundos a la vista muestra más información.</p></div></div></section>
   <section class="detail-section"><div class="wrap"><h2>En proyectos reales</h2><div class="case-grid"><article><h3>SweetRush · Aprendizaje digital</h3><p>Diseñé y desarrollé experiencias de formación en Webflow. Entre los proyectos del portfolio anterior están It’s about time y una experiencia de onboarding para Manpower.</p></article><article><h3>BBC English Mobile · Web</h3><p>Trabajé en el rediseño y desarrollo en Webflow, además de landings promocionales y comunicaciones por correo.</p></article></div></div></section>
   <section class="detail-section"><div class="wrap"><h2>Otras especialidades</h2><nav class="related" aria-label="Otras especialidades"><a href="../ui-behavioral-design/">UI y Behavioral Design</a><a href="../liderazgo-y-formacion/">Liderazgo y formación de equipos de diseño</a><a href="../sistemas-de-diseno/">Sistemas de diseño para múltiples marcas</a></nav></div></section>
 </main>
@@ -29,15 +30,6 @@
     <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="../../#inicio">Volver al inicio ↑</a></div>
   </div>
 </footer>
-<script>
-const demo=document.querySelector("[data-motion-demo]");
-const button=demo.querySelector("[data-motion-button]");
-const state=demo.querySelector("[data-state]");
-button.addEventListener("click",()=>{
-  const sent=demo.classList.toggle("is-sent");
-  state.textContent=sent?"Solicitud enviada":"Lista para enviar";
-  button.textContent=sent?"Repetir demo":"Enviar solicitud";
-});
-</script>
+
 </body>
 </html>
