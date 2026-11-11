@@ -98,7 +98,7 @@ export function createArt(art,models=pieces) {
     uniform vec2 viewport;
     uniform vec2 origin;
     uniform vec3 position;
-    uniform float orthographic;
+    uniform float orthographic, cameraSide;
     uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
     varying vec3 surfaceNormal, surfacePosition;
     varying float innerWall, localHeight;
@@ -109,8 +109,8 @@ export function createArt(art,models=pieces) {
       float waveHeight=ripple*sin(bobPhase+radialPosition*5.4);
       float heroOffset=pyramid*(terrace*0.39+band*0.105);
       p.y+=heroOffset+stretch*rise+waveHeight;
-      float u=p.x*0.808027+p.z*0.589145;
-      float v=-p.x*0.589145+p.z*0.808027;
+      float u=p.x*0.808027+p.z*0.589145*cameraSide;
+      float v=-p.x*0.589145*cameraSide+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
       float w=1.0-(1.0-orthographic)*depth/13.0;
       vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
@@ -155,7 +155,7 @@ export function createArt(art,models=pieces) {
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
   const cavity=gl.getAttribLocation(program,"cavity");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity","cameraSide"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=models.map((piece,index)=>{
     const data=piece.mesh??buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -186,12 +186,13 @@ export function createArt(art,models=pieces) {
       }
       gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     },
-    render(scale,poses,time,orthographic=false) {
+    render(scale,poses,time,orthographic=false,cameraSide=1) {
       if (scale<=0||!width||!height) return;
       gl.uniform2f(uniforms.origin,width*.5,height*.5);
       gl.uniform1f(uniforms.scale,scale);
       gl.uniform1f(uniforms.time,time);
       gl.uniform1f(uniforms.orthographic,Number(orthographic));
+      gl.uniform1f(uniforms.cameraSide,cameraSide);
       if (orthographic) { gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA); }
       meshes.forEach(({buffer,count,color},index)=>{
         const pose=poses[index];
@@ -383,7 +384,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.35:8.9),height/(training?3.85:2.85));
+    const scale=Math.min(width/(training?6.35:8.9),height/(training?4.35:2.85));
     renderer.clear({width,height});
     renderer.render(scale,models.map(model=>{
       const delay=model.stage*(training?190:370);
@@ -394,7 +395,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         origin:model.origin,position:[x,y-(1-opacity)*.16,z],opacity,
         pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
-    }),0,true);
+    }),0,true,training?1:-1);
     if (!reduced.matches&&elapsed<(training?800:1530)) frame=requestAnimationFrame(draw);
   }
   function queue() {
