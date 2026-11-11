@@ -210,7 +210,7 @@ function buildMesh(piece,index) {
 const coarse=matchMedia("(pointer: coarse)");
 
 function createArt() {
-  const gl=art.getContext("webgl",{alpha:true,antialias:!coarse.matches,depth:true});
+  const gl=art.getContext("webgl",{alpha:true,antialias:true,depth:true});
   if (!gl) return null;
   function shader(type,source) {
     const shader=gl.createShader(type);
@@ -247,7 +247,7 @@ function createArt() {
   const fragmentSource=`
     precision mediump float;
     uniform vec3 color;
-    uniform float time, emphasis;
+    uniform float time;
     varying vec3 surfaceNormal, surfacePosition;
     void main() {
       vec3 n=normalize(surfaceNormal);
@@ -255,8 +255,7 @@ function createArt() {
       float diffuse=max(0.0,dot(n,light));
       float sweep=smoothstep(-0.95,0.95,sin(surfacePosition.x*0.93+surfacePosition.z*0.52+sin(time*0.71)*1.5));
       float glint=sweep*(0.04+0.12*max(n.y,0.0));
-      vec3 material=mix(color,vec3(0.075,0.35,0.40),emphasis*0.75);
-      gl_FragColor=vec4(material*(0.46+diffuse*0.67)+glint*vec3(0.54,0.62,0.65),1.0);
+      gl_FragColor=vec4(color*(0.46+diffuse*0.67)+glint*vec3(0.54,0.62,0.65),1.0);
     }
   `;
   const program=gl.createProgram();
@@ -268,7 +267,7 @@ function createArt() {
   const vertex=gl.getAttribLocation(program,"vertex");
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","stretch","bobAmount","bobPhase","color","time","emphasis"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","stretch","bobAmount","bobPhase","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -284,7 +283,7 @@ function createArt() {
   let width,height,ratio;
   return {
     clear() {
-      const currentRatio=Math.min(devicePixelRatio||1,coarse.matches?1.15:1.6);
+      const currentRatio=Math.min(devicePixelRatio||1,coarse.matches?1.25:2);
       if (width!==art.clientWidth||height!==art.clientHeight||ratio!==currentRatio) {
         width=art.clientWidth;
         height=art.clientHeight;
@@ -311,7 +310,6 @@ function createArt() {
         gl.uniform1f(uniforms.bobAmount,poses[index].bobAmount);
         gl.uniform1f(uniforms.bobPhase,poses[index].bobPhase);
         gl.uniform1f(uniforms.stretch,poses[index].stretch);
-        gl.uniform1f(uniforms.emphasis,poses[index].emphasis);
         gl.uniform3fv(uniforms.color,color);
         gl.drawArrays(gl.TRIANGLES,0,count);
       });
@@ -327,7 +325,7 @@ function between(a,b,t) {
 }
 
 document.documentElement.classList.add("js");
-const heroPose=[2.14,1.42,.73,0];
+const heroPose=[1.44,.96,.48,0];
 const steps=[...story.querySelectorAll(".step")];
 let activeStage=-1;
 
@@ -354,7 +352,9 @@ function glide(target) {
   if (Math.abs(from-target)<2) { rest=target; return; }
   animating=true;
   const started=performance.now();
-  const duration=600;
+  const intro=documentTop(steps[0]);
+  const entersStory=Math.abs(target-intro)<4&&from<intro*.6;
+  const duration=entersStory?1100:600;
   function move(now) {
     const progress=clamp((now-started)/duration);
     const ease=progress<.5?4*progress**3:1-((-2*progress+2)**3)/2;
@@ -516,8 +516,7 @@ function update(now) {
       lift:heroPose[i]*(1-approach),
       bobAmount:motion?((1-approach)*.044+weight*.035):0,
       bobPhase:time*1.32-i*.28,
-      stretch:weight*.58,
-      emphasis:weight
+      stretch:weight*.58
     };
   }),time);
   sceneDrawn=true;
