@@ -175,8 +175,10 @@ function buildMesh(piece,index) {
   return new Float32Array(vertices);
 }
 
+const coarse=matchMedia("(pointer: coarse)");
+
 function createArt() {
-  const gl=art.getContext("webgl",{alpha:true,antialias:true});
+  const gl=art.getContext("webgl",{alpha:true,antialias:!coarse.matches,depth:true});
   if (!gl) return null;
   function shader(type,source) {
     const shader=gl.createShader(type);
@@ -190,11 +192,12 @@ function createArt() {
     attribute vec3 normal;
     uniform vec2 viewport;
     uniform vec2 origin;
-    uniform float scale, lift, tilt;
+    uniform float scale, lift, tilt, stretch;
     varying vec3 surfaceNormal, surfacePosition;
     void main() {
-      float c=cos(tilt), s=sin(tilt);
-      vec3 p=vec3(c*vertex.x-s*vertex.y,s*vertex.x+c*vertex.y+lift,vertex.z);
+      float top=(vertex.y+0.15)/0.3;
+      vec3 p=vertex;
+      p.y+=lift+top*(stretch+tilt*vertex.x);
       float u=p.x*0.808027+p.z*0.589145;
       float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
@@ -202,21 +205,23 @@ function createArt() {
       vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
       vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
       gl_Position=vec4(center*w+offset,-depth/10.0,w);
-      surfaceNormal=vec3(c*normal.x-s*normal.y,s*normal.x+c*normal.y,normal.z);
+      surfaceNormal=vec3(normal.x-tilt*normal.y,normal.y,normal.z);
       surfacePosition=p;
     }
   `;
   const fragmentSource=`
     precision mediump float;
     uniform vec3 color;
-    uniform float time;
+    uniform float time, emphasis;
     varying vec3 surfaceNormal, surfacePosition;
     void main() {
-      vec3 light=normalize(vec3(-0.48+0.17*sin(time*0.52),0.88,0.35));
-      float diffuse=max(0.0,dot(normalize(surfaceNormal),light));
-      float sweep=0.07*sin(surfacePosition.x*0.95+surfacePosition.z*0.7+sin(time*0.53));
-      float value=0.49+diffuse*0.65+sweep;
-      gl_FragColor=vec4(color*value,1.0);
+      vec3 n=normalize(surfaceNormal);
+      vec3 light=normalize(vec3(-0.45+0.30*sin(time*0.64),0.84,0.35));
+      float diffuse=max(0.0,dot(n,light));
+      float sweep=smoothstep(-0.95,0.95,sin(surfacePosition.x*0.93+surfacePosition.z*0.52+sin(time*0.71)*1.5));
+      float glint=sweep*(0.04+0.12*max(n.y,0.0));
+      vec3 material=mix(color,vec3(0.075,0.35,0.40),emphasis*0.75);
+      gl_FragColor=vec4(material*(0.46+diffuse*0.67)+glint*vec3(0.54,0.62,0.65),1.0);
     }
   `;
   const program=gl.createProgram();
@@ -227,7 +232,7 @@ function createArt() {
   gl.useProgram(program);
   const vertex=gl.getAttribLocation(program,"vertex");
   const normal=gl.getAttribLocation(program,"normal");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","tilt","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","tilt","stretch","color","time","emphasis"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -242,7 +247,7 @@ function createArt() {
   let width,height,ratio;
   return {
     clear() {
-      const currentRatio=Math.min(devicePixelRatio||1,2);
+      const currentRatio=Math.min(devicePixelRatio||1,coarse.matches?1.15:1.6);
       if (width!==art.clientWidth||height!==art.clientHeight||ratio!==currentRatio) {
         width=art.clientWidth;
         height=art.clientHeight;
@@ -266,6 +271,8 @@ function createArt() {
         gl.vertexAttribPointer(normal,3,gl.FLOAT,false,24,12);
         gl.uniform1f(uniforms.lift,poses[index].lift);
         gl.uniform1f(uniforms.tilt,poses[index].tilt);
+        gl.uniform1f(uniforms.stretch,poses[index].stretch);
+        gl.uniform1f(uniforms.emphasis,poses[index].emphasis);
         gl.uniform3fv(uniforms.color,color);
         gl.drawArrays(gl.TRIANGLES,0,count);
       });
@@ -330,7 +337,7 @@ function settle() {
   const last=points.at(-1);
   if (y>last+Math.min(115,chapterHeight()*.34)) { rest=null; return; }
   const closest=points.reduce((a,b)=>Math.abs(a-y)<=Math.abs(b-y)?a:b);
-  const index=points.indexOf(rest);
+  const index=rest===null?-1:points.findIndex(point=>Math.abs(point-rest)<4);
   if (index<0) { glide(closest); return; }
   const delta=y-rest;
   const threshold=index===0?58:Math.min(78,chapterHeight()*.21);
@@ -346,9 +353,58 @@ addEventListener("scroll",()=>{
   clearTimeout(timer);
   timer=setTimeout(settle,130);
 },{passive:true});
-for (const event of ["wheel","touchstart","pointerdown","keydown"]) {
-  addEventListener(event,cancelGlide,{passive:true});
+function adjacent(direction) {
+  if (!direction||reduced.matches) return null;
+  const points=anchors();
+  const index=points.findIndex(point=>Math.abs(point-scrollY)<4);
+  return index>=0 ? points[index+direction]??null : null;
 }
+
+let wheelAmount=0,wheelDirection=0,wheelTime=0,wheelCommitted=false;
+addEventListener("wheel",event=>{
+  if (event.ctrlKey||Math.abs(event.deltaX)>Math.abs(event.deltaY)||!event.cancelable) return;
+  const direction=Math.sign(event.deltaY);
+  const now=performance.now();
+  if (now-wheelTime>180||direction!==wheelDirection) {
+    wheelAmount=0;
+    wheelCommitted=false;
+  }
+  wheelTime=now;
+  wheelDirection=direction;
+  if (animating||wheelCommitted) { event.preventDefault(); return; }
+  const target=adjacent(direction);
+  if (target===null) return;
+  event.preventDefault();
+  wheelAmount+=Math.abs(event.deltaY)*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
+  if (wheelAmount>=25) {
+    wheelCommitted=true;
+    glide(target);
+  }
+},{passive:false});
+
+let touch=null;
+addEventListener("touchstart",event=>{
+  if (event.touches.length!==1) { touch=null; return; }
+  const point=event.touches[0];
+  touch={x:point.clientX,y:point.clientY,up:adjacent(-1),down:adjacent(1),committed:false};
+},{passive:true});
+addEventListener("touchmove",event=>{
+  if (!touch||event.touches.length!==1||!event.cancelable) return;
+  const point=event.touches[0];
+  const delta=touch.y-point.clientY;
+  if (!touch.committed&&Math.abs(delta)<Math.abs(touch.x-point.clientX)) return;
+  const target=delta>0?touch.down:touch.up;
+  if (!touch.committed&&!animating&&target===null) return;
+  event.preventDefault();
+  if (!touch.committed&&!animating&&Math.abs(delta)>=27) {
+    touch.committed=true;
+    glide(target);
+  }
+},{passive:false});
+for (const event of ["touchend","touchcancel"]) {
+  addEventListener(event,()=>{touch=null;},{passive:true});
+}
+addEventListener("keydown",cancelGlide);
 addEventListener("hashchange",()=>{
   cancelGlide();
   const target=document.getElementById(location.hash.slice(1));
@@ -356,9 +412,10 @@ addEventListener("hashchange",()=>{
 });
 rest=anchors().reduce((a,b)=>Math.abs(a-scrollY)<=Math.abs(b-scrollY)?a:b);
 
-function update(now) {
-  const motion=!reduced.matches;
-  const time=motion?now/1000:0;
+let layout=null,lastFrame=-Infinity,lastY,lastWidth,lastHeight,wasReduced;
+let sceneDrawn=false;
+
+function measure(motion) {
   const heroBounds=hero.getBoundingClientRect();
   const storyBounds=story.getBoundingClientRect();
   const screenHeight=stage.offsetHeight||innerHeight;
@@ -366,13 +423,8 @@ function update(now) {
   const approach=motion?smooth((screenHeight*.58-storyBounds.top)/(screenHeight*.58)):0;
   const heroFade=motion?smooth((screenHeight*.76-storyBounds.top)/(screenHeight*.48)):0;
   const introFade=smooth((approach-.58)/.42);
-  hero.style.setProperty("--hero-opacity",(1-heroFade).toFixed(3));
-  hero.style.setProperty("--hero-offset",(-heroFade*12).toFixed(1)+"px");
-  stage.style.setProperty("--intro-opacity",introFade.toFixed(3));
-  stage.style.setProperty("--intro-offset",((1-introFade)*12).toFixed(1)+"px");
   const heroVisible=heroBounds.bottom>0 && heroBounds.top<innerHeight;
   const storyVisible=motion && storyBounds.top<innerHeight && storyBounds.bottom>0;
-  renderer?.clear();
   if (storyVisible) {
     const chapter=Math.min(4,Math.floor(position+.5));
     if (chapter!==activeStage) {
@@ -386,23 +438,52 @@ function update(now) {
       }
       activeStage=chapter;
     }
-    stage.style.setProperty("--wipe",(approach*100).toFixed(2)+"%");
   }
-  if (heroVisible||storyVisible) {
-    const box=storyVisible
-      ? between(heroSlot.getBoundingClientRect(),storySlot.getBoundingClientRect(),approach)
-      : heroSlot.getBoundingClientRect();
-    renderer?.render(box,pieces.map((_,i)=>{
-      const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
-      const float=Math.sin(time*1.05-i*.21)*.047;
-      return {
-        lift:(heroPose[i]+(motion?float:0))*(1-approach)+weight*(.91+Math.sin(time*1.32)*.055),
-        tilt:motion?Math.sin(time*.78-i*.29)*.012*(1-approach)+weight*Math.sin(time*.97)*.031:0
-      };
-    }),time);
-  }
-  requestAnimationFrame(update);
+  const heroBox=heroSlot.getBoundingClientRect();
+  const box=storyVisible?between(heroBox,storySlot.getBoundingClientRect(),approach):heroBox;
+  hero.style.setProperty("--hero-opacity",(1-heroFade).toFixed(3));
+  hero.style.setProperty("--hero-offset",(-heroFade*12).toFixed(1)+"px");
+  stage.style.setProperty("--intro-opacity",introFade.toFixed(3));
+  stage.style.setProperty("--intro-offset",((1-introFade)*12).toFixed(1)+"px");
+  stage.style.setProperty("--wipe",(approach*100).toFixed(2)+"%");
+  return {visible:heroVisible||storyVisible,storyVisible,position,approach,box};
 }
+
+function update(now) {
+  requestAnimationFrame(update);
+  if (document.hidden) return;
+  const motion=!reduced.matches;
+  const changed=!layout||scrollY!==lastY||innerWidth!==lastWidth||innerHeight!==lastHeight||wasReduced!==reduced.matches;
+  if (!changed && (!motion||now-lastFrame<(coarse.matches?31:15))) return;
+  if (changed) {
+    lastY=scrollY;
+    lastWidth=innerWidth;
+    lastHeight=innerHeight;
+    wasReduced=reduced.matches;
+    layout=measure(motion);
+  }
+  if (!layout.visible) {
+    if (sceneDrawn) renderer?.clear();
+    sceneDrawn=false;
+    return;
+  }
+  lastFrame=now;
+  const {box,storyVisible,position,approach}=layout;
+  const time=motion?now/1000:0;
+  renderer?.clear();
+  renderer?.render(box,pieces.map((_,i)=>{
+    const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
+    const float=motion?Math.sin(time*1.05-i*.32)*.063:0;
+    return {
+      lift:(heroPose[i]+float)*(1-approach),
+      tilt:motion?Math.sin(time*.85-i*.31)*.027*(1-approach)+weight*Math.sin(time*1.07)*.048:0,
+      stretch:weight*(.58+Math.sin(time*1.17)*.037),
+      emphasis:weight
+    };
+  }),time);
+  sceneDrawn=true;
+}
+document.fonts.ready.then(()=>{layout=null;});
 requestAnimationFrame(update);
 
 if (!reduced.matches) document.querySelectorAll("[data-count]").forEach(item=>{
