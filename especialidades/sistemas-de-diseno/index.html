@@ -3,27 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Diseño sistemas que permiten compartir componentes, patrones y criterios entre productos o unidades de negocio, con espacio para que cada marca y cada servicio tengan sus propias necesidades.">
   <title>Sistemas de diseño para múltiples marcas · Alejandro Sánchez Bretones</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=Instrument+Serif&display=swap">
-  <style>
-    :root { color-scheme:dark; background:#171719; color:#f4f2ed; font-family:"Instrument Sans",system-ui,sans-serif; }
-    body { margin:0; min-height:100svh; display:grid; grid-template-rows:auto 1fr; }
-    header,main { padding:clamp(1.25rem,5vw,5rem); }
-    header { padding-block:1.4rem; }
-    a { color:inherit; text-underline-offset:.25em; }
-    main { align-self:center; max-width:65rem; }
-    h1 { font:400 clamp(3.25rem,8vw,7.25rem)/.95 "Instrument Serif",Georgia,serif; margin:0; text-wrap:balance; }
-    p { font-size:1.15rem; margin:1.35rem 0 2rem; }
-    .back { display:inline-block; background:#124d56; color:#f4f2ed; border-radius:.65rem; padding:.85rem 1rem; font-weight:600; text-decoration:none; }
-    .back:hover { text-decoration:underline; }
-  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
+  <link rel="stylesheet" href="../../portfolio.css">
 </head>
-<body>
-  <header><a href="../../">Alejandro Sánchez Bretones</a></header>
-  <main>
-    <h1>Sistemas de diseño para múltiples marcas</h1>
-    <p>Esta página está en construcción.</p>
-    <a class="back" href="../../#direccion-y-sistemas">Volver al recorrido</a>
-  </main>
+<body class="detail">
+<header id="inicio" class="detail-header"><div class="wrap"><a class="name" href="../../">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="../../#direccion-y-sistemas">Volver al recorrido</a><a href="#contacto">Contacto</a></nav></div></header>
+<main>
+  <section class="detail-hero"><div class="wrap"><p class="category">Sistemas de diseño para múltiples marcas</p><h1>Una base común para productos distintos</h1><p class="lead">Diseño sistemas que permiten compartir componentes, patrones y criterios entre productos o unidades de negocio, con espacio para que cada marca y cada servicio tengan sus propias necesidades.</p><ul class="tags"><li>Gobernanza</li><li>Componentes y variantes</li><li>Sistemas multiproducto</li></ul></div></section>
+  <section class="detail-section"><div class="wrap"><h2>Cómo trabajo</h2><div class="story-grid"><article><h3>Defino qué merece ser común</h3><p>Reviso qué comportamientos se repiten entre productos. Un estado de confirmación puede compartir estructura, accesibilidad y reglas aunque el color, el texto o los pasos previos dependan de cada marca.</p></article><article><h3>Hago explícito qué puede variar</h3><p>Organizo los componentes para que una variante de marca sea una decisión reconocible. Los equipos pueden adaptar identidad y contenido manteniendo patrones compartidos de interacción.</p></article><article><h3>Acompaño la adopción</h3><p>Alineo prioridades con cliente y desarrollo, documento estados y excepciones, y planteo cómo introducir el sistema en productos que ya están en marcha. La gobernanza define quién revisa los cambios y cómo llegan al resto.</p></article></div></div></section>
+  <section class="detail-section example"><div class="wrap"><div><h2>Un patrón compartido, dos expresiones</h2><p>Ejemplo ilustrativo. El componente conserva estructura y jerarquía mientras cada marca aplica sus propios colores.</p></div><div class="system-demo"><div class="example-theme"><strong>Marca A</strong><span class="sample-button">Continuar</span></div><div class="example-theme warm"><strong>Marca B</strong><span class="sample-button">Continuar</span></div></div></div></section>
+  <section class="detail-section"><div class="wrap"><h2>En proyectos reales</h2><div class="case-grid"><article><h3>Zennio · Sistema multiproducto</h3><p>Creé un sistema de diseño y definí su gobernanza e implementación para dar coherencia a distintos productos, incluidas interfaces domóticas y herramientas internas.</p></article><article><h3>Caser Helvetia · Líneas de negocio</h3><p>Participé en la actualización del sistema de diseño y en flujos de salud, hogar y auto, donde conviven patrones comunes y reglas específicas de cada servicio.</p></article></div></div></section>
+  <section class="detail-section"><div class="wrap"><h2>Otras especialidades</h2><nav class="related" aria-label="Otras especialidades"><a href="../ui-behavioral-design/">UI y Behavioral Design</a><a href="../motion-e-inmersion/">Motion e inmersión</a><a href="../liderazgo-y-formacion/">Liderazgo y formación de equipos de diseño</a></nav></div></section>
+</main>
+<footer class="site-footer" id="contacto">
+  <div class="footer-inner">
+    <h2>Hablemos</h2>
+    <p>Si quieres conocer un caso o hablar de un proyecto, puedes encontrarme aquí.</p>
+    <nav class="contact-blocks" aria-label="Opciones de contacto">
+      <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span>LinkedIn</span><span aria-hidden="true">↗</span></a>
+      <a href="mailto:alejandrosanchezbretones@gmail.com"><span>Correo</span><span aria-hidden="true">↗</span></a>
+      <a href="tel:+34648246290"><span>Llamar</span><span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="../../#inicio">Volver al inicio ↑</a></div>
+  </div>
+</footer>
+
 </body>
 </html>

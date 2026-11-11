@@ -90,7 +90,12 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .static-story .stage{min-height:auto;display:block;padding-block:2.5rem;text-align:left}
   .static-story .stage p{margin-top:1rem}
 }
+.career-list{list-style:none;margin:2rem 0 0;padding:0;max-width:52rem}
+.career-list li{display:grid;grid-template-columns:minmax(6rem,.35fr) 1fr;gap:.8rem 1.3rem;padding:.9rem 0;border-top:1px solid var(--line)}
+.career-list strong{font-weight:600}
+@media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 </style>
+<link rel="stylesheet" href="portfolio.css">
 </head>
 <body>
 <header id="inicio">
@@ -126,12 +131,27 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </section>
   <section class="notes" id="trayectoria">
     <h2>Distintos proyectos, el mismo criterio.</h2>
-    <p>He trabajado en e-commerce, educación, plataformas de aprendizaje, gestión interna de tickets y servicio técnico, con clientes en España y fuera.</p>
+    <p>He diseñado productos para e-commerce, seguros, aprendizaje y servicio técnico. Combino diseño de interfaz, prototipado y trabajo con equipos para que lo que se decide pueda llegar a producción.</p>
+    <ul class="career-list">
+      <li><strong>Flat 101</strong><span>Experto en diseño.</span></li>
+      <li><strong>Zennio</strong><span>Equipo de UX/UI y sistema de diseño para productos digitales de domótica.</span></li>
+      <li><strong>Freelance</strong><span>Diseño de interfaz, desarrollo web y formación para equipos y clientes en distintos mercados.</span></li>
+      <li><strong>Sepín Editorial</strong><span>Dirección de arte y diseño web para e-commerce editorial.</span></li>
+      <li><strong>Ogilvy</strong><span>Diseño digital y de interfaz para e-commerce, reservas y campañas.</span></li>
+    </ul>
   </section>
 </main>
-<footer id="contacto">
-  <span>Alejandro Sánchez Bretones</span>
-  <nav aria-label="Contacto"><a href="https://www.linkedin.com/in/alejandrosanchezbretones/">LinkedIn</a></nav>
+<footer class="site-footer" id="contacto">
+  <div class="footer-inner">
+    <h2>Hablemos</h2>
+    <p>Si quieres conocer un caso o hablar de un proyecto, puedes encontrarme aquí.</p>
+    <nav class="contact-blocks" aria-label="Opciones de contacto">
+      <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span>LinkedIn</span><span aria-hidden="true">↗</span></a>
+      <a href="mailto:alejandrosanchezbretones@gmail.com"><span>Correo</span><span aria-hidden="true">↗</span></a>
+      <a href="tel:+34648246290"><span>Llamar</span><span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="./#inicio">Volver al inicio ↑</a></div>
+  </div>
 </footer>
 <canvas id="portfolio-art" aria-hidden="true"></canvas>
 <script>
