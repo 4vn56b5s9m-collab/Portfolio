@@ -53,8 +53,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=ritmo-capas">
-<script defer src="portfolio-interactions.js?v=escenas-3d"></script>
+<link rel="stylesheet" href="portfolio.css?v=galeria-movil">
+<script defer src="portfolio-interactions.js?v=galeria-movil"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -79,6 +79,12 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></a>
       <a href="especialidades/liderazgo-y-formacion/" data-accordion-branch="2"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span></a>
       <a href="especialidades/sistemas-de-diseno/" data-accordion-branch="3"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span></a>
+    </div>
+    <div class="branch-pagination" aria-label="Posición en la galería">
+      <button type="button" aria-label="UI y Behavioral Design" data-branch-page="0" aria-current="true"></button>
+      <button type="button" aria-label="Motion e inmersión" data-branch-page="1"></button>
+      <button type="button" aria-label="Formación de equipos de diseño" data-branch-page="2"></button>
+      <button type="button" aria-label="Sistemas de diseño para múltiples marcas" data-branch-page="3"></button>
     </div>
     <div class="accordion-visual" id="accordion-visual">
       <div class="accordion-panel" data-accordion-panel="0"></div>
@@ -128,7 +134,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=ritmo-capas";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=galeria-movil";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");

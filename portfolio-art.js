@@ -341,7 +341,7 @@ function trainingModels() {
       [sleeve(1.45,.17,height,.25,3),chalk,height],
       [sleeve(1.07,.15,height+.17,.20,3),petrol,height+.17],
       [buildBands({width:.70,depth:.70,radius:.16},{width:.38,depth:.38,radius:.09},2,height+.34,true,.008),chalk,height+.34]
-    ].map(([mesh,color,h])=>({mesh,color,stage,origin:.5,position:[x,h/2-1.2,0]}));
+    ].map(([mesh,color,h])=>({mesh,color,stage,origin:.5,position:[x,h/2-1.12,0]}));
   });
 }
 
@@ -386,7 +386,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.35:8.9),height/(training?4.35:2.85));
+    const scale=Math.min(width/(training?6.35:8.9),height/(training?4.8:2.85));
     renderer.clear({width,height});
     renderer.render(scale,models.map(model=>{
       const delay=model.stage*(training?190:370);

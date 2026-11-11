@@ -148,6 +148,8 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   const cards = [...gallery.querySelectorAll("[data-accordion-branch]")];
   const panels = [...accordion.querySelectorAll("[data-accordion-panel]")];
   const link = accordion.querySelector("[data-mobile-branch-link]");
+  const dots = [...accordion.querySelectorAll("[data-branch-page]")];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width: 700px)");
   let active = 0;
   let frame = 0;
@@ -157,6 +159,10 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     active = index;
     cards.forEach((card, i) => card.classList.toggle("is-previewed", i === index));
     panels.forEach((panel, i) => { panel.hidden = i !== index; });
+    dots.forEach((dot, i) => {
+      if (i === index) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
     link.href = cards[index].href;
     link.setAttribute("aria-label", "Explorar " + cards[index].querySelector("strong").textContent);
   }
@@ -184,6 +190,16 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       if (!mobile.matches && event.pointerType !== "touch") preview(index);
     });
     card.addEventListener("focus", () => preview(index));
+  });
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      const bounds = gallery.getBoundingClientRect();
+      const card = cards[index].getBoundingClientRect();
+      gallery.scrollTo({
+        left: gallery.scrollLeft + card.left + card.width / 2 - bounds.left - bounds.width / 2,
+        behavior: reduced.matches ? "instant" : "smooth"
+      });
+    });
   });
   gallery.addEventListener("scroll", () => {
     if (mobile.matches && !frame) frame = requestAnimationFrame(previewCenteredCard);
