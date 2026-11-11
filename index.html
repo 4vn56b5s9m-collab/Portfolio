@@ -53,13 +53,12 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=progreso-hero">
-<script defer src="portfolio-interactions.js?v=progreso-hero"></script>
+<link rel="stylesheet" href="portfolio.css?v=franja-sectores">
+<script defer src="portfolio-interactions.js?v=franja-sectores"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
 <main>
-  <div class="home-atmosphere">
   <section class="hero" aria-labelledby="saludo">
     <div class="hero-copy">
       <div class="hero-title"><h1 id="saludo">Hola, soy Álex</h1>
@@ -87,6 +86,12 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <div class="hero-floor" aria-hidden="true"></div>
     <div class="hero-visual" aria-hidden="true"><canvas id="portfolio-art"></canvas></div>
   </section>
+  <aside class="experience-belt" aria-label="Sectores y clientes">
+    <div class="experience-belt-inner">
+      <div><h2>Sectores</h2><ul><li>E-commerce</li><li>Seguros</li><li>Educación</li><li>Servicio técnico</li></ul></div>
+      <div><h2>Clientes</h2><ul><li>Amazon</li><li>Caser</li><li>Correos Market</li></ul></div>
+    </div>
+  </aside>
   <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
     <h2 id="especialidades">Cada proyecto pide algo distinto.</h2>
@@ -125,7 +130,6 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <a class="mobile-branch-link" href="especialidades/ui-behavioral-design/" data-mobile-branch-link>Explorar especialidad</a>
   </div>
 </section>
-  </div>
   <section class="notes" id="trayectoria">
     <h2>Distintos proyectos, el mismo criterio.</h2>
     <p>He diseñado productos para e-commerce, seguros, aprendizaje y servicio técnico. Combino diseño de interfaz, prototipado y trabajo con equipos para que lo que se decide pueda llegar a producción.</p>
@@ -152,7 +156,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=progreso-hero";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=franja-sectores";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
