@@ -361,7 +361,7 @@ function glide(target) {
   const intro=documentTop(steps[0]);
   const entersStory=Math.abs(target-intro)<4&&from<intro*.6;
   const returnsToHero=target<4&&from<=intro+4;
-  const duration=entersStory||returnsToHero?1000:600;
+  const duration=entersStory||returnsToHero?1600:600;
   function move(now) {
     const progress=clamp((now-started)/duration);
     const ease=progress<.5?4*progress**3:1-((-2*progress+2)**3)/2;
@@ -523,7 +523,7 @@ function update(now) {
     return {
       pyramid:1-approach,
       bobPhase:time*.78,
-      ripple:motion?((1-approach)*.10+approach*smooth(position)*.065):0,
+      ripple:motion?((1-approach)*.10+approach*.065):0,
       stretch:weight*.58
     };
   }),time);
