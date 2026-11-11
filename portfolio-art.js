@@ -347,7 +347,7 @@ const systemWidths=[.58,.92,1.72,2];
 
 function systemModels() {
   const scene=[];
-  const add=(stage,mesh,color,x,y,z)=>scene.push({stage,mesh,color,origin:.5,position:[systemCenters[stage]+x,y,z]});
+  const add=(stage,mesh,color,x,y,z)=>scene.push({stage,mesh,color,origin:.5,position:[systemCenters[stage]+x,y-.27-(stage===3?.17:0),z]});
   const plate=(stage,width,height,depth,color,x,y,z,radius=.1)=>{
     add(stage,upright(solid(width,height,depth,radius)),color,x,y,z);
   };
@@ -407,7 +407,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       tracks.forEach((track,index)=>{
         const start=systemCenters[index]+systemWidths[index]/2+.12;
         const end=systemCenters[index+1]-systemWidths[index+1]/2-.12;
-        const project=x=>[width/2+x*.808027*scale,height/2+(.14-x*.589145*.548024)*scale];
+        const project=x=>[width/2+x*.808027*scale,height/2+(.37-x*.589145*.548024)*scale];
         const [x1,y1]=project(start), [x2,y2]=project(end);
         const path=`M${x1},${y1} L${x2},${y2}`;
         const progress=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-125-index*370)/245));

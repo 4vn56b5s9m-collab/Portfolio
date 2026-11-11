@@ -157,6 +157,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   function preview(index) {
     if (index === active) return;
     active = index;
+    accordion.dataset.litPiece = String([0, 2, 3, 1][index]);
     cards.forEach((card, i) => card.classList.toggle("is-previewed", i === index));
     panels.forEach((panel, i) => { panel.hidden = i !== index; });
     dots.forEach((dot, i) => {
@@ -199,6 +200,15 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
         left: gallery.scrollLeft + card.left + card.width / 2 - bounds.left - bounds.width / 2,
         behavior: reduced.matches ? "instant" : "smooth"
       });
+    });
+    dot.addEventListener("keydown", event => {
+      const offset = event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : 0;
+      const next = offset ? (index + offset + dots.length) % dots.length
+        : event.key === "Home" ? 0 : event.key === "End" ? dots.length - 1 : null;
+      if (next === null) return;
+      event.preventDefault();
+      dots[next].focus();
+      dots[next].click();
     });
   });
   gallery.addEventListener("scroll", () => {

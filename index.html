@@ -53,12 +53,13 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=especialidades-hero">
-<script defer src="portfolio-interactions.js?v=especialidades-hero"></script>
+<link rel="stylesheet" href="portfolio.css?v=fondo-continuo">
+<script defer src="portfolio-interactions.js?v=fondo-continuo"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
 <main>
+  <div class="home-atmosphere">
   <section class="hero" aria-labelledby="saludo">
     <div class="hero-copy">
       <div class="hero-title"><h1 id="saludo">Hola, soy Álex</h1>
@@ -75,20 +76,20 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <div class="hero-floor" aria-hidden="true"></div>
     <div class="hero-visual" aria-hidden="true"><canvas id="portfolio-art"></canvas></div>
   </section>
-  <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion>
+  <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
     <h2 id="especialidades">Cada proyecto pide algo distinto.</h2>
-    <div class="accordion-branches" aria-label="Vistas de especialidades" role="group">
+    <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
       <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></a>
       <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></a>
       <a href="especialidades/liderazgo-y-formacion/" data-accordion-branch="2"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span></a>
       <a href="especialidades/sistemas-de-diseno/" data-accordion-branch="3"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span></a>
     </div>
-    <div class="branch-pagination" aria-label="Posición en la galería">
-      <button type="button" aria-label="UI y Behavioral Design" data-branch-page="0" aria-current="true"></button>
-      <button type="button" aria-label="Motion e inmersión" data-branch-page="1"></button>
-      <button type="button" aria-label="Formación de equipos de diseño" data-branch-page="2"></button>
-      <button type="button" aria-label="Sistemas de diseño para múltiples marcas" data-branch-page="3"></button>
+    <div class="branch-pagination" role="group" aria-label="Elegir especialidad">
+      <button type="button" aria-label="UI y Behavioral Design" data-branch-page="0" aria-controls="specialty-gallery accordion-visual" aria-current="true"></button>
+      <button type="button" aria-label="Motion e inmersión" data-branch-page="1" aria-controls="specialty-gallery accordion-visual"></button>
+      <button type="button" aria-label="Formación de equipos de diseño" data-branch-page="2" aria-controls="specialty-gallery accordion-visual"></button>
+      <button type="button" aria-label="Sistemas de diseño para múltiples marcas" data-branch-page="3" aria-controls="specialty-gallery accordion-visual"></button>
     </div>
     <div class="accordion-visual" id="accordion-visual">
       <div class="accordion-panel" data-accordion-panel="0"></div>
@@ -113,6 +114,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <a class="mobile-branch-link" href="especialidades/ui-behavioral-design/" data-mobile-branch-link>Explorar especialidad</a>
   </div>
 </section>
+  </div>
   <section class="notes" id="trayectoria">
     <h2>Distintos proyectos, el mismo criterio.</h2>
     <p>He diseñado productos para e-commerce, seguros, aprendizaje y servicio técnico. Combino diseño de interfaz, prototipado y trabajo con equipos para que lo que se decide pueda llegar a producción.</p>
@@ -139,7 +141,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=especialidades-hero";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=fondo-continuo";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
