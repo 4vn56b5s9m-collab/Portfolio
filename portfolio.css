@@ -158,23 +158,30 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .product-card[data-step="3"] .product-cta:focus-visible{outline:3px solid #171719;outline-offset:3px}
 .notes{background:var(--page);color:var(--home-ink)}
 
-.hero{position:relative;isolation:isolate;--light-x:68%;--light-y:51%;--light-tone:#245b63;--light-opacity:.55}
-.hero::before,.hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1}
-.hero::before{background:
-  radial-gradient(ellipse at 79% 35%,#3861633d,transparent 48%),
-  radial-gradient(ellipse at 47% 85%,#4b47413b,transparent 48%),
-  radial-gradient(ellipse at 22% 17%,#3a3b423e,transparent 50%);
-  background-size:110% 120%;animation:hero-atmosphere 25s ease-in-out infinite alternate}
-.hero::after{background:radial-gradient(ellipse at var(--light-x) var(--light-y),var(--light-tone),transparent 57%);opacity:var(--light-opacity);transition:opacity 1s;animation:hero-light-drift 19s ease-in-out infinite alternate}
-.hero[data-lit-piece]{--light-opacity:.82}
-.hero[data-lit-piece="0"]{--light-x:70%;--light-y:39%;--light-tone:#54504d}
-.hero[data-lit-piece="1"]{--light-x:77%;--light-y:49%;--light-tone:#286369}
-.hero[data-lit-piece="2"]{--light-x:74%;--light-y:61%;--light-tone:#555049}
-.hero[data-lit-piece="3"]{--light-x:66%;--light-y:70%;--light-tone:#46525a}
-@keyframes hero-atmosphere{0%{background-position:10% 50%,0% 20%,65% 20%}45%{background-position:60% 10%,75% 70%,10% 45%}100%{background-position:94% 75%,25% 5%,80% 90%}}
-@keyframes hero-light-drift{from{background-size:112% 102%;background-position:0% 0%}to{background-size:102% 114%;background-position:100% 100%}}
-.hero-visual{position:relative}
-.hero-visual::before{content:"";position:absolute;inset:59% 5% 4%;border-radius:50%;background:radial-gradient(ellipse,#0006 0%,transparent 65%);opacity:var(--hero-opacity,1);pointer-events:none}
+.hero{position:relative;isolation:isolate;overflow:hidden;--floor-tint:#285560}
+.hero::before{content:"";position:absolute;inset:-3%;pointer-events:none;z-index:-1;background:
+  radial-gradient(ellipse at 74% 66%,#2c697650,transparent 43%),
+  radial-gradient(ellipse at 88% 90%,#c0a58225,transparent 38%),
+  radial-gradient(ellipse at 36% 94%,#c0a58214,transparent 50%);
+  animation:hero-atmosphere 22s ease-in-out infinite alternate}
+@keyframes hero-atmosphere{from{transform:translate(-1%,-.6%)}to{transform:translate(1%,.6%)}}
+.hero[data-lit-piece="0"]{--floor-tint:#80684d}
+.hero[data-lit-piece="1"]{--floor-tint:#368997}
+.hero[data-lit-piece="2"]{--floor-tint:#a48660}
+.hero[data-lit-piece="3"]{--floor-tint:#426477}
+.hero-visual{position:relative;isolation:isolate}
+.hero-visual::before,.hero-visual::after{content:"";position:absolute;inset:54% 1% 1%;pointer-events:none;z-index:0}
+.hero-visual::before{background:
+  radial-gradient(ellipse at 52% 64%,#08090bd9 0%,#08090b70 24%,transparent 58%),
+  radial-gradient(ellipse at 62% 60%,#08090b98,transparent 58%),
+  radial-gradient(ellipse at 24% 68%,#b49c7340,transparent 49%),
+  radial-gradient(ellipse at 78% 72%,#2d7b8638,transparent 53%)}
+.hero-visual::after{
+  background-color:var(--floor-tint);
+  mask-image:radial-gradient(ellipse at 46% 63%,transparent 8%,#000a 35%,#0004 52%,transparent 70%);
+  opacity:.58;
+  transition:background-color .7s ease;
+}
 .accordion-branches{display:flex;gap:.55rem}
 .accordion-branches button{flex:1 1 0;min-width:0;min-height:8.5rem;text-align:left;padding:clamp(.65rem,1.55vw,1.15rem);display:grid;align-content:start;gap:.55rem;border:1px solid #ffffff32;border-radius:.85rem;background:#242428;color:#f4f2ed;cursor:pointer;transition:flex-grow .45s cubic-bezier(.23,.73,.29,1),background .35s,border-color .35s}
 .accordion-branches button[aria-pressed=true]{flex-grow:1.55;background:#163e44;border-color:#9bc9c4}
@@ -236,7 +243,7 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
   .accordion-visual{min-height:14rem}
 }
 @media(prefers-reduced-motion:reduce){
-  .hero::before,.hero::after,.accordion-panel,.progress-object span,.attention-core,.attention-halo,.attention-travel,.growth-object>span,.system-evolution li{animation:none}
-  .hero::after,.accordion-branches button{transition:none}
+  .hero::before,.accordion-panel,.progress-object span,.attention-core,.attention-halo,.attention-travel,.growth-object>span,.system-evolution li{animation:none}
+  .hero-visual::after,.accordion-branches button{transition:none}
   .attention-travel{display:none}
 }
