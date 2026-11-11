@@ -20,22 +20,29 @@ function contour(width,depth,radius,height) {
 
 function buildMesh(piece,index) {
   const inner=pieces[index-1];
-  const shape={width:piece.width,depth:piece.depth,radius:piece.depth*.19};
-  const opening=inner
-    ? {width:inner.width+.13,depth:inner.depth+.13,radius:inner.depth*.19+.065}
-    : {width:1.16,depth:.35,radius:.075};
+  const inset=inner?(piece.depth-inner.depth-.13)/2:.17;
+  const radius=Math.max(piece.depth*.19,inset+.065);
+  const shape={width:piece.width,depth:piece.depth,radius};
+  const opening={width:shape.width-2*inset,depth:shape.depth-2*inset,radius:radius-inset};
+  const thickness=[.34,.39,.44,.52][index];
+  return buildBands(shape,opening,inner?3:2,thickness,!inner);
+}
+
+function buildBands(shape,opening,bands,thickness,solidCore=false) {
+  const upper=thickness/2;
+  const lower=-upper;
   const vertices=[];
   function quad(points,normal,level,cavity=0) {
     for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level,cavity);
   }
   function rim(outside,inside,level) {
-    const bevel=.022;
-    const top=contour(outside.width-2*bevel,outside.depth-2*bevel,outside.radius-bevel,.15);
-    const shoulder=contour(outside.width,outside.depth,outside.radius,.15-bevel);
-    const base=contour(outside.width,outside.depth,outside.radius,-.15);
-    const holeTop=inside&&contour(inside.width+2*bevel,inside.depth+2*bevel,inside.radius+bevel,.15);
-    const holeShoulder=inside&&contour(inside.width,inside.depth,inside.radius,.15-bevel);
-    const holeBase=inside&&contour(inside.width,inside.depth,inside.radius,-.15);
+    const bevel=Math.min(.032,thickness*.22,outside.radius*.4);
+    const top=contour(outside.width-2*bevel,outside.depth-2*bevel,outside.radius-bevel,upper);
+    const shoulder=contour(outside.width,outside.depth,outside.radius,upper-bevel);
+    const base=contour(outside.width,outside.depth,outside.radius,lower);
+    const holeTop=inside&&contour(inside.width+2*bevel,inside.depth+2*bevel,inside.radius+bevel,upper);
+    const holeShoulder=inside&&contour(inside.width,inside.depth,inside.radius,upper-bevel);
+    const holeBase=inside&&contour(inside.width,inside.depth,inside.radius,lower);
     for (let i=0;i<top.length;i++) {
       const j=(i+1)%top.length;
       const dx=shoulder[j][0]-shoulder[i][0],dz=shoulder[j][2]-shoulder[i][2];
@@ -49,29 +56,32 @@ function buildMesh(piece,index) {
         quad([holeTop[i],holeTop[j],holeShoulder[j],holeShoulder[i]],[-nx,.9,-nz],level,.48);
         quad([holeShoulder[i],holeShoulder[j],holeBase[j],holeBase[i]],[-nx,0,-nz],level,1);
       } else {
-        vertices.push(0,.15,0,0,1,0,level,0,...top[i],0,1,0,level,0,...top[j],0,1,0,level,0);
-        for (const point of [[0,-.15,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level,0);
+        vertices.push(0,upper,0,0,1,0,level,0,...top[i],0,1,0,level,0,...top[j],0,1,0,level,0);
+        for (const point of [[0,lower,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level,0);
       }
     }
+  }
+  if (!opening) {
+    rim(shape,null,0);
+    return new Float32Array(vertices);
   }
   const interpolate=(t,offset)=>({
     width:shape.width+(opening.width-shape.width)*t+offset*2,
     depth:shape.depth+(opening.depth-shape.depth)*t+offset*2,
     radius:shape.radius+(opening.radius-shape.radius)*t+offset
   });
-  const bands=inner?3:2;
   for (let band=0;band<bands;band++) {
-    const level=band/(inner?bands-1:bands);
+    const level=band/(solidCore?bands:Math.max(1,bands-1));
     rim(interpolate(band/bands,band===0?0:-.023),
       interpolate((band+1)/bands,band===bands-1?0:.023),level);
   }
-  if (!inner) rim(interpolate(1,-.05),null,1);
+  if (solidCore) rim(interpolate(1,-.043),null,1);
   return new Float32Array(vertices);
 }
 
 export const coarse=matchMedia("(pointer: coarse)");
 
-export function createArt(art) {
+export function createArt(art,models=pieces) {
   const gl=art.getContext("webgl",{alpha:true,antialias:true,depth:true});
   if (!gl) return null;
   function shader(type,source) {
@@ -87,11 +97,13 @@ export function createArt(art) {
     attribute float band, cavity;
     uniform vec2 viewport;
     uniform vec2 origin;
+    uniform vec3 position;
+    uniform float orthographic;
     uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
     varying vec3 surfaceNormal, surfacePosition;
     varying float innerWall, localHeight;
     void main() {
-      vec3 p=vertex;
+      vec3 p=vertex+position;
       float rise=0.31+0.69*band*band;
       float radialPosition=(terrace*3.0+band*2.0)/11.0;
       float waveHeight=ripple*sin(bobPhase+radialPosition*5.4);
@@ -100,7 +112,7 @@ export function createArt(art) {
       float u=p.x*0.808027+p.z*0.589145;
       float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
-      float w=1.0-depth/13.0;
+      float w=1.0-(1.0-orthographic)*depth/13.0;
       vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
       vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
       gl_Position=vec4(center*w+offset,-depth/10.0,w);
@@ -113,7 +125,7 @@ export function createArt(art) {
   const fragmentSource=`
     precision mediump float;
     uniform vec3 color;
-    uniform float time;
+    uniform float time, opacity;
     varying vec3 surfaceNormal, surfacePosition;
     varying float innerWall, localHeight;
     void main() {
@@ -130,7 +142,7 @@ export function createArt(art) {
       vec3 light=color*(.38+warm*.59+cool*.20)*occlusion;
       light+=vec3(1.0,.79,.55)*(.085*warm*(1.0-wash)+.16*rim);
       light+=vec3(.22,.61,.72)*(.16*cool*wash+.12*bounce)*(1.0+.1*sin(time*.65));
-      gl_FragColor=vec4(light,1.0);
+      gl_FragColor=vec4(light*opacity,opacity);
     }
   `;
   const program=gl.createProgram();
@@ -143,9 +155,9 @@ export function createArt(art) {
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
   const cavity=gl.getAttribLocation(program,"cavity");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
-  const meshes=pieces.map((piece,index)=>{
-    const data=buildMesh(piece,index);
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const meshes=models.map((piece,index)=>{
+    const data=piece.mesh??buildMesh(piece,index);
     const buffer=gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
@@ -174,12 +186,19 @@ export function createArt(art) {
       }
       gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     },
-    render(scale,poses,time) {
+    render(scale,poses,time,orthographic=false) {
       if (scale<=0||!width||!height) return;
       gl.uniform2f(uniforms.origin,width*.5,height*.5);
       gl.uniform1f(uniforms.scale,scale);
       gl.uniform1f(uniforms.time,time);
+      gl.uniform1f(uniforms.orthographic,Number(orthographic));
+      if (orthographic) { gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA); }
       meshes.forEach(({buffer,count,color},index)=>{
+        const pose=poses[index];
+        if (pose.opacity===0) return;
+        gl.uniform3fv(uniforms.position,pose.position??[0,0,0]);
+        gl.uniform2f(uniforms.origin,width*(pose.origin??.5),height*.5);
+        gl.uniform1f(uniforms.opacity,pose.opacity??1);
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
         gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,32,0);
         gl.vertexAttribPointer(normal,3,gl.FLOAT,false,32,12);
@@ -284,3 +303,112 @@ for (const selector of document.querySelectorAll("[data-specialty-selector]")) {
   reduced.addEventListener("change",()=>{last=0;queue();});
 }
 
+
+const chalk=[226,208,175];
+const petrol=[39,108,118];
+const stone=[136,123,105];
+
+function solid(width,depth,height,radius) {
+  return buildBands({width,depth,radius},null,1,height);
+}
+
+function sleeve(size,wall,height,radius) {
+  return buildBands(
+    {width:size,depth:size,radius},
+    {width:size-2*wall,depth:size-2*wall,radius:radius-wall},
+    1,height
+  );
+}
+
+function upright(mesh) {
+  for (let offset=0;offset<mesh.length;offset+=8) {
+    const y=mesh[offset+1], ny=mesh[offset+4];
+    mesh[offset+1]=mesh[offset+2];
+    mesh[offset+2]=-y;
+    mesh[offset+4]=mesh[offset+5];
+    mesh[offset+5]=-ny;
+  }
+  return mesh;
+}
+
+function trainingModels() {
+  return [.55,1.02,1.65].flatMap((height,stage)=>{
+    const x=(stage-1)*1.95;
+    return [
+      [sleeve(1.45,.14,height,.25),chalk,height],
+      [sleeve(1.07,.13,height+.17,.20),petrol,height+.17],
+      [solid(.70,.70,height+.34,.14),chalk,height+.34]
+    ].map(([mesh,color,h])=>({mesh,color,stage,origin:.5,position:[x,h/2-1.2,0]}));
+  });
+}
+
+function systemModels() {
+  const scene=[];
+  const origins=[.095,.31,.55,.805];
+  const add=(stage,mesh,color,x,y,z)=>scene.push({stage,mesh,color,origin:origins[stage],position:[x,y,z]});
+  const plate=(stage,width,height,depth,color,x,y,z,radius=.1)=>{
+    add(stage,upright(solid(width,height,depth,radius)),color,x,y,z);
+  };
+  const cube=(stage,x,y,z,size)=>add(stage,solid(size,size,size,.075),petrol,x,y,z);
+  const token=(stage,x,y,z,size)=>{
+    add(stage,upright(sleeve(size,size*.16,.17,size*.24)),chalk,x,y,z);
+    cube(stage,x,y,z+.08,size*.53);
+  };
+  const card=(stage,x,y,z,size)=>{
+    plate(stage,size*1.65,size*.90,.18,petrol,x,y,z,size*.14);
+    token(stage,x-size*.42,y,z+.16,size*.61);
+    plate(stage,size*.51,size*.09,.08,chalk,x+size*.31,y+size*.12,z+.12,.035);
+    plate(stage,size*.38,size*.08,.08,chalk,x+size*.25,y-size*.11,z+.12,.03);
+  };
+  cube(0,0,-.32,0,.58);
+  token(1,0,-.25,0,.92);
+  card(2,0,-.17,0,1.04);
+  plate(3,2.0,1.75,.22,stone,0,.1,0,.16);
+  card(3,-.23,.15,.18,.8);
+  plate(3,.48,.40,.12,chalk,.63,.19,.21,.08);
+  plate(3,1.62,.24,.12,petrol,0,-.53,.18,.08);
+  return scene;
+}
+
+for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
+  const training=canvas.dataset.branchCanvas==="training";
+  const models=training?trainingModels():systemModels();
+  const parent=canvas.parentElement;
+  const reduced=matchMedia("(prefers-reduced-motion: reduce)");
+  let renderer, frame=0, started=0, visible=false;
+  function draw(now) {
+    frame=0;
+    if (!visible) return;
+    const {clientWidth:width,clientHeight:height}=parent;
+    if (!width||!height) return;
+    started ||= now;
+    const elapsed=now-started;
+    const scale=Math.min(width/(training?6.35:8.9),height/(training?3.85:2.85));
+    renderer.clear({width,height});
+    renderer.render(scale,models.map(model=>{
+      const delay=model.stage*(training?190:370);
+      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/420));
+      const opacity=1-(1-progress)**3;
+      const [x,y,z]=model.position;
+      return {
+        origin:model.origin,position:[x,y-(1-opacity)*.16,z],opacity,
+        pyramid:0,stretch:0,bobPhase:0,ripple:0
+      };
+    }),0,true);
+    if (!reduced.matches&&elapsed<(training?800:1530)) frame=requestAnimationFrame(draw);
+  }
+  function queue() {
+    if (visible&&renderer&&!frame) frame=requestAnimationFrame(draw);
+  }
+  new IntersectionObserver(([entry])=>{
+    visible=entry.isIntersecting;
+    if (visible&&!renderer) {
+      try { renderer=createArt(canvas,models); } catch(error) { console.warn("Portfolio 3D:",error); }
+      if (!renderer) { parent.classList.add("is-3d-unavailable");return; }
+    }
+    started=0;
+    queue();
+  }).observe(parent);
+  new ResizeObserver(queue).observe(parent);
+  reduced.addEventListener("change",queue);
+}

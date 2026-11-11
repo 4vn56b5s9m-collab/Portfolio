@@ -144,21 +144,50 @@ for (const button of document.querySelectorAll("[data-copy-contact]")) {
 
 
 for (const accordion of document.querySelectorAll("[data-specialty-accordion]")) {
-  const cards = [...accordion.querySelectorAll("[data-accordion-branch]")];
+  const gallery = accordion.querySelector(".accordion-branches");
+  const cards = [...gallery.querySelectorAll("[data-accordion-branch]")];
   const panels = [...accordion.querySelectorAll("[data-accordion-panel]")];
+  const link = accordion.querySelector("[data-mobile-branch-link]");
+  const mobile = matchMedia("(max-width: 700px)");
   let active = 0;
+  let frame = 0;
 
   function preview(index) {
     if (index === active) return;
     active = index;
     cards.forEach((card, i) => card.classList.toggle("is-previewed", i === index));
     panels.forEach((panel, i) => { panel.hidden = i !== index; });
+    link.href = cards[index].href;
+    link.setAttribute("aria-label", "Explorar " + cards[index].querySelector("strong").textContent);
+  }
+
+  function previewCenteredCard() {
+    frame = 0;
+    if (!mobile.matches) return;
+    const bounds = gallery.getBoundingClientRect();
+    const center = bounds.left + bounds.width / 2;
+    let closest = 0;
+    let distance = Infinity;
+    cards.forEach((card, index) => {
+      const { left, width } = card.getBoundingClientRect();
+      const offset = Math.abs(left + width / 2 - center);
+      if (offset < distance) {
+        closest = index;
+        distance = offset;
+      }
+    });
+    preview(closest);
   }
 
   cards.forEach((card, index) => {
     card.addEventListener("pointerenter", event => {
-      if (event.pointerType !== "touch") preview(index);
+      if (!mobile.matches && event.pointerType !== "touch") preview(index);
     });
     card.addEventListener("focus", () => preview(index));
   });
+  gallery.addEventListener("scroll", () => {
+    if (mobile.matches && !frame) frame = requestAnimationFrame(previewCenteredCard);
+  }, { passive: true });
+  mobile.addEventListener("change", previewCenteredCard);
+  previewCenteredCard();
 }
