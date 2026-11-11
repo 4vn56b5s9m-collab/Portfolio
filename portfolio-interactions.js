@@ -144,35 +144,21 @@ for (const button of document.querySelectorAll("[data-copy-contact]")) {
 
 
 for (const accordion of document.querySelectorAll("[data-specialty-accordion]")) {
-  const buttons=[...accordion.querySelectorAll("[data-accordion-branch]")];
-  const panels=[...accordion.querySelectorAll("[data-accordion-panel]")];
-  const visual=accordion.querySelector(".accordion-visual");
-  const link=accordion.querySelector("[data-accordion-link]");
-  const paths=["ui-behavioral-design","motion-e-inmersion","liderazgo-y-formacion","sistemas-de-diseno"];
-  let active=-1;
-  let measureFrame=0;
-  function measureOrigin(button) {
-    cancelAnimationFrame(measureFrame);
-    measureFrame=requestAnimationFrame(()=>{
-      const origin=button.getBoundingClientRect();
-      const target=visual.getBoundingClientRect();
-      visual.style.setProperty("--entry-x",((origin.left+origin.width*.5)-(target.left+target.width*.5))+"px");
-      visual.style.setProperty("--entry-y",-Math.max(45,target.top-origin.bottom+30)+"px");
+  const cards = [...accordion.querySelectorAll("[data-accordion-branch]")];
+  const panels = [...accordion.querySelectorAll("[data-accordion-panel]")];
+  let active = 0;
+
+  function preview(index) {
+    if (index === active) return;
+    active = index;
+    cards.forEach((card, i) => card.classList.toggle("is-previewed", i === index));
+    panels.forEach((panel, i) => { panel.hidden = i !== index; });
+  }
+
+  cards.forEach((card, index) => {
+    card.addEventListener("pointerenter", event => {
+      if (event.pointerType !== "touch") preview(index);
     });
-  }
-  function show(index) {
-    if(index===active)return;
-    active=index;
-    measureOrigin(buttons[index]);
-    buttons.forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
-    panels.forEach((panel,i)=>{panel.hidden=i!==index;});
-    link.href="especialidades/"+paths[index]+"/";
-    link.setAttribute("aria-label","Explorar "+buttons[index].querySelector("strong").textContent);
-  }
-  buttons.forEach((button,index)=>{
-    button.addEventListener("pointerenter",event=>{if(event.pointerType!=="touch")show(index);});
-    button.addEventListener("focus",()=>show(index));
-    button.addEventListener("click",()=>show(index));
+    card.addEventListener("focus", () => preview(index));
   });
-  show(0);
 }

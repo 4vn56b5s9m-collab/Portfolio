@@ -22,14 +22,14 @@ function buildMesh(piece,index) {
   const inner=pieces[index-1];
   const shape={width:piece.width,depth:piece.depth,radius:piece.depth*.19};
   const opening=inner
-    ? {width:inner.width+.012,depth:inner.depth+.012,radius:inner.depth*.19+.006}
+    ? {width:inner.width+.13,depth:inner.depth+.13,radius:inner.depth*.19+.065}
     : {width:1.16,depth:.35,radius:.075};
   const vertices=[];
-  function quad(points,normal,level) {
-    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level);
+  function quad(points,normal,level,cavity=0) {
+    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level,cavity);
   }
   function rim(outside,inside,level) {
-    const bevel=.009;
+    const bevel=.022;
     const top=contour(outside.width-2*bevel,outside.depth-2*bevel,outside.radius-bevel,.15);
     const shoulder=contour(outside.width,outside.depth,outside.radius,.15-bevel);
     const base=contour(outside.width,outside.depth,outside.radius,-.15);
@@ -46,11 +46,11 @@ function buildMesh(piece,index) {
       if (inside) {
         quad([top[i],top[j],holeTop[j],holeTop[i]],[0,1,0],level);
         quad([base[i],base[j],holeBase[j],holeBase[i]],[0,-1,0],level);
-        quad([holeTop[i],holeTop[j],holeShoulder[j],holeShoulder[i]],[-nx,.9,-nz],level);
-        quad([holeShoulder[i],holeShoulder[j],holeBase[j],holeBase[i]],[-nx,0,-nz],level);
+        quad([holeTop[i],holeTop[j],holeShoulder[j],holeShoulder[i]],[-nx,.9,-nz],level,.48);
+        quad([holeShoulder[i],holeShoulder[j],holeBase[j],holeBase[i]],[-nx,0,-nz],level,1);
       } else {
-        vertices.push(0,.15,0,0,1,0,level,...top[i],0,1,0,level,...top[j],0,1,0,level);
-        for (const point of [[0,-.15,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level);
+        vertices.push(0,.15,0,0,1,0,level,0,...top[i],0,1,0,level,0,...top[j],0,1,0,level,0);
+        for (const point of [[0,-.15,0],base[i],base[j]]) vertices.push(...point,0,-1,0,level,0);
       }
     }
   }
@@ -62,10 +62,10 @@ function buildMesh(piece,index) {
   const bands=inner?3:2;
   for (let band=0;band<bands;band++) {
     const level=band/(inner?bands-1:bands);
-    rim(interpolate(band/bands,band===0?0:-.002),
-      interpolate((band+1)/bands,band===bands-1?0:.002),level);
+    rim(interpolate(band/bands,band===0?0:-.023),
+      interpolate((band+1)/bands,band===bands-1?0:.023),level);
   }
-  if (!inner) rim(interpolate(1,-.008),null,1);
+  if (!inner) rim(interpolate(1,-.05),null,1);
   return new Float32Array(vertices);
 }
 
@@ -84,11 +84,12 @@ export function createArt(art) {
   const vertexSource=`
     attribute vec3 vertex;
     attribute vec3 normal;
-    attribute float band;
+    attribute float band, cavity;
     uniform vec2 viewport;
     uniform vec2 origin;
     uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
     varying vec3 surfaceNormal, surfacePosition;
+    varying float innerWall, localHeight;
     void main() {
       vec3 p=vertex;
       float rise=0.31+0.69*band*band;
@@ -104,6 +105,8 @@ export function createArt(art) {
       vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
       gl_Position=vec4(center*w+offset,-depth/10.0,w);
       surfaceNormal=normal;
+      innerWall=cavity;
+      localHeight=vertex.y;
       surfacePosition=p;
     }
   `;
@@ -112,13 +115,22 @@ export function createArt(art) {
     uniform vec3 color;
     uniform float time;
     varying vec3 surfaceNormal, surfacePosition;
+    varying float innerWall, localHeight;
     void main() {
       vec3 n=normalize(surfaceNormal);
-      vec3 light=normalize(vec3(-0.45+0.30*sin(time*0.64),0.84,0.35));
-      float diffuse=max(0.0,dot(n,light));
-      float sweep=smoothstep(-0.95,0.95,sin(surfacePosition.x*0.93+surfacePosition.z*0.52+sin(time*0.71)*1.5));
-      float glint=sweep*(0.025+0.07*max(n.y,0.0));
-      gl_FragColor=vec4(color*(0.57+diffuse*0.49)+glint*vec3(0.54,0.62,0.65),1.0);
+      vec3 key=normalize(vec3(-.58,.76,.32));
+      vec3 fill=normalize(vec3(.72,.54,-.38));
+      vec3 view=normalize(vec3(-.32,.55,.76));
+      float warm=max(dot(n,key),0.0);
+      float cool=max(dot(n,fill),0.0);
+      float wash=smoothstep(-2.5,2.5,surfacePosition.x+surfacePosition.z*.54);
+      float rim=pow(max(dot(n,normalize(key+view)),0.0),18.0);
+      float bounce=pow(max(dot(n,normalize(fill+view)),0.0),11.0);
+      float occlusion=mix(1.0,mix(.43,.88,smoothstep(-.15,.15,localHeight)),innerWall);
+      vec3 light=color*(.38+warm*.59+cool*.20)*occlusion;
+      light+=vec3(1.0,.79,.55)*(.085*warm*(1.0-wash)+.16*rim);
+      light+=vec3(.22,.61,.72)*(.16*cool*wash+.12*bounce)*(1.0+.1*sin(time*.65));
+      gl_FragColor=vec4(light,1.0);
     }
   `;
   const program=gl.createProgram();
@@ -130,18 +142,20 @@ export function createArt(art) {
   const vertex=gl.getAttribLocation(program,"vertex");
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
+  const cavity=gl.getAttribLocation(program,"cavity");
   const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
-    return {buffer,count:data.length/7,color:piece.color.map(channel=>channel/255)};
+    return {buffer,count:data.length/8,color:piece.color.map(channel=>channel/255)};
   });
   gl.enable(gl.DEPTH_TEST);
   gl.enableVertexAttribArray(vertex);
   gl.enableVertexAttribArray(normal);
   gl.enableVertexAttribArray(band);
+  gl.enableVertexAttribArray(cavity);
   gl.clearColor(0,0,0,0);
   let width,height,ratio;
   return {
@@ -167,9 +181,10 @@ export function createArt(art) {
       gl.uniform1f(uniforms.time,time);
       meshes.forEach(({buffer,count,color},index)=>{
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,28,0);
-        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,28,12);
-        gl.vertexAttribPointer(band,1,gl.FLOAT,false,28,24);
+        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,32,0);
+        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,32,12);
+        gl.vertexAttribPointer(band,1,gl.FLOAT,false,32,24);
+        gl.vertexAttribPointer(cavity,1,gl.FLOAT,false,32,28);
         gl.uniform1f(uniforms.pyramid,poses[index].pyramid);
         gl.uniform1f(uniforms.terrace,3-index);
         gl.uniform1f(uniforms.bobPhase,poses[index].bobPhase);
@@ -203,8 +218,8 @@ export function pickHeroPiece(x,y,scale,pyramid) {
       const perspective=scale/(1-depth/13);
       return [u*perspective,(v*.548024-py*.836463)*perspective,depth];
     }
-    for (let at=0;at<mesh.length;at+=21) {
-      const a=project(at),b=project(at+7),c=project(at+14);
+    for (let at=0;at<mesh.length;at+=24) {
+      const a=project(at),b=project(at+8),c=project(at+16);
       if (Math.abs((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]))<.001) continue;
       if (insideTriangle(x,y,a,b,c)) {
         const depth=(a[2]+b[2]+c[2])/3;
