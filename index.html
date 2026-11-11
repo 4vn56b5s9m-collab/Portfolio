@@ -35,6 +35,24 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 @media(min-width:701px){.hero-copy,.hero-visual{position:relative;top:calc(-1 * min(5svh,3.1rem))}}
 .stage-copy{display:grid;justify-items:center;gap:.8rem}
 .stage-copy h2,.stage-copy p{margin:0}
+.stage .stage-copy h2{font-size:clamp(2.2rem,4.3vw,4.4rem);max-width:24ch}
+.branch-card{width:min(100%,36rem);display:grid;justify-items:center;gap:.7rem;padding:clamp(.85rem,2vw,1.25rem);border:1px solid #ffffff29;border-radius:1rem;background:#ffffff08;color:var(--tiza)}
+.branch-card[hidden]{display:none}
+.stage .branch-card p{font-size:clamp(.94rem,1.35vw,1.12rem);max-width:54ch;line-height:1.42;text-wrap:pretty}
+.branch-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.32rem}
+.branch-tags li{font-size:.76rem;line-height:1.15;border:1px solid #ffffff36;border-radius:999px;padding:.3rem .57rem}
+.branch-link{display:inline-flex;align-items:center;min-height:44px;padding:.45rem .9rem;border-radius:.65rem;background:var(--petroleo);color:var(--tiza);font-weight:600;font-size:.89rem;text-decoration:none}
+.branch-link:hover{text-decoration:underline}
+.story-screen:not(.intro){padding-block:clamp(1rem,4svh,2.75rem);gap:clamp(.3rem,1.4svh,1rem)}
+.story-screen .stage-visual{height:100%;max-height:min(40svh,25rem);min-height:0}
+.static-story .branch-card{justify-items:start}
+.static-story .branch-tags{justify-content:start}
+@media(max-width:700px){
+  .stage-copy{gap:.55rem}
+  .stage .stage-copy h2{font-size:clamp(2.05rem,8vw,3.3rem)}
+  .branch-card{gap:.4rem}
+  .branch-tags li{font-size:.7rem}
+}
 .stage.story-screen{grid-template-rows:auto minmax(0,1fr)}
 .hero-copy{opacity:var(--hero-opacity,1);transform:translateY(var(--hero-offset,0px))}
 .stage.intro h2{opacity:var(--intro-opacity,0);transform:translateY(var(--intro-offset,12px))}
@@ -48,7 +66,7 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .js .story-track{position:relative;margin-top:-100svh;pointer-events:none}
 .story-track .step{height:48svh}
 .story-track .step:last-child{height:100svh}
-.js .static-story{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.js .static-story{display:none}
 .story-screen,.story-track{display:none}
 .js .story-screen{display:grid}
 .js .story-track{display:block}
@@ -68,7 +86,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .stage-visual{height:min(45svh,75vw)}
 }
 @media(prefers-reduced-motion:reduce){
-  .js .story-screen,.js .story-track{display:none}.js .static-story{position:static;width:auto;height:auto;overflow:visible;clip-path:none}
+  .js .story-screen,.js .story-track{display:none}.js .static-story{display:block}
   .static-story .stage{min-height:auto;display:block;padding-block:2.5rem;text-align:left}
   .static-story .stage p{margin-top:1rem}
 }
@@ -92,18 +110,18 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <div class="hero-visual" aria-hidden="true"></div>
   </section>
   <section class="story" id="especialidades" aria-label="Mis especialidades">
-    <div class="story-screen stage" aria-hidden="true">
-      <div class="stage-copy"><h2></h2><p></p></div><div class="stage-visual"></div>
+    <div class="story-screen stage">
+      <div class="stage-copy"><h2></h2><div class="branch-card" hidden><p></p><ul class="branch-tags"></ul><a class="branch-link"></a></div></div><div class="stage-visual" aria-hidden="true"></div>
     </div>
     <div class="story-track" aria-hidden="true">
       <div class="step"></div><div class="step" id="ui-behavioral-design"></div><div class="step" id="motion-e-inmersion"></div><div class="step" id="formaciones"></div><div class="step" id="direccion-y-sistemas"></div>
     </div>
     <div class="static-story">
       <article class="stage"><h2>Cada proyecto pide algo distinto.</h2></article>
-      <article class="stage"><h2>UI y Behavioral Design</h2><p>Diseño interfaces que ayudan a decidir.</p></article>
-      <article class="stage"><h2>Motion e inmersión</h2><p>Uso el movimiento para guiar la atención.</p></article>
-      <article class="stage"><h2>Experiencia formando equipos</h2><p>He formado a equipos de diseño en empresas y les he ayudado a definir flujos de trabajo y estándares para que todos trabajen con criterios compartidos.</p></article>
-      <article class="stage"><h2>Dirección y sistemas de diseño</h2><p>Alineo alcance, componentes y entrega a desarrollo.</p></article>
+      <article class="stage"><h2>UI y Behavioral Design</h2><div class="branch-card"><p>Diseño interfaces para decisiones complejas. En un flujo de devolución, por ejemplo, pongo las opciones y sus condiciones donde la persona decide qué hacer.</p><ul class="branch-tags"><li>Flujos de decisión</li><li>Jerarquía visual</li></ul><a class="branch-link" href="especialidades/ui-behavioral-design/">Explorar UI y Behavioral Design</a></div></article>
+      <article class="stage"><h2>Motion e inmersión</h2><div class="branch-card"><p>Diseño microinteracciones que hacen visible un cambio de estado y ayudan a mantener el contexto. También llevo estas decisiones a experiencias web interactivas.</p><ul class="branch-tags"><li>Microinteracciones</li><li>Prototipos interactivos</li><li>Webflow</li></ul><a class="branch-link" href="especialidades/motion-e-inmersion/">Explorar motion e inmersión</a></div></article>
+      <article class="stage"><h2>Liderazgo y formación de equipos de diseño</h2><div class="branch-card"><p>He formado a equipos de diseño en empresas y les he ayudado a acordar flujos de trabajo, estándares y criterios para revisar y entregar diseño con coherencia.</p><ul class="branch-tags"><li>Formación de equipos</li><li>Flujos de trabajo</li><li>Estándares</li></ul><a class="branch-link" href="especialidades/liderazgo-y-formacion/">Explorar liderazgo y formación</a></div></article>
+      <article class="stage"><h2>Sistemas de diseño para múltiples marcas</h2><div class="branch-card"><p>Estructuro componentes y patrones que pueden compartirse entre productos y unidades de negocio. Defino qué se mantiene en común y qué puede adaptar cada marca.</p><ul class="branch-tags"><li>Componentes compartidos</li><li>Variantes por marca</li><li>Entrega a desarrollo</li></ul><a class="branch-link" href="especialidades/sistemas-de-diseno/">Explorar sistemas de diseño</a></div></article>
     </div>
   </section>
   <section class="notes" id="trayectoria">
@@ -127,10 +145,10 @@ const story = document.querySelector(".story");
 const stage = document.querySelector(".story-screen");
 const stages = [...document.querySelectorAll(".static-story article")].map(article => ({
   title: article.querySelector("h2").textContent,
-  description: article.querySelector("p")?.textContent ?? ""
+  card: article.querySelector(".branch-card")
 }));
 const stageTitle = stage.querySelector("h2");
-const stageDescription = stage.querySelector("p");
+const stageCard = stage.querySelector(".branch-card");
 const heroSlot = document.querySelector(".hero-visual");
 const storySlot = stage.querySelector(".stage-visual");
 const stageCopy = stage.querySelector(".stage-copy");
@@ -504,7 +522,9 @@ function layoutAt(y,motion) {
     const chapter=Math.min(4,Math.floor(position+.5));
     if (chapter!==activeStage) {
       stageTitle.textContent=stages[chapter].title;
-      stageDescription.textContent=stages[chapter].description;
+      const card=stages[chapter].card;
+      stageCard.hidden=!card;
+      stageCard.replaceChildren(...(card?Array.from(card.children,node=>node.cloneNode(true)):[]));
       stage.classList.toggle("intro",chapter===0);
       stageCopy.getAnimations().forEach(animation=>animation.cancel());
       if (activeStage!==-1) {
