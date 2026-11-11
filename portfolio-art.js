@@ -98,18 +98,17 @@ export function createArt(art,models=pieces) {
     uniform vec2 viewport;
     uniform vec2 origin;
     uniform vec3 position;
-    uniform float orthographic, quarterTurn, layerRise;
+    uniform float orthographic;
     uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
     varying vec3 surfaceNormal, surfacePosition;
     varying float innerWall, localHeight;
     void main() {
       vec3 p=vertex+position;
-      p.xz=mix(p.xz,vec2(-p.z,p.x),quarterTurn);
       float rise=0.31+0.69*band*band;
       float radialPosition=(terrace*3.0+band*2.0)/11.0;
       float waveHeight=ripple*sin(bobPhase+radialPosition*5.4);
       float heroOffset=pyramid*(terrace*0.39+band*0.105);
-      p.y+=heroOffset+stretch*rise+waveHeight+band*layerRise;
+      p.y+=heroOffset+stretch*rise+waveHeight;
       float u=p.x*0.808027+p.z*0.589145;
       float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
@@ -117,7 +116,7 @@ export function createArt(art,models=pieces) {
       vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
       vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
       gl_Position=vec4(center*w+offset,-depth/10.0,w);
-      surfaceNormal=mix(normal,vec3(-normal.z,normal.y,normal.x),quarterTurn);
+      surfaceNormal=normal;
       innerWall=cavity;
       localHeight=vertex.y;
       surfacePosition=p;
@@ -156,7 +155,7 @@ export function createArt(art,models=pieces) {
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
   const cavity=gl.getAttribLocation(program,"cavity");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity","quarterTurn","layerRise"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=models.map((piece,index)=>{
     const data=piece.mesh??buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -187,13 +186,12 @@ export function createArt(art,models=pieces) {
       }
       gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     },
-    render(scale,poses,time,orthographic=false,quarterTurn=0) {
+    render(scale,poses,time,orthographic=false) {
       if (scale<=0||!width||!height) return;
       gl.uniform2f(uniforms.origin,width*.5,height*.5);
       gl.uniform1f(uniforms.scale,scale);
       gl.uniform1f(uniforms.time,time);
       gl.uniform1f(uniforms.orthographic,Number(orthographic));
-      gl.uniform1f(uniforms.quarterTurn,quarterTurn);
       if (orthographic) { gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA); }
       meshes.forEach(({buffer,count,color},index)=>{
         const pose=poses[index];
@@ -201,7 +199,6 @@ export function createArt(art,models=pieces) {
         gl.uniform3fv(uniforms.position,pose.position??[0,0,0]);
         gl.uniform2f(uniforms.origin,width*(pose.origin??.5),height*.5);
         gl.uniform1f(uniforms.opacity,pose.opacity??1);
-        gl.uniform1f(uniforms.layerRise,pose.layerRise??0);
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
         gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,32,0);
         gl.vertexAttribPointer(normal,3,gl.FLOAT,false,32,12);
@@ -315,11 +312,11 @@ function solid(width,depth,height,radius) {
   return buildBands({width,depth,radius},null,1,height);
 }
 
-function sleeve(size,wall,height,radius,bands=1) {
+function sleeve(size,wall,height,radius) {
   return buildBands(
     {width:size,depth:size,radius},
     {width:size-2*wall,depth:size-2*wall,radius:radius-wall},
-    bands,height,false,bands===1?.023:.006
+    1,height
   );
 }
 
@@ -338,17 +335,19 @@ function trainingModels() {
   return [.55,1.02,1.65].flatMap((height,stage)=>{
     const x=(stage-1)*1.95;
     return [
-      [sleeve(1.45,.17,height,.25,3),chalk,height],
-      [sleeve(1.07,.15,height+.17,.20,3),petrol,height+.17],
-      [buildBands({width:.70,depth:.70,radius:.16},{width:.38,depth:.38,radius:.09},2,height+.34,true,.008),chalk,height+.34]
+      [sleeve(1.45,.14,height,.25),chalk,height],
+      [sleeve(1.07,.13,height+.17,.20),petrol,height+.17],
+      [solid(.70,.70,height+.34,.14),chalk,height+.34]
     ].map(([mesh,color,h])=>({mesh,color,stage,origin:.5,position:[x,h/2-1.12,0]}));
   });
 }
 
+const systemCenters=[-4.05,-1.9,.60,3.65];
+const systemWidths=[.58,.92,1.72,2];
+
 function systemModels() {
   const scene=[];
-  const origins=[.095,.31,.55,.805];
-  const add=(stage,mesh,color,x,y,z)=>scene.push({stage,mesh,color,origin:origins[stage],position:[x,y,z]});
+  const add=(stage,mesh,color,x,y,z)=>scene.push({stage,mesh,color,origin:.5,position:[systemCenters[stage]+x,y,z]});
   const plate=(stage,width,height,depth,color,x,y,z,radius=.1)=>{
     add(stage,upright(solid(width,height,depth,radius)),color,x,y,z);
   };
@@ -363,8 +362,8 @@ function systemModels() {
     plate(stage,size*.51,size*.09,.08,chalk,x+size*.31,y+size*.12,z+.12,.035);
     plate(stage,size*.38,size*.08,.08,chalk,x+size*.25,y-size*.11,z+.12,.03);
   };
-  cube(0,0,-.32,0,.58);
-  token(1,0,-.25,0,.92);
+  cube(0,0,-.17,0,.58);
+  token(1,0,-.17,0,.92);
   card(2,0,-.17,0,1.04);
   plate(3,2.0,1.75,.22,stone,0,.1,0,.16);
   card(3,-.23,.15,.18,.8);
@@ -377,6 +376,10 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const training=canvas.dataset.branchCanvas==="training";
   const models=training?trainingModels():systemModels();
   const parent=canvas.parentElement;
+  const connectors=parent.querySelector(".system-connectors");
+  const tracks=connectors?[...connectors.querySelectorAll(".system-track")]:[];
+  const fills=connectors?[...connectors.querySelectorAll(".system-fill")]:[];
+  const pulse=connectors?.querySelector(".system-pulse");
   const reduced=matchMedia("(prefers-reduced-motion: reduce)");
   let renderer, frame=0, started=0, visible=false;
   function draw(now) {
@@ -386,7 +389,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.35:8.9),height/(training?4.8:2.85));
+    const scale=Math.min(width/(training?6.35:9.2),height/(training?4.8:4.7));
     renderer.clear({width,height});
     renderer.render(scale,models.map(model=>{
       const delay=model.stage*(training?190:370);
@@ -395,9 +398,28 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const [x,y,z]=model.position;
       return {
         origin:model.origin,position:[x,y-(1-opacity)*.16,z],opacity,
-        pyramid:0,stretch:0,bobPhase:0,ripple:0,layerRise:training?.095:0
+        pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
-    }),0,true,training?0:1);
+    }),0,true);
+    if (connectors) {
+      connectors.setAttribute("viewBox",`0 0 ${width} ${height}`);
+      pulse.style.visibility="hidden";
+      tracks.forEach((track,index)=>{
+        const start=systemCenters[index]+systemWidths[index]/2+.12;
+        const end=systemCenters[index+1]-systemWidths[index+1]/2-.12;
+        const project=x=>[width/2+x*.808027*scale,height/2+(.14-x*.589145*.548024)*scale];
+        const [x1,y1]=project(start), [x2,y2]=project(end);
+        const path=`M${x1},${y1} L${x2},${y2}`;
+        const progress=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-125-index*370)/245));
+        track.setAttribute("d",path);
+        fills[index].setAttribute("d",path);
+        fills[index].style.strokeDashoffset=1-progress;
+        if (progress>0&&progress<1) {
+          pulse.setAttribute("transform",`translate(${x1+(x2-x1)*progress} ${y1+(y2-y1)*progress})`);
+          pulse.style.visibility="visible";
+        }
+      });
+    }
     if (!reduced.matches&&elapsed<(training?800:1530)) frame=requestAnimationFrame(draw);
   }
   function queue() {

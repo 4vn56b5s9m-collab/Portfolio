@@ -53,15 +53,19 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=galeria-movil">
-<script defer src="portfolio-interactions.js?v=galeria-movil"></script>
+<link rel="stylesheet" href="portfolio.css?v=especialidades-hero">
+<script defer src="portfolio-interactions.js?v=especialidades-hero"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
 <main>
   <section class="hero" aria-labelledby="saludo">
     <div class="hero-copy">
-      <div class="hero-title"><h1 id="saludo">Hola, soy Alex</h1><p class="tagline">Interfaces con intención</p></div>
+      <div class="hero-title"><h1 id="saludo">Hola, soy Álex</h1>
+        <p class="tagline">Experto en diseño de interfaces mediante
+          <span class="hero-typed" aria-hidden="true">Behavioral Design</span>
+          <span class="hero-specialties-reader">Behavioral Design, sistemas de diseño, motion e inmersión y formación de equipos.</span>
+        </p></div>
       <dl class="stats">
         <div><dd data-count="81">81</dd><dt>proyectos</dt></div>
         <div><dd data-count="25">25</dd><dt>clientes</dt></div>
@@ -97,10 +101,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <div class="accordion-panel system-panel" data-accordion-panel="3" hidden>
         <div class="branch-scene systems-scene">
           <canvas data-branch-canvas="systems" role="img" aria-label="Un cubo se integra en un marco, el marco en una tarjeta y la tarjeta en una interfaz"></canvas>
-          <svg class="system-connectors" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">
-            <g style="--step:0"><path class="system-track" d="M145 67H241"/><path class="system-fill" pathLength="1" d="M145 67H241"/></g>
-            <g style="--step:1"><path class="system-track" d="M384 67H440"/><path class="system-fill" pathLength="1" d="M384 67H440"/></g>
-            <g style="--step:2"><path class="system-track" d="M663 67H702"/><path class="system-fill" pathLength="1" d="M663 67H702"/></g>
+          <svg class="system-connectors" aria-hidden="true">
+            <g><path class="system-track"/><path class="system-fill" pathLength="1"/></g>
+            <g><path class="system-track"/><path class="system-fill" pathLength="1"/></g>
+            <g><path class="system-track"/><path class="system-fill" pathLength="1"/></g>
+            <g class="system-pulse"><circle class="system-halo" r="8"/><circle class="system-core" r="2.6"/></g>
           </svg>
         </div>
       </div>
@@ -134,7 +139,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=galeria-movil";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=especialidades-hero";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
@@ -144,11 +149,55 @@ const updateHeader=()=>document.documentElement.style.setProperty("--nav-height"
 new ResizeObserver(updateHeader).observe(header);
 updateHeader();
 
+const branches=["Behavioral Design","Sistemas de diseño","Motion e inmersión","Formación de equipos"];
+const typed=hero.querySelector(".hero-typed");
+let active=0,hovered=-1,heroVisible=false,cycleTimer=0,typeTimer=0;
+hero.dataset.litPiece="0";
+
+function showBranch(index) {
+  if (index===active) return;
+  active=index;
+  hero.dataset.litPiece=String(index);
+  clearTimeout(typeTimer);
+  const label=branches[index];
+  if (reduced.matches) {
+    typed.textContent=label;
+    return;
+  }
+  let length=0;
+  typed.textContent="";
+  function typeNext() {
+    typed.textContent=label.slice(0,++length);
+    if (length<label.length) typeTimer=setTimeout(typeNext,42);
+  }
+  typeNext();
+}
+
+function scheduleCycle() {
+  clearTimeout(cycleTimer);
+  if (reduced.matches||document.hidden||!heroVisible||hovered>=0) return;
+  cycleTimer=setTimeout(()=>{
+    showBranch((active+1)%branches.length);
+    scheduleCycle();
+  },3300);
+}
+
+new IntersectionObserver(([entry])=>{
+  heroVisible=entry.isIntersecting;
+  scheduleCycle();
+}).observe(hero);
+document.addEventListener("visibilitychange",scheduleCycle);
+reduced.addEventListener("change",()=>{
+  clearTimeout(typeTimer);
+  typed.textContent=branches[active];
+  scheduleCycle();
+});
+
 let renderer;
 try { renderer=createArt(canvas); } catch(error) { console.warn("Portfolio WebGL:",error); }
 if (renderer) {
   const heights=pieces.map(()=>0);
-  let frame=0,last=0,active=-1,visible=false,scale=0,surface;
+  let frame=0,last=0,visible=false,scale=0,surface;
   function queue() {
     if (visible&&!frame) frame=requestAnimationFrame(draw);
   }
@@ -169,11 +218,13 @@ if (renderer) {
     if (!reduced.matches) queue();
   }
   function highlight(index) {
-    if(index===active) return;
-    active=index;
-    if(index<0) hero.removeAttribute("data-lit-piece");
-    else hero.dataset.litPiece=String(index);
-    queue();
+    if (index===hovered) return;
+    hovered=index;
+    if (index>=0) {
+      showBranch(index);
+      queue();
+    }
+    scheduleCycle();
   }
   slot.addEventListener("pointermove",event=>{
     if (event.pointerType==="touch"||!surface) return;
