@@ -150,115 +150,131 @@ function corners(width, depth, height) {
 
 function buildMesh(piece,index) {
   const top=corners(piece.width,piece.depth,.15);
-  const base=corners(piece.width,piece.depth,-.15);
+  const bottom=corners(piece.width,piece.depth,-.15);
   const inner=pieces[index-1];
-  const hole=inner && corners(inner.width+.045,inner.depth+.045,.15);
-  const holeBase=inner && corners(inner.width+.045,inner.depth+.045,-.15);
-  const sides=top.map((_,i)=>{
+  const hole=inner&&corners(inner.width+.045,inner.depth+.045,.15);
+  const holeBottom=inner&&corners(inner.width+.045,inner.depth+.045,-.15);
+  const normals=[[0,0,-1],[1,0,0],[0,0,1],[-1,0,0]];
+  const vertices=[];
+  function quad(points,normal) {
+    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal);
+  }
+  if (!hole) {
+    quad(top,[0,1,0]);
+    quad(bottom,[0,-1,0]);
+  }
+  for (let i=0;i<4;i++) {
     const j=(i+1)%4;
-    return {outer:[top[j],top[i],base[i],base[j]],inner:hole && [hole[i],hole[j],holeBase[j],holeBase[i]]};
+    quad([top[i],top[j],bottom[j],bottom[i]],normals[i]);
+    if (hole) {
+      quad([top[i],top[j],hole[j],hole[i]],[0,1,0]);
+      quad([bottom[i],bottom[j],holeBottom[j],holeBottom[i]],[0,-1,0]);
+      quad([hole[i],hole[j],holeBottom[j],holeBottom[i]],normals[i].map(n=>-n));
+    }
+  }
+  return new Float32Array(vertices);
+}
+
+function createArt() {
+  const gl=art.getContext("webgl",{alpha:true,antialias:true});
+  if (!gl) return null;
+  function shader(type,source) {
+    const shader=gl.createShader(type);
+    gl.shaderSource(shader,source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader,gl.COMPILE_STATUS)) throw Error(gl.getShaderInfoLog(shader));
+    return shader;
+  }
+  const vertexSource=`
+    attribute vec3 vertex;
+    attribute vec3 normal;
+    uniform vec2 viewport;
+    uniform vec2 origin;
+    uniform float scale, lift, tilt;
+    varying vec3 surfaceNormal, surfacePosition;
+    void main() {
+      float c=cos(tilt), s=sin(tilt);
+      vec3 p=vec3(c*vertex.x-s*vertex.y,s*vertex.x+c*vertex.y+lift,vertex.z);
+      float u=p.x*0.808027+p.z*0.589145;
+      float v=-p.x*0.589145+p.z*0.808027;
+      float depth=p.y*0.548024+v*0.836463;
+      float w=1.0-depth/13.0;
+      vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
+      vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
+      gl_Position=vec4(center*w+offset,-depth/10.0,w);
+      surfaceNormal=vec3(c*normal.x-s*normal.y,s*normal.x+c*normal.y,normal.z);
+      surfacePosition=p;
+    }
+  `;
+  const fragmentSource=`
+    precision mediump float;
+    uniform vec3 color;
+    uniform float time;
+    varying vec3 surfaceNormal, surfacePosition;
+    void main() {
+      vec3 light=normalize(vec3(-0.48+0.17*sin(time*0.52),0.88,0.35));
+      float diffuse=max(0.0,dot(normalize(surfaceNormal),light));
+      float sweep=0.07*sin(surfacePosition.x*0.95+surfacePosition.z*0.7+sin(time*0.53));
+      float value=0.49+diffuse*0.65+sweep;
+      gl_FragColor=vec4(color*value,1.0);
+    }
+  `;
+  const program=gl.createProgram();
+  gl.attachShader(program,shader(gl.VERTEX_SHADER,vertexSource));
+  gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fragmentSource));
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program,gl.LINK_STATUS)) throw Error(gl.getProgramInfoLog(program));
+  gl.useProgram(program);
+  const vertex=gl.getAttribLocation(program,"vertex");
+  const normal=gl.getAttribLocation(program,"normal");
+  const uniforms=Object.fromEntries(["viewport","origin","scale","lift","tilt","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const meshes=pieces.map((piece,index)=>{
+    const data=buildMesh(piece,index);
+    const buffer=gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+    gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
+    return {buffer,count:data.length/6,color:piece.color.map(channel=>channel/255)};
   });
-  return {top,hole,sides,color:piece.color};
-}
-
-const meshes=pieces.map(buildMesh);
-const ctx=art.getContext("2d");
-let width=0,height=0,pixelRatio=0;
-
-function clearArt() {
-  const ratio=Math.min(devicePixelRatio||1,2);
-  if (width!==art.clientWidth || height!==art.clientHeight || pixelRatio!==ratio) {
-    width=art.clientWidth;
-    height=art.clientHeight;
-    pixelRatio=ratio;
-    art.width=Math.round(width*ratio);
-    art.height=Math.round(height*ratio);
-    ctx.setTransform(ratio,0,0,ratio,0,0);
-  }
-  ctx.clearRect(0,0,width,height);
-}
-
-function path(points) {
-  points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));
-  ctx.closePath();
-}
-
-function frontFacing([a,b,c]) {
-  return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])>0;
-}
-
-function render(box,poses,time) {
-  const scale=Math.min(box.width/6.4,box.height/4.25);
-  if (scale<=0) return;
-  const cy=Math.cos(.63),sy=Math.sin(.63),cp=Math.cos(.58),sp=Math.sin(.58);
-  const floorX=box.left+box.width*.5;
-  const floorY=box.top+box.height*.62;
-  ctx.save();
-  ctx.translate(floorX,floorY+scale*.9);
-  ctx.scale(scale*2.55,scale*.38);
-  const shadow=ctx.createRadialGradient(0,0,0,0,0,1);
-  shadow.addColorStop(0,"#0008");
-  shadow.addColorStop(1,"#0000");
-  ctx.fillStyle=shadow;
-  ctx.fillRect(-1,-1,2,2);
-  ctx.restore();
-
-  const order=meshes.map((_,i)=>i).sort((a,b)=>poses[a].lift-poses[b].lift||b-a);
-  const surfaces=[];
-  for (const i of order) {
-    const {top,hole,sides,color}=meshes[i];
-    const {lift,tilt}=poses[i];
-    const sin=Math.sin(tilt),cos=Math.cos(tilt);
-    const project=([x,y,z])=>{
-      const tx=x*cos-y*sin,ty=x*sin+y*cos+lift;
-      const u=tx*cy+z*sy,v=-tx*sy+z*cy;
-      const perspective=13/(13-(ty*sp+v*cp));
-      return [floorX+u*scale*perspective,floorY+(-ty*cp+v*sp)*scale*perspective];
-    };
-    const projectedTop=top.map(project);
-    const projectedHole=hole?.map(project);
-    const shade=(tone)=>"rgb("+color.map(c=>clamp(Math.round(c*tone),0,255)).join(",")+")";
-    function wall(vertices,tone) {
-      const points=vertices.map(project);
-      if (!frontFacing(points)) return;
-      ctx.beginPath();
-      path(points);
-      ctx.fillStyle=shade(tone);
-      ctx.fill();
+  gl.enable(gl.DEPTH_TEST);
+  gl.enableVertexAttribArray(vertex);
+  gl.enableVertexAttribArray(normal);
+  gl.clearColor(0,0,0,0);
+  let width,height,ratio;
+  return {
+    clear() {
+      const currentRatio=Math.min(devicePixelRatio||1,2);
+      if (width!==art.clientWidth||height!==art.clientHeight||ratio!==currentRatio) {
+        width=art.clientWidth;
+        height=art.clientHeight;
+        ratio=currentRatio;
+        art.width=Math.round(width*ratio);
+        art.height=Math.round(height*ratio);
+        gl.viewport(0,0,art.width,art.height);
+        gl.uniform2f(uniforms.viewport,width,height);
+      }
+      gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+    },
+    render(box,poses,time) {
+      const scale=Math.min(box.width/6.4,box.height/4.25);
+      if (scale<=0||!width||!height) return;
+      gl.uniform2f(uniforms.origin,box.left+box.width*.5,box.top+box.height*.62);
+      gl.uniform1f(uniforms.scale,scale);
+      gl.uniform1f(uniforms.time,time);
+      meshes.forEach(({buffer,count,color},index)=>{
+        gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+        gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,24,0);
+        gl.vertexAttribPointer(normal,3,gl.FLOAT,false,24,12);
+        gl.uniform1f(uniforms.lift,poses[index].lift);
+        gl.uniform1f(uniforms.tilt,poses[index].tilt);
+        gl.uniform3fv(uniforms.color,color);
+        gl.drawArrays(gl.TRIANGLES,0,count);
+      });
     }
-    const drawWalls=()=>{
-      sides.forEach(({outer},j)=>wall(outer,[.49,.64,.66,.51][j]));
-      if (!projectedHole) return;
-      ctx.save();
-      ctx.beginPath();
-      path(projectedHole);
-      ctx.clip();
-      sides.forEach(({inner})=>wall(inner,.52));
-      ctx.restore();
-    };
-    const shift=Math.sin(time*.52)*box.width*.15;
-    const light=ctx.createLinearGradient(floorX-box.width*.36+shift,floorY-box.height*.3,floorX+box.width*.36+shift,floorY+box.height*.35);
-    light.addColorStop(0,shade(1.18));
-    light.addColorStop(.47,shade(1.04));
-    light.addColorStop(1,shade(.77));
-    const drawTop=()=>{
-      ctx.beginPath();
-      path(projectedTop);
-      if (projectedHole) path(projectedHole);
-      ctx.fillStyle=light;
-      ctx.fill("evenodd");
-    };
-    if (lift<=.018) {
-      drawWalls();
-      surfaces.push(drawTop);
-    } else {
-      surfaces.splice(0).forEach(draw=>draw());
-      drawWalls();
-      drawTop();
-    }
-  }
-  surfaces.forEach(draw=>draw());
+  };
 }
+
+let renderer;
+try { renderer=createArt(); } catch (error) { console.warn("Portfolio WebGL:",error); }
 
 function between(a,b,t) {
   return Object.fromEntries(["left","top","width","height"].map(key=>[key,a[key]+(b[key]-a[key])*t]));
@@ -356,7 +372,7 @@ function update(now) {
   stage.style.setProperty("--intro-offset",((1-introFade)*12).toFixed(1)+"px");
   const heroVisible=heroBounds.bottom>0 && heroBounds.top<innerHeight;
   const storyVisible=motion && storyBounds.top<innerHeight && storyBounds.bottom>0;
-  clearArt();
+  renderer?.clear();
   if (storyVisible) {
     const chapter=Math.min(4,Math.floor(position+.5));
     if (chapter!==activeStage) {
@@ -376,7 +392,7 @@ function update(now) {
     const box=storyVisible
       ? between(heroSlot.getBoundingClientRect(),storySlot.getBoundingClientRect(),approach)
       : heroSlot.getBoundingClientRect();
-    render(box,pieces.map((_,i)=>{
+    renderer?.render(box,pieces.map((_,i)=>{
       const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
       const float=Math.sin(time*1.05-i*.21)*.047;
       return {
