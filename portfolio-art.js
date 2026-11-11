@@ -98,12 +98,13 @@ export function createArt(art,models=pieces) {
     uniform vec2 viewport;
     uniform vec2 origin;
     uniform vec3 position;
-    uniform float orthographic;
+    uniform float orthographic, growth, baseY;
     uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
     varying vec3 surfaceNormal, surfacePosition;
     varying float innerWall, localHeight;
     void main() {
       vec3 p=vertex+position;
+      p.y=position.y+baseY+(vertex.y-baseY)*growth;
       float rise=0.31+0.69*band*band;
       float radialPosition=(terrace*3.0+band*2.0)/11.0;
       float waveHeight=ripple*sin(bobPhase+radialPosition*5.4);
@@ -155,7 +156,7 @@ export function createArt(art,models=pieces) {
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
   const cavity=gl.getAttribLocation(program,"cavity");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity","growth","baseY"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=models.map((piece,index)=>{
     const data=piece.mesh??buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -199,6 +200,8 @@ export function createArt(art,models=pieces) {
         gl.uniform3fv(uniforms.position,pose.position??[0,0,0]);
         gl.uniform2f(uniforms.origin,width*(pose.origin??.5),height*.5);
         gl.uniform1f(uniforms.opacity,pose.opacity??1);
+        gl.uniform1f(uniforms.growth,pose.growth??1);
+        gl.uniform1f(uniforms.baseY,pose.baseY??0);
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
         gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,32,0);
         gl.vertexAttribPointer(normal,3,gl.FLOAT,false,32,12);
@@ -338,7 +341,7 @@ function trainingModels() {
       [sleeve(1.45,.14,height,.25),chalk,height],
       [sleeve(1.07,.13,height+.17,.20),petrol,height+.17],
       [solid(.70,.70,height+.34,.14),chalk,height+.34]
-    ].map(([mesh,color,h])=>({mesh,color,stage,origin:.5,position:[x,h/2-1.12,0]}));
+    ].map(([mesh,color,h],layer)=>({mesh,color,stage,layer,baseY:-h/2,origin:.5,position:[x,h/2-1.12,0]}));
   });
 }
 
@@ -346,14 +349,17 @@ const systemCenters=[-4.05,-1.9,.60,3.65];
 
 function systemModels() {
   const scene=[];
-  const add=(stage,mesh,color,x,y,z)=>scene.push({stage,mesh,color,origin:.5,position:[systemCenters[stage]+x,y-.27-(stage===3?.17:0),z]});
+  const phases=[0,0,0,0];
+  const add=(stage,mesh,color,x,y,z)=>scene.push({
+    stage,layer:phases[stage]++,mesh,color,origin:.5,position:[systemCenters[stage]+x,y-.27-(stage===3?.17:0),z]
+  });
   const plate=(stage,width,height,depth,color,x,y,z,radius=.1)=>{
     add(stage,upright(solid(width,height,depth,radius)),color,x,y,z);
   };
   const cube=(stage,x,y,z,size)=>add(stage,solid(size,size,size,.075),petrol,x,y,z);
   const token=(stage,x,y,z,size)=>{
-    add(stage,upright(sleeve(size,size*.16,.17,size*.24)),chalk,x,y,z);
     cube(stage,x,y,z+.08,size*.53);
+    add(stage,upright(sleeve(size,size*.16,.17,size*.24)),chalk,x,y,z);
   };
   const card=(stage,x,y,z,size)=>{
     plate(stage,size*1.65,size*.90,.18,petrol,x,y,z,size*.14);
@@ -404,20 +410,56 @@ function systemFootprints(models) {
   });
 }
 
+function behavioralModels() {
+  const ground=-.98, height=1.30;
+  const arch=upright(buildBands({width:.88,depth:height,radius:.39},
+    {width:.58,depth:1,radius:.24},1,.16));
+  for (let i=0;i<arch.length;i+=8) {
+    const x=arch[i],nx=arch[i+3];
+    arch[i]=arch[i+2];
+    arch[i+2]=-x;
+    arch[i+3]=arch[i+5];
+    arch[i+5]=-nx;
+  }
+  const doors=[[-3,0],[-.75,0],[2.35,-1.30],[2.35,0],[2.35,1.30]];
+  const models=doors.map(([x,z],index)=>({mesh:arch,color:index===4?petrol:chalk,
+    stage:index<2?index:2,origin:.5,position:[x,ground+height/2,z]}));
+  const paver=solid(.33,.45,.10,.09);
+  for (let i=0;i<14;i++) {
+    const x=-3.34+i*.45;
+    const z=1.30*Math.max(0,(x+.70)/3.2);
+    models.push({mesh:paver,color:i<6?chalk:petrol,stage:0,delay:230+i*105,
+      origin:.5,position:[x,ground+.05,z]});
+  }
+  return models;
+}
+
+function focusModels() {
+  return [
+    [sleeve(1.88,.19,.16,.45),chalk,-.57],
+    [sleeve(1.27,.14,.17,.33),petrol,-.41],
+    [solid(.59,.59,.19,.22),chalk,-.23]
+  ].map(([mesh,color,y],stage)=>({mesh,color,stage,origin:.5,position:[0,y,0]}));
+}
+
 for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
-  const training=canvas.dataset.branchCanvas==="training";
-  const models=training?trainingModels():systemModels();
-  const footprints=training?null:systemFootprints(models);
+  const kind=canvas.dataset.branchCanvas;
+  const training=kind==="training",behavioral=kind==="behavioral",focus=kind==="focus",systems=kind==="systems";
+  const models=training?trainingModels():behavioral?behavioralModels():focus?focusModels():systemModels();
+  const footprints=systems?systemFootprints(models):null;
   const parent=canvas.parentElement;
   const floor=parent.querySelector(".scene-floor");
   const shadows=[...floor.querySelectorAll(".scene-shadow")];
   const labels=[floor.querySelector(".scene-back"),floor.querySelector(".scene-front")];
+  const masks=[...floor.querySelectorAll("clipPath rect")];
+  const focusDot=floor.querySelector(".focus-dot");
   const connectors=parent.querySelector(".system-connectors");
   const tracks=connectors?[...connectors.querySelectorAll(".system-track")]:[];
   const fills=connectors?[...connectors.querySelectorAll(".system-fill")]:[];
   const pulse=connectors?.querySelector(".system-pulse");
   const reduced=matchMedia("(prefers-reduced-motion: reduce)");
   let renderer, frame=0, started=0, visible=false;
+  const duration=focus?3400:behavioral?2020:training?1480:2650;
   function draw(now) {
     frame=0;
     if (!visible) return;
@@ -425,20 +467,28 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.9:9.8),height/5.25);
+    const scale=Math.min(width/(training?6.9:behavioral?8.5:focus?7.3:9.8),height/5.25);
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
     ];
     renderer.clear({width,height});
     renderer.render(scale,models.map(model=>{
-      const delay=model.stage*(training?190:370);
-      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/420));
-      const opacity=1-(1-progress)**3;
+      const delay=model.delay??(training?model.stage*330+model.layer*105
+        :systems?model.stage*510+model.layer*88
+        :model.stage*(focus?190:370));
+      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/(training?570:420)));
+      const remaining=1-progress;
+      const settled=1-remaining**3;
       const [x,y,z]=model.position;
+      const growth=training?Math.max(.015,1-2.55*remaining**3+1.55*remaining**2)
+        :systems?Math.max(.06,settled):1;
       return {
-        origin:model.origin,position:[x,y-(1-opacity)*.16,z],opacity,
-        pyramid:0,stretch:0,bobPhase:0,ripple:0
+        origin:model.origin,
+        position:systems?[x+remaining*.18,y+remaining*.24,z+remaining*.29]
+          :[x,y-(training?0:remaining*.16),z],
+        opacity:training||systems?Number(progress>0):settled,
+        growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
@@ -446,8 +496,29 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     labels.forEach((label,index)=>{
       const [x,y]=project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
       label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
+      if (focus) {
+        const length=width*(index===0?.64:.94);
+        const size=Math.max(22,Math.min(110,width*.135));
+        for (const text of label.querySelectorAll("text")) {
+          text.setAttribute("textLength",length);
+          text.setAttribute("lengthAdjust","spacingAndGlyphs");
+        }
+        const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
+        const ratio=reduced.matches?1:Math.max(0,Math.min(1,time));
+        const progress=ratio*ratio*(3-2*ratio);
+        masks[index].setAttribute("x",-length/2-2);
+        masks[index].setAttribute("y",-size*1.2);
+        masks[index].setAttribute("width",(length+4)*progress);
+        masks[index].setAttribute("height",size*1.55);
+        if ((index===0&&elapsed<1680)||(index===1&&elapsed>=1680)||reduced.matches&&index===1) {
+          const along=length*(progress-.5)+((index===1&&ratio===1)?size*.105:0);
+          const lift=index===1&&ratio===1?-size*.05:-size*.22-Math.sin(ratio*Math.PI)*size*.09;
+          focusDot.setAttribute("transform",`translate(${x+.808*along+.589*lift} ${y-.323*along+.443*lift})`);
+          focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
+        }
+      }
     });
-    const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]:footprints.map(item=>item.center);
+    const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]:footprints?.map(item=>item.center);
     shadows.forEach((shadow,index)=>{
       const [x,y]=project(...ground[index]);
       const radius=training?.88:footprints[index].radius;
@@ -465,7 +536,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         const end=footprints[index+1].left-.17;
         const [x1,y1]=project(start,-.44,0), [x2,y2]=project(end,-.44,0);
         const path=end>start?`M${x1},${y1} L${x2},${y2}`:"";
-        const progress=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-125-index*370)/245));
+        const progress=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-235-index*510)/265));
         track.setAttribute("d",path);
         fills[index].setAttribute("d",path);
         fills[index].style.strokeDashoffset=1-progress;
@@ -475,7 +546,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         }
       });
     }
-    if (!reduced.matches&&elapsed<(training?800:1530)) frame=requestAnimationFrame(draw);
+    if (!reduced.matches&&elapsed<duration) frame=requestAnimationFrame(draw);
   }
   function queue() {
     if (visible&&renderer&&!frame) frame=requestAnimationFrame(draw);

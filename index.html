@@ -53,8 +53,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=primer-vistazo">
-<script defer src="portfolio-interactions.js?v=primer-vistazo"></script>
+<link rel="stylesheet" href="portfolio.css?v=puertas-y-foco">
+<script defer src="portfolio-interactions.js?v=puertas-y-foco"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -109,8 +109,29 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <button type="button" aria-label="Sistemas de diseño para múltiples marcas" data-branch-page="3" aria-controls="specialty-gallery accordion-visual"></button>
     </div>
     <div class="accordion-visual" id="accordion-visual">
-      <div class="accordion-panel" data-accordion-panel="0"></div>
-      <div class="accordion-panel light-panel" data-accordion-panel="1" hidden><p class="motion-caption"><span class="motion-line">Una microinteracción<span class="motion-ink" aria-hidden="true">Una microinteracción</span><span class="motion-orbit" aria-hidden="true"><i></i></span></span> <span class="motion-continuation"><span class="motion-line">puede cambiar tu foco<span class="motion-ink" aria-hidden="true">puede cambiar tu foco</span><span class="motion-orbit" aria-hidden="true"><i></i></span></span> <span class="motion-line motion-line-final">de atención<span class="motion-period">.</span><span class="motion-ink" aria-hidden="true">de atención<span class="motion-period">.</span></span><span class="motion-orbit" aria-hidden="true"><i></i></span></span></span></p></div>
+      <div class="accordion-panel" data-accordion-panel="0">
+        <div class="branch-scene behavioral-scene">
+          <svg class="scene-floor" aria-hidden="true">
+    <text class="scene-back" text-anchor="middle">Guía al usuario</text>
+    <text class="scene-front" text-anchor="middle">Facilita el siguiente paso</text>
+  </svg>
+          <canvas data-branch-canvas="behavioral" role="img" aria-label="Guía al usuario y facilita el siguiente paso. Un camino de piezas conecta dos puertas y conduce a la salida de la derecha."></canvas>
+        </div>
+      </div>
+      <div class="accordion-panel light-panel" data-accordion-panel="1" hidden>
+        <div class="branch-scene focus-scene">
+          <svg class="scene-floor focus-floor" aria-hidden="true">
+  <defs>
+    <clipPath id="focus-mask-back"><rect/></clipPath>
+    <clipPath id="focus-mask-front"><rect/></clipPath>
+  </defs>
+  <g class="focus-type scene-back"><text text-anchor="middle">Una microinteracción</text><text class="focus-ink" text-anchor="middle" clip-path="url(#focus-mask-back)">Una microinteracción</text></g>
+  <g class="focus-type scene-front"><text text-anchor="middle">puede cambiar tu foco de atención</text><text class="focus-ink" text-anchor="middle" clip-path="url(#focus-mask-front)">puede cambiar tu foco de atención</text></g>
+  <g class="focus-dot"><circle class="system-halo" r="8"/><circle class="system-core" r="3.2"/></g>
+</svg>
+          <canvas data-branch-canvas="focus" role="img" aria-label="Una microinteracción puede cambiar tu foco de atención."></canvas>
+        </div>
+      </div>
       <div class="accordion-panel growth-panel" data-accordion-panel="2" hidden>
         <div class="branch-scene training-scene">
           <svg class="scene-floor" aria-hidden="true">
@@ -168,7 +189,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=primer-vistazo";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=puertas-y-foco";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
