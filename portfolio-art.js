@@ -468,7 +468,7 @@ function focusModels() {
     [sleeve(1.88,.19,.16,.45),chalk,-.57],
     [sleeve(1.27,.14,.17,.33),petrol,-.41],
     [solid(.59,.59,.19,.22),chalk,-.23]
-  ].map(([mesh,color,y],stage)=>({mesh,color,stage,origin:.5,position:[0,y,0]}));
+  ].map(([mesh,color,y],stage)=>({mesh,color,stage,origin:.5,position:[0,y+.22,-.20]}));
 }
 
 for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
@@ -527,13 +527,13 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     floor.style.setProperty("--scene-type",Math.max(26,Math.min(110,width*.135))+"px");
     const fontSize=Math.max(26,Math.min(110,width*.135));
     labels.forEach((label,index)=>{
-      let [x,y]=focus&&index===1?project(-.42,-.72,1.44):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
+      let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
       if (!focus) {
         label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
         return;
       }
       if (width!==captionWidth||!captionBounds[index]?.width) {
-        const length=width*(index===0?.64:.80);
+        const length=width*(index===0?.64:.75);
         const [base,ink]=label.querySelectorAll("text");
         for (const text of [base,ink]) {
           text.setAttribute("textLength",length);
