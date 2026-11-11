@@ -117,8 +117,8 @@ export function createArt(art) {
       vec3 light=normalize(vec3(-0.45+0.30*sin(time*0.64),0.84,0.35));
       float diffuse=max(0.0,dot(n,light));
       float sweep=smoothstep(-0.95,0.95,sin(surfacePosition.x*0.93+surfacePosition.z*0.52+sin(time*0.71)*1.5));
-      float glint=sweep*(0.04+0.12*max(n.y,0.0));
-      gl_FragColor=vec4(color*(0.46+diffuse*0.67)+glint*vec3(0.54,0.62,0.65),1.0);
+      float glint=sweep*(0.025+0.07*max(n.y,0.0));
+      gl_FragColor=vec4(color*(0.57+diffuse*0.49)+glint*vec3(0.54,0.62,0.65),1.0);
     }
   `;
   const program=gl.createProgram();
@@ -269,85 +269,3 @@ for (const selector of document.querySelectorAll("[data-specialty-selector]")) {
   reduced.addEventListener("change",()=>{last=0;queue();});
 }
 
-for (const alternate of document.querySelectorAll("[data-alternate-hero]")) {
-  const buttons=[...alternate.querySelectorAll("[data-alt-branch]")];
-  const panels=[...alternate.querySelectorAll("[data-alt-examples]")];
-  const link=alternate.querySelector("[data-alt-link]");
-  const pauseButton=alternate.querySelector("[data-alt-pause]");
-  const slot=alternate.querySelector(".alternate-figure");
-  const canvas=slot.querySelector("canvas");
-  const routes=["ui-behavioral-design","motion-e-inmersion","liderazgo-y-formacion","sistemas-de-diseno"];
-  const reduced=matchMedia("(prefers-reduced-motion: reduce)");
-  let renderer;
-  try { renderer=createArt(canvas); } catch (error) { console.warn("Portfolio WebGL:",error); }
-  if (!renderer) slot.hidden=true;
-  let current=0,paused=false,visible=false,frame=0,last=0,next=0,scale=0,surface;
-  const heights=pieces.map(()=>0);
-  const duration=6500;
-  function select(index) {
-    next=performance.now()+duration;
-    if (index===current) return;
-    current=index;
-    buttons.forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
-    panels.forEach((panel,i)=>{panel.hidden=i!==index;});
-    link.href="especialidades/"+routes[index]+"/";
-    queue();
-  }
-  function draw(now) {
-    frame=0;
-    if (!visible) return;
-    if (!paused&&!reduced.matches&&!alternate.matches(":hover")&&!alternate.matches(":focus-within")&&now>=next) select((current+1)%buttons.length);
-    const elapsed=last?now-last:16;
-    if (renderer&&surface&&(reduced.matches||!last||elapsed>=(coarse.matches?30:15))) {
-      last=now;
-      const time=reduced.matches?0:now/1000;
-      const blend=reduced.matches?1:1-Math.exp(-elapsed/120);
-      renderer.clear(surface);
-      renderer.render(scale,pieces.map((_,i)=>{
-        heights[i]+=((current===i?.53:0)-heights[i])*blend;
-        return {pyramid:1,stretch:heights[i],bobPhase:time*.78,ripple:reduced.matches?0:.07};
-      }),time);
-    }
-    if (!reduced.matches) queue();
-  }
-  function queue() { if (visible&&!frame)frame=requestAnimationFrame(draw); }
-  buttons.forEach((button,index)=>{
-    button.addEventListener("pointerenter",event=>{if(event.pointerType!=="touch")select(index);});
-    button.addEventListener("focus",()=>select(index));
-    button.addEventListener("click",()=>select(index));
-  });
-  slot.addEventListener("pointermove",event=>{
-    if (event.pointerType==="touch"||!surface) return;
-    const box=canvas.getBoundingClientRect();
-    const index=pickHeroPiece(event.clientX-box.left-box.width*.5,event.clientY-box.top-box.height*.5,scale,1);
-    if (index>=0) select(index);
-  });
-  alternate.addEventListener("pointerleave",()=>{next=performance.now()+duration;});
-  pauseButton.addEventListener("click",()=>{
-    paused=!paused;
-    pauseButton.setAttribute("aria-pressed",String(paused));
-    pauseButton.textContent=paused?"Reanudar ciclo":"Pausar ciclo";
-    next=performance.now()+duration;
-  });
-  const motionPreference=()=>{
-    pauseButton.hidden=reduced.matches;
-    next=performance.now()+duration;
-    last=0;
-    queue();
-  };
-  reduced.addEventListener("change",motionPreference);
-  motionPreference();
-  new ResizeObserver(([entry])=>{
-    const {width,height}=entry.contentRect;
-    scale=Math.min(width/6.7,height/4.6);
-    surface={width:Math.max(1,Math.ceil(scale*6.7)),height:Math.max(1,Math.ceil(scale*4.6))};
-    last=0;
-    queue();
-  }).observe(slot);
-  new IntersectionObserver(([entry])=>{
-    visible=entry.isIntersecting;
-    next=performance.now()+duration;
-    last=0;
-    queue();
-  },{threshold:.2}).observe(alternate);
-}

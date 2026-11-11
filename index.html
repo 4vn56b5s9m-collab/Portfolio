@@ -95,8 +95,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .career-list strong{font-weight:600}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=cabecera">
-<script defer src="portfolio-interactions.js?v=escenas"></script>
+<link rel="stylesheet" href="portfolio.css?v=acordeon">
+<script defer src="portfolio-interactions.js?v=acordeon"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -111,7 +111,6 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       </dl>
     </div>
     <div class="hero-visual" aria-hidden="true"></div>
-    <a class="compare-hero" href="#cabecera-alternativa">Ver cabecera alternativa ↓</a>
   </section>
   <section class="story" id="especialidades" aria-label="Mis especialidades">
     <div class="story-screen stage">
@@ -128,58 +127,38 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <article class="stage"><h2>Sistemas de diseño para múltiples marcas</h2><div class="branch-card"><p>Estructuro componentes y patrones que pueden compartirse entre productos y unidades de negocio. Defino qué se mantiene en común y qué puede adaptar cada marca.</p><ul class="branch-tags"><li>Componentes compartidos</li><li>Variantes por marca</li><li>Entrega a desarrollo</li></ul><a class="branch-link" href="especialidades/sistemas-de-diseno/">Explorar sistemas de diseño</a></div></article>
     </div>
   </section>
-  <section class="alternate-hero" id="cabecera-alternativa" aria-label="Cabecera alternativa" data-alternate-hero>
-  <div class="alternate-inner">
-    <div class="alternate-copy">
-      <p class="alternate-label">Cabecera alternativa</p>
-      <div class="alternate-tabs" role="group" aria-label="Vista previa de especialidades"><button type="button" data-alt-branch="0" aria-pressed="true">UI y Behavioral Design</button><button type="button" data-alt-branch="1" aria-pressed="false">Motion e inmersión</button><button type="button" data-alt-branch="2" aria-pressed="false">Formación de equipos</button><button type="button" data-alt-branch="3" aria-pressed="false">Sistemas de diseño</button></div>
-      <div class="alternate-actions"><a href="especialidades/ui-behavioral-design/" data-alt-link>Explorar especialidad ↗</a><button type="button" data-alt-pause aria-pressed="false">Pausar ciclo</button></div>
-    </div>
-    <div class="alternate-scene" data-alt-scene>
-      <div class="alternate-figure" aria-hidden="true"><canvas></canvas></div>
-      <div class="alternate-examples" data-alt-examples="0">
-        <div class="alternate-example" data-side="top"><small>Meta visible</small><strong>Te faltan 2 € para el envío gratis</strong></div><div class="alternate-example" data-side="left"><small>Reencuadre</small><strong>Tu casa, <em>siempre vigilada.</em></strong></div><div class="alternate-example" data-side="right"><small>Control</small><strong>Puedes cambiar la fecha después</strong></div><div class="alternate-example" data-side="bottom"><small>Precio transparente</small><strong>49 € en total</strong></div>
-      </div><div class="alternate-examples" data-alt-examples="1" hidden>
-        <div class="alternate-example" data-side="top"><small>Entrada</small><strong>El pulso te guía hasta el contenido</strong></div><div class="alternate-example" data-side="left"><small>Atención</small><strong>Tu foco de atención</strong></div><div class="alternate-example" data-side="right"><small>Confirmación</small><strong>La solicitud se ha enviado</strong></div><div class="alternate-example" data-side="bottom"><small>Contexto</small><strong>Abre el detalle sin perder el hilo</strong></div>
-      </div><div class="alternate-examples" data-alt-examples="2" hidden>
-        <div class="alternate-example" data-side="top"><small>Ejercicio</small><strong>Revisamos una entrega juntos</strong></div><div class="alternate-example" data-side="left"><small>Práctica</small><strong>Probamos el flujo de revisión</strong></div><div class="alternate-example" data-side="right"><small>Acuerdo</small><strong>Compartimos estados y nombres</strong></div><div class="alternate-example" data-side="bottom"><small>Aplicación</small><strong>Una pauta para la próxima entrega</strong></div>
-      </div><div class="alternate-examples" data-alt-examples="3" hidden>
-        <div class="alternate-example" data-side="top"><small>Primitiva</small><strong>Petróleo · #124D56</strong></div><div class="alternate-example" data-side="left"><small>Semántica</small><strong>Acción principal</strong></div><div class="alternate-example" data-side="right"><small>Componente</small><strong>Botón · Continuar</strong></div><div class="alternate-example" data-side="bottom"><small>Interfaz</small><strong>Configura tu entrega</strong></div>
-      </div>
-    </div>
-  </div>
-</section>
-  <section class="specialty-selector" id="explorar-especialidades" data-branch-scenes>
+  <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion>
   <div class="specialty-inner">
     <h2>Cada proyecto pide algo distinto.</h2>
-    <div class="specialty-cards"><a class="specialty-card" href="especialidades/ui-behavioral-design/" data-piece="0"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/motion-e-inmersion/" data-piece="1"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/liderazgo-y-formacion/" data-piece="2"><strong>Formación de equipos de diseño</strong><span>Ejercicios y acuerdos para trabajar con criterios compartidos.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/sistemas-de-diseno/" data-piece="3"><strong>Sistemas de diseño para múltiples marcas</strong><span>Componentes comunes que cada marca puede adaptar.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a></div>
-    <div class="branch-scenes" aria-label="Ejemplos de cada especialidad">
-      <div class="branch-scene behavior-scene" data-branch-scene="0">
-        <article class="scene-tile scene-left"><span class="scene-label">Meta visible</span><strong>Te faltan 2 € para el envío gratis</strong><div class="scene-progress" aria-hidden="true"><span></span></div></article>
-        <article class="scene-tile scene-top behavior-copy"><span class="scene-label">Reencuadre</span><del>Nunca dejes tu casa sola.</del><strong>Tu casa,<br><em>siempre vigilada.</em></strong></article>
-        <article class="scene-tile scene-right"><span class="scene-label">Precio transparente</span><strong>49 € en total</strong><small>Envío e impuestos incluidos.</small></article>
-        <article class="scene-tile scene-left"><span class="scene-label">Expectativa clara</span><strong>Envío en 48 h</strong><small>Consulta la fecha antes de pagar.</small></article>
-        <article class="scene-tile scene-bottom"><span class="scene-label">Control</span><strong>Puedes cambiar la fecha después</strong><small>Desde el seguimiento de tu pedido.</small></article>
-        <article class="scene-tile scene-right"><span class="scene-label">Opciones comparables</span><strong>En casa o en un punto cercano</strong><small>Compara coste y plazo de entrega.</small></article>
+    <div class="accordion-branches" aria-label="Vistas de especialidades" role="group">
+      <button type="button" data-accordion-branch="0" aria-pressed="true" aria-controls="accordion-visual"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></button>
+      <button type="button" data-accordion-branch="1" aria-pressed="false" aria-controls="accordion-visual"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></button>
+      <button type="button" data-accordion-branch="2" aria-pressed="false" aria-controls="accordion-visual"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span></button>
+      <button type="button" data-accordion-branch="3" aria-pressed="false" aria-controls="accordion-visual"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span></button>
+    </div>
+    <div class="accordion-visual" id="accordion-visual">
+      <div class="accordion-panel progress-panel" data-accordion-panel="0">
+        <div class="progress-object" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <p><strong>Te faltan 2 € para el envío gratis</strong><small>Una meta visible aclara cuánto queda.</small></p>
       </div>
-      <div class="branch-scene motion-scene" data-branch-scene="1" hidden>
-        <div class="motion-frame scene-top">
-          <span class="motion-pulse" aria-hidden="true"></span>
-          <div class="motion-target"><span class="target-rings" aria-hidden="true"></span><strong>Tu foco de atención</strong><small>El movimiento orienta la mirada.</small></div>
-        </div>
+      <div class="accordion-panel light-panel" data-accordion-panel="1" hidden>
+        <div class="attention-field" aria-hidden="true"><span class="attention-travel"></span><span class="attention-halo"></span><span class="attention-halo second"></span><span class="attention-core"></span></div>
+        <p><strong>Una microinteracción puede cambiar tu foco de atención.</strong><small>Y hacer que la experiencia sea más inmersiva.</small></p>
       </div>
-      <div class="branch-scene training-scene" data-branch-scene="2" hidden>
-        <article class="scene-tile scene-left"><span class="scene-label">Punto de partida</span><strong>Dos equipos, dos formas de entregar</strong><small>Los archivos, estados y nombres siguen criterios distintos.</small></article>
-        <article class="scene-tile scene-top training-exercise"><span class="scene-label">Ejercicio de formación</span><strong>Revisamos una entrega juntos</strong><small>Comparamos archivos y acordamos qué necesita ver quien recibe el trabajo.</small></article>
-        <article class="scene-tile scene-right"><span class="scene-label">Acuerdo de equipo</span><strong>Una pauta para la próxima entrega</strong><small>Flujo, estados, decisiones y cuestiones abiertas.</small></article>
+      <div class="accordion-panel growth-panel" data-accordion-panel="2" hidden>
+        <div class="growth-object" aria-hidden="true"><span><i></i></span><span><i></i><i></i></span><span><i></i><i></i><i></i></span><span><i></i><i></i><i></i><i></i></span></div>
+        <p class="growth-labels"><span>Comienza aquí</span><strong>Eleva el nivel de tu equipo hasta aquí</strong></p>
       </div>
-      <div class="branch-scene systems-scene" data-branch-scene="3" hidden>
-        <article class="scene-tile scene-left"><span class="scene-label">Primitiva</span><span class="token-swatch" aria-hidden="true"></span><strong>Petróleo 600</strong><small>#124D56</small></article>
-        <article class="scene-tile scene-top"><span class="scene-label">Semántica</span><strong>Acción principal</strong><small>La marca asigna el color.</small></article>
-        <article class="scene-tile scene-bottom"><span class="scene-label">Componente</span><strong>Botón</strong><span class="token-button">Continuar</span></article>
-        <article class="scene-tile scene-right"><span class="scene-label">Interfaz</span><div class="token-layout"><strong>Configura tu entrega</strong><small>Selecciona una franja.</small><span class="token-button">Continuar</span></div></article>
+      <div class="accordion-panel system-panel" data-accordion-panel="3" hidden>
+        <ol class="system-evolution">
+          <li><span class="evolution-shape primitive" aria-hidden="true"><i></i></span><strong>Variable primitiva</strong></li>
+          <li><span class="evolution-shape semantic" aria-hidden="true"><i></i><i></i></span><strong>Variable semántica</strong></li>
+          <li><span class="evolution-shape component" aria-hidden="true"><i></i><i></i><i></i></span><strong>Componente</strong></li>
+          <li><span class="evolution-shape structure" aria-hidden="true"><i></i><i></i><i></i><i></i></span><strong>Estructura de interfaz</strong></li>
+        </ol>
       </div>
     </div>
+    <a class="accordion-link" href="especialidades/ui-behavioral-design/" data-accordion-link>Explorar especialidad ↗</a>
   </div>
 </section>
   <section class="notes" id="trayectoria">
@@ -209,7 +188,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 </footer>
 <canvas id="portfolio-art" aria-hidden="true"></canvas>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=cabecera";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=acordeon";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const hero = document.querySelector(".hero");
 const header=document.querySelector("header");
@@ -403,9 +382,16 @@ const heroHeights=pieces.map(()=>0);
 heroSlot.addEventListener("pointermove",event=>{
   if (!layout||layout.approach>.18||event.pointerType==="touch"||reduced.matches) return;
   const {x,top,surface,scale,approach}=layout;
-  heroPiece=pickHeroPiece(event.clientX-x-surface.width*.5,event.clientY-top-surface.height*.5,scale,1-approach);
+  const nextPiece=pickHeroPiece(event.clientX-x-surface.width*.5,event.clientY-top-surface.height*.5,scale,1-approach);
+  if(nextPiece===heroPiece)return;
+  heroPiece=nextPiece;
+  if(heroPiece<0) hero.removeAttribute("data-lit-piece");
+  else hero.dataset.litPiece=String(heroPiece);
 });
-heroSlot.addEventListener("pointerleave",()=>{heroPiece=-1;});
+heroSlot.addEventListener("pointerleave",()=>{
+  heroPiece=-1;
+  hero.removeAttribute("data-lit-piece");
+});
 
 function sizeFor(box) {
   return Math.min(box.width/6.4,box.height/4.25);
