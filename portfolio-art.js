@@ -410,26 +410,55 @@ function systemFootprints(models) {
   });
 }
 
-function behavioralModels() {
-  const ground=-.98, height=1.30;
-  const arch=upright(buildBands({width:.88,depth:height,radius:.39},
-    {width:.58,depth:1,radius:.24},1,.16));
-  for (let i=0;i<arch.length;i+=8) {
-    const x=arch[i],nx=arch[i+3];
-    arch[i]=arch[i+2];
-    arch[i+2]=-x;
-    arch[i+3]=arch[i+5];
-    arch[i+5]=-nx;
+function doorwayMesh() {
+  const outer=[],inner=[],vertices=[];
+  const spring=.82,outerRadius=.46,innerRadius=.31,depth=.085;
+  outer.push([0,-outerRadius]);
+  inner.push([0,-innerRadius]);
+  for (let i=0;i<=24;i++) {
+    const angle=Math.PI*(1-i/24);
+    outer.push([spring+Math.sin(angle)*outerRadius,Math.cos(angle)*outerRadius]);
+    inner.push([spring+Math.sin(angle)*innerRadius,Math.cos(angle)*innerRadius]);
   }
+  outer.push([0,outerRadius]);
+  inner.push([0,innerRadius]);
+  const point=(x,[y,z])=>[x,y,z];
+  function quad(points,normal,cavity=0) {
+    for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,0,cavity);
+  }
+  for (let i=0;i<outer.length-1;i++) {
+    const j=i+1;
+    for (const x of [-depth,depth]) {
+      quad([point(x,outer[i]),point(x,outer[j]),point(x,inner[j]),point(x,inner[i])],[Math.sign(x),0,0]);
+    }
+    for (const [profile,sign,cavity] of [[outer,1,0],[inner,-1,.75]]) {
+      const p=profile[i],q=profile[j],dy=q[0]-p[0],dz=q[1]-p[1];
+      const length=Math.hypot(dy,dz);
+      quad([point(-depth,p),point(depth,p),point(depth,q),point(-depth,q)],
+        [0,sign*dz/length,-sign*dy/length],cavity);
+    }
+  }
+  for (const i of [0,outer.length-1]) {
+    quad([point(-depth,outer[i]),point(depth,outer[i]),point(depth,inner[i]),point(-depth,inner[i])],[0,-1,0]);
+  }
+  return new Float32Array(vertices);
+}
+
+function behavioralModels() {
+  const ground=-.98;
+  const arch=doorwayMesh();
   const doors=[[-3,0],[-.75,0],[2.35,-1.30],[2.35,0],[2.35,1.30]];
   const models=doors.map(([x,z],index)=>({mesh:arch,color:index===4?petrol:chalk,
-    stage:index<2?index:2,origin:.5,position:[x,ground+height/2,z]}));
-  const paver=solid(.33,.45,.10,.09);
-  for (let i=0;i<14;i++) {
-    const x=-3.34+i*.45;
-    const z=1.30*Math.max(0,(x+.70)/3.2);
-    models.push({mesh:paver,color:i<6?chalk:petrol,stage:0,delay:230+i*105,
-      origin:.5,position:[x,ground+.05,z]});
+    stage:index<2?index:2,origin:.5,position:[x,ground,z]}));
+  const paver=solid(.32,.38,.09,.055);
+  for (let i=0;i<16;i++) {
+    const x=-3.38+i*.40;
+    const t=Math.max(0,Math.min(1,(x+.75)/3.1));
+    const curve=1.30*t*t*(3-2*t);
+    const stagger=(i%2===0?-1:1)*.085;
+    const z=curve+stagger;
+    models.push({mesh:paver,color:x<-.75?chalk:petrol,stage:0,delay:230+i*96,
+      origin:.5,position:[x,ground+.045,z]});
   }
   return models;
 }
@@ -458,8 +487,9 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const fills=connectors?[...connectors.querySelectorAll(".system-fill")]:[];
   const pulse=connectors?.querySelector(".system-pulse");
   const reduced=matchMedia("(prefers-reduced-motion: reduce)");
-  let renderer, frame=0, started=0, visible=false;
-  const duration=focus?3400:behavioral?2020:training?1480:2650;
+  let renderer, frame=0, started=0, visible=false, captionWidth=0;
+  const captionBounds=[];
+  const duration=focus?3400:behavioral?2130:training?2170:3000;
   function draw(now) {
     frame=0;
     if (!visible) return;
@@ -474,18 +504,20 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     ];
     renderer.clear({width,height});
     renderer.render(scale,models.map(model=>{
-      const delay=model.delay??(training?model.stage*330+model.layer*105
-        :systems?model.stage*510+model.layer*88
+      const delay=model.delay??(training?model.stage*470+model.layer*155
+        :systems?model.stage*580+model.layer*101
         :model.stage*(focus?190:370));
-      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/(training?570:420)));
+      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/(training?870:systems?490:420)));
       const remaining=1-progress;
       const settled=1-remaining**3;
+      const eased=progress*progress*progress*(progress*(progress*6-15)+10);
+      const drift=1-eased;
       const [x,y,z]=model.position;
-      const growth=training?Math.max(.015,1-2.55*remaining**3+1.55*remaining**2)
-        :systems?Math.max(.06,settled):1;
+      const growth=training?Math.max(.015,1-3.5*remaining**3+2.5*remaining**2)
+        :systems?Math.max(.06,eased):1;
       return {
         origin:model.origin,
-        position:systems?[x+remaining*.18,y+remaining*.24,z+remaining*.29]
+        position:systems?[x+drift*.18,y+drift*.24,z+drift*.29]
           :[x,y-(training?0:remaining*.16),z],
         opacity:training||systems?Number(progress>0):settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
@@ -493,31 +525,53 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
     floor.style.setProperty("--scene-type",Math.max(26,Math.min(110,width*.135))+"px");
+    const fontSize=Math.max(26,Math.min(110,width*.135));
     labels.forEach((label,index)=>{
-      const [x,y]=focus&&index===1?project(-.42,-.72,1.44):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
-      label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
-      if (focus) {
+      let [x,y]=focus&&index===1?project(-.42,-.72,1.44):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
+      if (!focus) {
+        label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
+        return;
+      }
+      if (width!==captionWidth||!captionBounds[index]?.width) {
         const length=width*(index===0?.64:.80);
-        const size=Math.max(22,Math.min(110,width*.135));
-        for (const text of label.querySelectorAll("text")) {
+        const [base,ink]=label.querySelectorAll("text");
+        for (const text of [base,ink]) {
           text.setAttribute("textLength",length);
           text.setAttribute("lengthAdjust","spacingAndGlyphs");
         }
-        const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
-        const ratio=reduced.matches?1:Math.max(0,Math.min(1,time));
-        const progress=ratio*ratio*(3-2*ratio);
-        masks[index].setAttribute("x",-length/2-2);
-        masks[index].setAttribute("y",-size*1.2);
-        masks[index].setAttribute("width",(length+4)*progress);
-        masks[index].setAttribute("height",size*1.55);
-        if ((index===0&&elapsed<1680)||(index===1&&elapsed>=1680)||reduced.matches&&index===1) {
-          const along=length*(progress-.5)+((index===1&&ratio===1)?size*.105:0);
-          const lift=index===1&&ratio===1?-size*.05:-size*.22-Math.sin(ratio*Math.PI)*size*.09;
-          focusDot.setAttribute("transform",`translate(${x+.808*along+.589*lift} ${y-.323*along+.443*lift})`);
-          focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
-        }
+        const bounds=base.getBBox();
+        captionBounds[index]=bounds.width?bounds:{x:-length/2,y:-fontSize,width:length,height:fontSize*1.2};
+      }
+      const bounds=captionBounds[index];
+      const right=bounds.x+bounds.width, bottom=bounds.y+bounds.height;
+      const corners=[[bounds.x,bounds.y],[right,bounds.y],[bounds.x,bottom],[right,bottom]];
+      const projectedX=corners.map(([u,v])=>.808*u+.589*v);
+      const projectedY=corners.map(([u,v])=>-.323*u+.443*v);
+      const left=Math.min(...projectedX), farRight=Math.max(...projectedX);
+      const top=Math.min(...projectedY), low=Math.max(...projectedY);
+      const margin=Math.min(20,width*.05);
+      const fit=Math.min(1,(width-2*margin)/(farRight-left),(height-2*margin)/(low-top));
+      x=Math.max(margin-left*fit,Math.min(width-margin-farRight*fit,x));
+      y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));
+      label.setAttribute("transform",`matrix(${.808*fit} ${-.323*fit} ${.589*fit} ${.443*fit} ${x} ${y})`);
+
+      const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
+      const ratio=reduced.matches?1:Math.max(0,Math.min(1,time));
+      const progress=ratio*ratio*(3-2*ratio);
+      const inkPadding=4;
+      masks[index].setAttribute("x",bounds.x-inkPadding);
+      masks[index].setAttribute("y",bounds.y-inkPadding);
+      masks[index].setAttribute("width",(bounds.width+2*inkPadding)*progress);
+      masks[index].setAttribute("height",bounds.height+2*inkPadding);
+      if ((index===0&&elapsed<1680)||(index===1&&elapsed>=1680)||reduced.matches&&index===1) {
+        const final=index===1&&ratio===1;
+        const along=bounds.x+bounds.width*progress+(final?fontSize*.11:0);
+        const lift=final?-fontSize*.05:-fontSize*.22-Math.sin(ratio*Math.PI)*fontSize*.09;
+        focusDot.setAttribute("transform",`translate(${x+(.808*along+.589*lift)*fit} ${y+(-.323*along+.443*lift)*fit})`);
+        focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
       }
     });
+    captionWidth=width;
     const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]:footprints?.map(item=>item.center);
     shadows.forEach((shadow,index)=>{
       const [x,y]=project(...ground[index]);
@@ -536,7 +590,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         const end=footprints[index+1].left-.17;
         const [x1,y1]=project(start,-.44,0), [x2,y2]=project(end,-.44,0);
         const path=end>start?`M${x1},${y1} L${x2},${y2}`:"";
-        const progress=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-235-index*510)/265));
+        const elapsedRatio=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-270-index*580)/310));
+        const progress=elapsedRatio*elapsedRatio*(3-2*elapsedRatio);
         track.setAttribute("d",path);
         fills[index].setAttribute("d",path);
         fills[index].style.strokeDashoffset=1-progress;
@@ -561,5 +616,6 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     queue();
   }).observe(parent);
   new ResizeObserver(queue).observe(parent);
+  if (focus) document.fonts?.ready.then(()=>{captionWidth=0;queue();});
   reduced.addEventListener("change",queue);
 }
