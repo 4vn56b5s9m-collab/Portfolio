@@ -30,7 +30,7 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 .reel{display:inline-block;height:1em;overflow:hidden;vertical-align:top}
 .reel span{display:block}
 .reel span span{height:1em;line-height:1em}
-#portfolio-art{position:fixed;inset:0;display:block;width:100%;height:100%;z-index:1;pointer-events:none}
+#portfolio-art{position:fixed;top:0;left:0;display:block;width:0;height:0;z-index:1;pointer-events:none;visibility:hidden}
 .hero-copy,.stage-copy{position:relative;z-index:2}
 @media(min-width:701px){.hero-copy,.hero-visual{position:relative;top:calc(-1 * min(5svh,3.1rem))}}
 .stage-copy{display:grid;justify-items:center;gap:.8rem}
@@ -288,11 +288,13 @@ function createArt() {
   gl.clearColor(0,0,0,0);
   let width,height,ratio;
   return {
-    clear() {
+    clear(surface) {
       const currentRatio=Math.min(devicePixelRatio||1,coarse.matches?1.25:2);
-      if (width!==art.clientWidth||height!==art.clientHeight||ratio!==currentRatio) {
-        width=art.clientWidth;
-        height=art.clientHeight;
+      if (width!==surface.width||height!==surface.height||ratio!==currentRatio) {
+        width=surface.width;
+        height=surface.height;
+        art.style.width=width+"px";
+        art.style.height=height+"px";
         ratio=currentRatio;
         art.width=Math.round(width*ratio);
         art.height=Math.round(height*ratio);
@@ -301,10 +303,9 @@ function createArt() {
       }
       gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     },
-    render(box,poses,time) {
-      const scale=Math.min(box.width/6.4,box.height/4.25);
+    render(scale,poses,time) {
       if (scale<=0||!width||!height) return;
-      gl.uniform2f(uniforms.origin,box.left+box.width*.5,box.top+box.height*box.center);
+      gl.uniform2f(uniforms.origin,width*.5,height*.5);
       gl.uniform1f(uniforms.scale,scale);
       gl.uniform1f(uniforms.time,time);
       meshes.forEach(({buffer,count,color},index)=>{
@@ -335,7 +336,8 @@ document.documentElement.classList.add("js");
 const steps=[...story.querySelectorAll(".step")];
 let activeStage=-1;
 
-const chapterHeight=()=>steps[0].offsetHeight||innerHeight*.48;
+let geometry=null;
+const chapterHeight=()=>geometry?.stepHeight||steps[0].offsetHeight||innerHeight*.48;
 const documentTop=element=>element.getBoundingClientRect().top+scrollY;
 let rest=null;
 let timer=0;
@@ -343,7 +345,7 @@ let scrollingFrame=0;
 let animating=false;
 
 function anchors() {
-  return [0,...steps.map(documentTop)];
+  return geometry?.anchors||[0,...steps.map(documentTop)];
 }
 
 function cancelGlide() {
@@ -358,7 +360,7 @@ function glide(target) {
   if (Math.abs(from-target)<2) { rest=target; return; }
   animating=true;
   const started=performance.now();
-  const intro=documentTop(steps[0]);
+  const intro=anchors()[1];
   const entersStory=Math.abs(target-intro)<4&&from<intro*.6;
   const returnsToHero=target<4&&from<=intro+4;
   const duration=entersStory||returnsToHero?1600:600;
@@ -461,16 +463,43 @@ rest=anchors().reduce((a,b)=>Math.abs(a-scrollY)<=Math.abs(b-scrollY)?a:b);
 let layout=null,lastFrame=-Infinity,lastY,lastWidth,lastHeight,wasReduced;
 let sceneDrawn=false;
 
-function measure(motion) {
+function sizeFor(box) {
+  return Math.min(box.width/6.4,box.height/4.25);
+}
+
+function measureGeometry() {
+  const y=scrollY;
   const heroBounds=hero.getBoundingClientRect();
   const storyBounds=story.getBoundingClientRect();
-  const screenHeight=stage.offsetHeight||innerHeight;
-  const position=clamp(-storyBounds.top/chapterHeight(),0,4);
-  const approach=motion?smooth((screenHeight*.58-storyBounds.top)/(screenHeight*.58)):0;
-  const heroFade=motion?smooth((screenHeight*.76-storyBounds.top)/(screenHeight*.48)):0;
+  const heroBox=heroSlot.getBoundingClientRect();
+  const stageBounds=stage.getBoundingClientRect();
+  const slot=storySlot.getBoundingClientRect();
+  const storyBox={left:slot.left,top:slot.top-stageBounds.top,width:slot.width,height:slot.height};
+  const maxScale=sizeFor({width:Math.max(heroBox.width,storyBox.width),height:Math.max(heroBox.height,storyBox.height)});
+  return {
+    heroTop:heroBounds.top+y,heroBottom:heroBounds.bottom+y,
+    storyTop:storyBounds.top+y,storyBottom:storyBounds.bottom+y,
+    heroBox:{left:heroBox.left,top:heroBox.top+y,width:heroBox.width,height:heroBox.height},
+    storyBox,screenHeight:stageBounds.height||innerHeight,
+    stepHeight:steps[0].offsetHeight||innerHeight*.48,
+    anchors:[0,...steps.map(documentTop)],
+    surface:{width:Math.max(1,Math.ceil(maxScale*6.7)),height:Math.max(1,Math.ceil(maxScale*4.85))}
+  };
+}
+
+const invalidateGeometry=()=>{geometry=null;};
+const resizeObserver=new ResizeObserver(invalidateGeometry);
+[header,hero,heroSlot,story,stage,storySlot].forEach(element=>resizeObserver.observe(element));
+
+function layoutAt(y,motion) {
+  let {heroTop,heroBottom,storyTop,storyBottom,screenHeight,stepHeight}=geometry;
+  const storyOffset=storyTop-y;
+  const position=clamp(-storyOffset/stepHeight,0,4);
+  const approach=motion?smooth((screenHeight*.58-storyOffset)/(screenHeight*.58)):0;
+  const heroFade=motion?smooth((screenHeight*.76-storyOffset)/(screenHeight*.48)):0;
   const introFade=smooth((approach-.58)/.42);
-  const heroVisible=heroBounds.bottom>0 && heroBounds.top<innerHeight;
-  const storyVisible=motion && storyBounds.top<innerHeight && storyBounds.bottom>0;
+  const heroVisible=heroBottom>y && heroTop<y+innerHeight;
+  const storyVisible=motion && storyTop<y+innerHeight && storyBottom>y;
   if (storyVisible) {
     const chapter=Math.min(4,Math.floor(position+.5));
     if (chapter!==activeStage) {
@@ -483,42 +512,51 @@ function measure(motion) {
           {duration:340,easing:"ease-out"});
       }
       activeStage=chapter;
+      geometry=measureGeometry();
     }
   }
-  const heroBox=heroSlot.getBoundingClientRect();
-  const box=storyVisible?between(heroBox,storySlot.getBoundingClientRect(),approach):{left:heroBox.left,top:heroBox.top,width:heroBox.width,height:heroBox.height};
-  box.center=.55+approach*.07;
+  const heroBox={...geometry.heroBox,top:geometry.heroBox.top-y};
+  const stickyTop=Math.min(Math.max(geometry.storyTop-y,0),geometry.storyBottom-y-geometry.screenHeight);
+  const storyBox={...geometry.storyBox,top:geometry.storyBox.top+stickyTop};
+  const box=storyVisible?between(heroBox,storyBox,approach):heroBox;
   hero.style.setProperty("--hero-opacity",(1-heroFade).toFixed(3));
   hero.style.setProperty("--hero-offset",(-heroFade*12).toFixed(1)+"px");
   stage.style.setProperty("--intro-opacity",introFade.toFixed(3));
   stage.style.setProperty("--intro-offset",((1-introFade)*12).toFixed(1)+"px");
   stage.style.setProperty("--wipe",(approach*100).toFixed(2)+"%");
-  return {visible:heroVisible||storyVisible,storyVisible,position,approach,box};
+  const visible=heroVisible||storyVisible;
+  const {surface}=geometry;
+  const x=box.left+(box.width-surface.width)*.5;
+  const top=box.top+box.height*(.55+approach*.07)-surface.height*.5;
+  return {visible,storyVisible,position,approach,surface,scale:sizeFor(box),x,top};
 }
 
 function update(now) {
   requestAnimationFrame(update);
   if (document.hidden) return;
   const motion=!reduced.matches;
-  const changed=!layout||scrollY!==lastY||innerWidth!==lastWidth||innerHeight!==lastHeight||wasReduced!==reduced.matches;
+  const viewportChanged=innerWidth!==lastWidth||innerHeight!==lastHeight||wasReduced!==reduced.matches;
+  const changed=!geometry||!layout||scrollY!==lastY||viewportChanged;
   if (!changed && (!motion||now-lastFrame<(coarse.matches?31:15))) return;
   if (changed) {
     lastY=scrollY;
     lastWidth=innerWidth;
     lastHeight=innerHeight;
     wasReduced=reduced.matches;
-    layout=measure(motion);
+    if (!geometry||viewportChanged) geometry=measureGeometry();
+    layout=layoutAt(lastY,motion);
+    if (layout.visible) art.style.transform="translate3d("+layout.x+"px,"+layout.top+"px,0)";
   }
   if (!layout.visible) {
-    if (sceneDrawn) renderer?.clear();
+    if (sceneDrawn) art.style.visibility="hidden";
     sceneDrawn=false;
     return;
   }
   lastFrame=now;
-  const {box,storyVisible,position,approach}=layout;
+  const {surface,scale,storyVisible,position,approach}=layout;
   const time=motion?now/1000:0;
-  renderer?.clear();
-  renderer?.render(box,pieces.map((_,i)=>{
+  renderer?.clear(surface);
+  renderer?.render(scale,pieces.map((_,i)=>{
     const weight=storyVisible?1-smooth(Math.abs(position-i-1)*2):0;
     return {
       pyramid:1-approach,
@@ -527,9 +565,10 @@ function update(now) {
       stretch:weight*.58
     };
   }),time);
+  if (!sceneDrawn) art.style.visibility="visible";
   sceneDrawn=true;
 }
-document.fonts.ready.then(()=>{layout=null;});
+document.fonts.ready.then(invalidateGeometry);
 requestAnimationFrame(update);
 
 if (!reduced.matches) document.querySelectorAll("[data-count]").forEach(item=>{
