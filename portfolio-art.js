@@ -306,7 +306,7 @@ for (const selector of document.querySelectorAll("[data-specialty-selector]")) {
 
 const chalk=[226,208,175];
 const petrol=[39,108,118];
-const stone=[136,123,105];
+const stone=[200,181,150];
 
 function solid(width,depth,height,radius) {
   return buildBands({width,depth,radius},null,1,height);
@@ -367,16 +367,60 @@ function systemModels() {
   card(2,0,-.17,0,1.04);
   plate(3,2.0,1.75,.22,stone,0,.1,0,.16);
   card(3,-.23,.15,.18,.8);
-  plate(3,.48,.40,.12,chalk,.63,.19,.21,.08);
+  plate(3,.36,.40,.12,chalk,.74,.19,.21,.08);
   plate(3,1.62,.24,.12,petrol,0,-.53,.18,.08);
   return scene;
 }
 
+const motionCenters=[-1.58,0,1.58];
+const motionHeights=[.25,.53,.81];
+const motionFloor=-.71;
+const ballRadius=.09;
+
+function sphere(radius) {
+  const vertices=[];
+  function point(row,column) {
+    const latitude=Math.PI*row/12, longitude=2*Math.PI*column/20;
+    return [Math.sin(latitude)*Math.cos(longitude),Math.cos(latitude),Math.sin(latitude)*Math.sin(longitude)];
+  }
+  for (let row=0;row<12;row++) for (let column=0;column<20;column++) {
+    const corners=[point(row,column),point(row+1,column),point(row+1,column+1),point(row,column+1)];
+    for (const i of [0,1,2,0,2,3]) {
+      const normal=corners[i];
+      vertices.push(...normal.map(value=>value*radius),...normal,0,0);
+    }
+  }
+  return new Float32Array(vertices);
+}
+
+function motionModels() {
+  const models=motionCenters.map((x,stage)=>{
+    const height=motionHeights[stage];
+    return {mesh:solid(1.63,1.12,height,.40),color:[petrol,[129,153,149],chalk][stage],
+      stage:0,origin:.5,position:[x,motionFloor+height/2,0]};
+  });
+  return [...models,{mesh:sphere(ballRadius),color:[186,241,248],stage:0,origin:.5,position:[0,0,0]}];
+}
+
+function motionRoute(progress) {
+  const x=-2.12+4.28*progress;
+  const smooth=value=>{const t=Math.max(0,Math.min(1,value));return t*t*(3-2*t);};
+  const rise=.28*(smooth((x+1.09)/.38)+smooth((x-.49)/.38));
+  return [x,motionFloor+.25+rise+ballRadius+.025,Math.sin(progress*Math.PI*2)*.21];
+}
+
 for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
-  const training=canvas.dataset.branchCanvas==="training";
-  const models=training?trainingModels():systemModels();
+  const kind=canvas.dataset.branchCanvas;
+  const training=kind==="training", motion=kind==="motion";
+  const models=training?trainingModels():motion?motionModels():systemModels();
   const parent=canvas.parentElement;
-  const connectors=parent.querySelector(".system-connectors");
+  const floor=parent.querySelector(".scene-floor");
+  const shadows=[...floor.querySelectorAll(".scene-shadow")];
+  const labels=[floor.querySelector(".scene-back"),floor.querySelector(".scene-front")];
+  const motionOverlay=parent.querySelector(".motion-path");
+  const guide=motionOverlay?.querySelector(".motion-guide");
+  const motionLight=motionOverlay?.querySelector(".motion-light");
+  const connectors=parent.querySelector(".system-connectors:not(.motion-path)");
   const tracks=connectors?[...connectors.querySelectorAll(".system-track")]:[];
   const fills=connectors?[...connectors.querySelectorAll(".system-fill")]:[];
   const pulse=connectors?.querySelector(".system-pulse");
@@ -389,26 +433,59 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.35:9.2),height/(training?4.8:4.7));
+    const scale=Math.min(width/(training?6.9:motion?6.35:9.8),height/5.25);
+    const project=(x,y,z)=>[
+      width/2+(x*.808027+z*.589145)*scale,
+      height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
+    ];
+    const routeProgress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-240)/2100));
+    const route=motion?motionRoute(routeProgress*routeProgress*(3-2*routeProgress)):null;
     renderer.clear({width,height});
-    renderer.render(scale,models.map(model=>{
+    renderer.render(scale,models.map((model,index)=>{
       const delay=model.stage*(training?190:370);
       const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/420));
       const opacity=1-(1-progress)**3;
-      const [x,y,z]=model.position;
+      const [x,y,z]=motion&&index===models.length-1?route:model.position;
       return {
         origin:model.origin,position:[x,y-(1-opacity)*.16,z],opacity,
         pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
     }),0,true);
+    floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
+    floor.style.setProperty("--scene-type",Math.max(15,Math.min(37,scale*.49))+"px");
+    labels.forEach((label,index)=>{
+      const [x,y]=project(index===0?-.64:.64,-1.12,index===0?-1.55:1.63);
+      label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
+    });
+    const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]
+      :motion?motionCenters.map(x=>[x,motionFloor,0])
+      :systemCenters.map((x,i)=>[x,[-.73,-.90,-.91,-1.22][i],0]);
+    shadows.forEach((shadow,index)=>{
+      const [x,y]=project(...ground[index]);
+      const radius=training?.88:motion?.90:systemWidths[index]*.55+.13;
+      shadow.setAttribute("cx",x+.11*scale);
+      shadow.setAttribute("cy",y+.07*scale);
+      shadow.setAttribute("rx",radius*scale);
+      shadow.setAttribute("ry",.23*scale);
+      shadow.setAttribute("transform",`rotate(-18 ${x} ${y})`);
+    });
+    if (motionOverlay) {
+      motionOverlay.setAttribute("viewBox",`0 0 ${width} ${height}`);
+      const points=Array.from({length:29},(_,i)=>{
+        const [x,y,z]=motionRoute(i/28);
+        return project(x,y-ballRadius,z);
+      });
+      guide.setAttribute("d",points.map(([x,y],i)=>`${i?"L":"M"}${x},${y}`).join(" "));
+      const [x,y]=project(...route);
+      motionLight.setAttribute("transform",`translate(${x} ${y})`);
+    }
     if (connectors) {
       connectors.setAttribute("viewBox",`0 0 ${width} ${height}`);
       pulse.style.visibility="hidden";
       tracks.forEach((track,index)=>{
         const start=systemCenters[index]+systemWidths[index]/2+.12;
         const end=systemCenters[index+1]-systemWidths[index+1]/2-.12;
-        const project=x=>[width/2+x*.808027*scale,height/2+(.37-x*.589145*.548024)*scale];
-        const [x1,y1]=project(start), [x2,y2]=project(end);
+        const [x1,y1]=project(start,-.44,0), [x2,y2]=project(end,-.44,0);
         const path=`M${x1},${y1} L${x2},${y2}`;
         const progress=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-125-index*370)/245));
         track.setAttribute("d",path);
@@ -420,7 +497,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         }
       });
     }
-    if (!reduced.matches&&elapsed<(training?800:1530)) frame=requestAnimationFrame(draw);
+    if (!reduced.matches&&elapsed<(training?800:motion?2360:1530)) frame=requestAnimationFrame(draw);
   }
   function queue() {
     if (visible&&renderer&&!frame) frame=requestAnimationFrame(draw);
