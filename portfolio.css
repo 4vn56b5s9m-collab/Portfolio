@@ -215,3 +215,46 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
   .scene-tile,.motion-frame,.motion-pulse{animation:none}
   .motion-pulse{left:.35rem;top:.35rem}
 }
+
+.hero{position:relative}
+.compare-hero{position:absolute;bottom:clamp(.8rem,3vh,1.5rem);left:var(--space);z-index:2;color:var(--tiza);font-size:.84rem;text-underline-offset:.25em}
+.alternate-hero{background:#171719;color:#f4f2ed;padding:clamp(3rem,7vw,7rem) var(--gutter);border-top:1px solid #ffffff24}
+.alternate-inner{max-width:89rem;margin-inline:auto;display:grid;grid-template-columns:minmax(15rem,.82fr) minmax(0,1.65fr);gap:clamp(1rem,4vw,4rem);align-items:center}
+.alternate-label{font-size:.8rem;color:#bdd1ce;margin-bottom:1rem}
+.alternate-tabs{display:grid;gap:.18rem}
+.alternate-tabs button{display:block;width:fit-content;text-align:left;border:0;background:none;padding:.15rem 0;color:#b7bab9;font:400 clamp(2rem,3.7vw,4.4rem)/.97 var(--display);text-wrap:balance;cursor:pointer;transition:color .24s,transform .24s}
+.alternate-tabs button[aria-pressed=true]{color:#a4e2d9;transform:translateX(.25rem)}
+.alternate-tabs button:focus-visible,.alternate-actions button:focus-visible{outline:2px solid #a4e2d9;outline-offset:4px}
+.alternate-actions{display:flex;gap:.6rem 1.05rem;align-items:center;flex-wrap:wrap;margin-top:1.45rem}
+.alternate-actions a{padding:.58rem .85rem;border-radius:999px;background:#124d56;font-size:.86rem;font-weight:600;text-decoration:none}
+.alternate-actions button{background:none;border:0;color:#c1d5d2;text-decoration:underline;text-underline-offset:.25em;padding:.52rem 0;font:inherit;font-size:.79rem;cursor:pointer}
+.alternate-actions button[hidden]{display:none}
+.alternate-scene{min-width:0;display:grid;grid-template: minmax(4rem,auto) minmax(12rem,1fr) minmax(4rem,auto) / minmax(0,1fr) minmax(0,2.5fr) minmax(0,1fr);min-height:clamp(20rem,34vw,34rem);gap:.35rem .55rem;align-items:center}
+.alternate-figure{grid-area:2/2;min-width:0;height:100%;min-height:12rem;display:grid;place-items:center}
+.alternate-figure canvas{display:block;max-width:100%;max-height:100%}
+.alternate-examples{display:contents}
+.alternate-examples[hidden]{display:none}
+.alternate-example{min-width:0;position:relative;z-index:1;display:grid;gap:.32rem;padding:.65rem .8rem;border:1px solid #a4e2d960;border-radius:.7rem;background:#232f31;color:#f4f2ed;animation:scene-enter .45s cubic-bezier(.22,.65,.28,1) both;text-wrap:balance}
+.alternate-example strong{font-size:clamp(.8rem,1.25vw,1rem);font-weight:500;line-height:1.32}
+.alternate-example small{color:#a4e2d9;font-size:.68rem}
+.alternate-example em{color:#a4e2d9;font-style:normal}
+.alternate-example[data-side=top]{grid-area:1/2;justify-self:center;--from-y:25px}
+.alternate-example[data-side=left]{grid-area:2/1;--from-x:30px;--from-y:0px;animation-delay:55ms}
+.alternate-example[data-side=right]{grid-area:2/3;--from-x:-30px;--from-y:0px;animation-delay:95ms}
+.alternate-example[data-side=bottom]{grid-area:3/2;justify-self:center;--from-y:-25px;animation-delay:135ms}
+.alternate-examples[data-alt-examples="1"] .alternate-example[data-side=left]{box-shadow:0 0 1.2rem #79d8d55c}
+@media(max-width:950px){.alternate-inner{grid-template-columns:1fr}.alternate-tabs{grid-template-columns:1fr 1fr}.alternate-scene{min-height:24rem}}
+@media(max-width:570px){
+  .hero{padding-bottom:clamp(3.3rem,8svh,5rem)}
+  .compare-hero{left:50%;transform:translateX(-50%);white-space:nowrap}
+  .alternate-tabs button{font-size:clamp(1.55rem,6.5vw,2.25rem)}
+  .alternate-scene{grid-template: auto auto auto / 1fr 1fr;min-height:0;gap:.55rem}
+  .alternate-figure{grid-area:1/1/2/3;min-height:11rem;height:52vw;max-height:17rem}
+  .alternate-example[data-side=top]{grid-area:2/1;justify-self:stretch}
+  .alternate-example[data-side=left]{grid-area:2/2}
+  .alternate-example[data-side=right]{grid-area:3/1}
+  .alternate-example[data-side=bottom]{grid-area:3/2;justify-self:stretch}
+}
+@media(prefers-reduced-motion:reduce){.alternate-example{animation:none}.alternate-tabs button{transition:none}}
+
+.alternate-figure[hidden]{display:none}

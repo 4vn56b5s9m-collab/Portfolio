@@ -95,7 +95,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .career-list strong{font-weight:600}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=escenas">
+<link rel="stylesheet" href="portfolio.css?v=cabecera">
 <script defer src="portfolio-interactions.js?v=escenas"></script>
 </head>
 <body>
@@ -111,6 +111,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       </dl>
     </div>
     <div class="hero-visual" aria-hidden="true"></div>
+    <a class="compare-hero" href="#cabecera-alternativa">Ver cabecera alternativa ↓</a>
   </section>
   <section class="story" id="especialidades" aria-label="Mis especialidades">
     <div class="story-screen stage">
@@ -127,6 +128,27 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <article class="stage"><h2>Sistemas de diseño para múltiples marcas</h2><div class="branch-card"><p>Estructuro componentes y patrones que pueden compartirse entre productos y unidades de negocio. Defino qué se mantiene en común y qué puede adaptar cada marca.</p><ul class="branch-tags"><li>Componentes compartidos</li><li>Variantes por marca</li><li>Entrega a desarrollo</li></ul><a class="branch-link" href="especialidades/sistemas-de-diseno/">Explorar sistemas de diseño</a></div></article>
     </div>
   </section>
+  <section class="alternate-hero" id="cabecera-alternativa" aria-label="Cabecera alternativa" data-alternate-hero>
+  <div class="alternate-inner">
+    <div class="alternate-copy">
+      <p class="alternate-label">Cabecera alternativa</p>
+      <div class="alternate-tabs" role="group" aria-label="Vista previa de especialidades"><button type="button" data-alt-branch="0" aria-pressed="true">UI y Behavioral Design</button><button type="button" data-alt-branch="1" aria-pressed="false">Motion e inmersión</button><button type="button" data-alt-branch="2" aria-pressed="false">Formación de equipos</button><button type="button" data-alt-branch="3" aria-pressed="false">Sistemas de diseño</button></div>
+      <div class="alternate-actions"><a href="especialidades/ui-behavioral-design/" data-alt-link>Explorar especialidad ↗</a><button type="button" data-alt-pause aria-pressed="false">Pausar ciclo</button></div>
+    </div>
+    <div class="alternate-scene" data-alt-scene>
+      <div class="alternate-figure" aria-hidden="true"><canvas></canvas></div>
+      <div class="alternate-examples" data-alt-examples="0">
+        <div class="alternate-example" data-side="top"><small>Meta visible</small><strong>Te faltan 2 € para el envío gratis</strong></div><div class="alternate-example" data-side="left"><small>Reencuadre</small><strong>Tu casa, <em>siempre vigilada.</em></strong></div><div class="alternate-example" data-side="right"><small>Control</small><strong>Puedes cambiar la fecha después</strong></div><div class="alternate-example" data-side="bottom"><small>Precio transparente</small><strong>49 € en total</strong></div>
+      </div><div class="alternate-examples" data-alt-examples="1" hidden>
+        <div class="alternate-example" data-side="top"><small>Entrada</small><strong>El pulso te guía hasta el contenido</strong></div><div class="alternate-example" data-side="left"><small>Atención</small><strong>Tu foco de atención</strong></div><div class="alternate-example" data-side="right"><small>Confirmación</small><strong>La solicitud se ha enviado</strong></div><div class="alternate-example" data-side="bottom"><small>Contexto</small><strong>Abre el detalle sin perder el hilo</strong></div>
+      </div><div class="alternate-examples" data-alt-examples="2" hidden>
+        <div class="alternate-example" data-side="top"><small>Ejercicio</small><strong>Revisamos una entrega juntos</strong></div><div class="alternate-example" data-side="left"><small>Práctica</small><strong>Probamos el flujo de revisión</strong></div><div class="alternate-example" data-side="right"><small>Acuerdo</small><strong>Compartimos estados y nombres</strong></div><div class="alternate-example" data-side="bottom"><small>Aplicación</small><strong>Una pauta para la próxima entrega</strong></div>
+      </div><div class="alternate-examples" data-alt-examples="3" hidden>
+        <div class="alternate-example" data-side="top"><small>Primitiva</small><strong>Petróleo · #124D56</strong></div><div class="alternate-example" data-side="left"><small>Semántica</small><strong>Acción principal</strong></div><div class="alternate-example" data-side="right"><small>Componente</small><strong>Botón · Continuar</strong></div><div class="alternate-example" data-side="bottom"><small>Interfaz</small><strong>Configura tu entrega</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
   <section class="specialty-selector" id="explorar-especialidades" data-branch-scenes>
   <div class="specialty-inner">
     <h2>Cada proyecto pide algo distinto.</h2>
@@ -187,7 +209,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 </footer>
 <canvas id="portfolio-art" aria-hidden="true"></canvas>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=cabecera";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const hero = document.querySelector(".hero");
 const header=document.querySelector("header");
