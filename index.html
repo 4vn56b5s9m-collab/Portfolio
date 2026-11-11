@@ -53,7 +53,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=flecha-hover">
+<link rel="stylesheet" href="portfolio.css?v=luz-activa">
 <script defer src="portfolio-interactions.js?v=puertas-y-foco"></script>
 </head>
 <body>
@@ -68,6 +68,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
           <span class="hero-specialties-reader">Behavioral Design, sistemas de diseño, motion e inmersión y formación de equipos.</span>
         </p>
         <div class="hero-rotation" role="group" aria-label="Especialidades de la cabecera">
+          <button class="hero-rotation-toggle" type="button" aria-label="Pausar rotación automática"><span aria-hidden="true">Ⅱ</span></button>
           <div class="hero-progress" aria-hidden="true"><span></span></div>
           <div class="hero-pagination">
             <button type="button" data-hero-page="0" aria-label="Behavioral Design" aria-current="true"></button>
@@ -75,7 +76,6 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
             <button type="button" data-hero-page="2" aria-label="Motion e inmersión"></button>
             <button type="button" data-hero-page="3" aria-label="Formación de equipos"></button>
           </div>
-          <button class="hero-rotation-toggle" type="button" aria-label="Pausar rotación automática"><span aria-hidden="true">Ⅱ</span></button>
         </div>
       </div>
     </div>
@@ -89,13 +89,13 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <div><dd data-count="6">6</dd><dt>países</dt></div>
     </dl>
   </section>
-    <div class="intro-next">
-      <a class="intro-next-link" href="#explorar-especialidades">Descubre cómo trabajo <span aria-hidden="true">↓</span></a>
-    </div>
   </div>
   <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
+    <div class="intro-next">
+      <a class="intro-next-link" href="#especialidades">Descubre cómo trabajo <span aria-hidden="true">↓</span></a>
+    </div>
   <div class="specialty-inner">
-    <h2 id="especialidades">Cada proyecto pide algo distinto.</h2>
+    <h2 id="especialidades" tabindex="-1">Cada proyecto pide algo distinto.</h2>
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
       <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">UI y Behavioral Design <b>↗</b></span></a>
       <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><div class="branch-card-copy"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Motion e inmersión <b>↗</b></span></a>
@@ -194,6 +194,8 @@ const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
 const slot=hero.querySelector(".hero-visual");
+const introCue=document.querySelector(".intro-next");
+const specialtiesTitle=document.querySelector("#especialidades");
 const canvas=slot.querySelector("canvas");
 const updateHeader=()=>document.documentElement.style.setProperty("--nav-height",header.offsetHeight+"px");
 new ResizeObserver(updateHeader).observe(header);
@@ -263,8 +265,16 @@ toggle.addEventListener("click",()=>{
 
 new IntersectionObserver(([entry])=>{
   heroVisible=entry.isIntersecting;
+  introCue.classList.toggle("is-away",!heroVisible);
   scheduleCycle();
 }).observe(hero);
+introCue.querySelector("a").addEventListener("click",event=>{
+  if (event.metaKey||event.ctrlKey||event.shiftKey||event.altKey) return;
+  event.preventDefault();
+  introCue.classList.add("is-away");
+  specialtiesTitle.focus({preventScroll:true});
+  specialtiesTitle.scrollIntoView({behavior:reduced.matches?"instant":"smooth",block:"start"});
+});
 document.addEventListener("visibilitychange",scheduleCycle);
 reduced.addEventListener("change",()=>{
   clearTimeout(typeTimer);
