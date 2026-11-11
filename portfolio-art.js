@@ -28,7 +28,7 @@ function buildMesh(piece,index) {
   return buildBands(shape,opening,inner?3:2,thickness,!inner);
 }
 
-function buildBands(shape,opening,bands,thickness,solidCore=false) {
+function buildBands(shape,opening,bands,thickness,solidCore=false,gap=.023) {
   const upper=thickness/2;
   const lower=-upper;
   const vertices=[];
@@ -36,7 +36,7 @@ function buildBands(shape,opening,bands,thickness,solidCore=false) {
     for (const i of [0,1,2,0,2,3]) vertices.push(...points[i],...normal,level,cavity);
   }
   function rim(outside,inside,level) {
-    const bevel=Math.min(.032,thickness*.22,outside.radius*.4);
+    const bevel=Math.min(.032,thickness*.22,outside.radius*.4,opening?(shape.depth-opening.depth)/(bands*8):.032);
     const top=contour(outside.width-2*bevel,outside.depth-2*bevel,outside.radius-bevel,upper);
     const shoulder=contour(outside.width,outside.depth,outside.radius,upper-bevel);
     const base=contour(outside.width,outside.depth,outside.radius,lower);
@@ -72,10 +72,10 @@ function buildBands(shape,opening,bands,thickness,solidCore=false) {
   });
   for (let band=0;band<bands;band++) {
     const level=band/(solidCore?bands:Math.max(1,bands-1));
-    rim(interpolate(band/bands,band===0?0:-.023),
-      interpolate((band+1)/bands,band===bands-1?0:.023),level);
+    rim(interpolate(band/bands,band===0?0:-gap),
+      interpolate((band+1)/bands,band===bands-1?0:gap),level);
   }
-  if (solidCore) rim(interpolate(1,-.043),null,1);
+  if (solidCore) rim(interpolate(1,-gap*1.87),null,1);
   return new Float32Array(vertices);
 }
 
@@ -98,25 +98,26 @@ export function createArt(art,models=pieces) {
     uniform vec2 viewport;
     uniform vec2 origin;
     uniform vec3 position;
-    uniform float orthographic, cameraSide;
+    uniform float orthographic, quarterTurn, layerRise;
     uniform float scale, pyramid, terrace, stretch, bobPhase, ripple;
     varying vec3 surfaceNormal, surfacePosition;
     varying float innerWall, localHeight;
     void main() {
       vec3 p=vertex+position;
+      p.xz=mix(p.xz,vec2(-p.z,p.x),quarterTurn);
       float rise=0.31+0.69*band*band;
       float radialPosition=(terrace*3.0+band*2.0)/11.0;
       float waveHeight=ripple*sin(bobPhase+radialPosition*5.4);
       float heroOffset=pyramid*(terrace*0.39+band*0.105);
-      p.y+=heroOffset+stretch*rise+waveHeight;
-      float u=p.x*0.808027+p.z*0.589145*cameraSide;
-      float v=-p.x*0.589145*cameraSide+p.z*0.808027;
+      p.y+=heroOffset+stretch*rise+waveHeight+band*layerRise;
+      float u=p.x*0.808027+p.z*0.589145;
+      float v=-p.x*0.589145+p.z*0.808027;
       float depth=p.y*0.548024+v*0.836463;
       float w=1.0-(1.0-orthographic)*depth/13.0;
       vec2 center=vec2(2.0*origin.x/viewport.x-1.0,1.0-2.0*origin.y/viewport.y);
       vec2 offset=vec2(u*2.0*scale/viewport.x,(p.y*0.836463-v*0.548024)*2.0*scale/viewport.y);
       gl_Position=vec4(center*w+offset,-depth/10.0,w);
-      surfaceNormal=normal;
+      surfaceNormal=mix(normal,vec3(-normal.z,normal.y,normal.x),quarterTurn);
       innerWall=cavity;
       localHeight=vertex.y;
       surfacePosition=p;
@@ -155,7 +156,7 @@ export function createArt(art,models=pieces) {
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
   const cavity=gl.getAttribLocation(program,"cavity");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity","cameraSide"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobPhase","ripple","color","time","position","orthographic","opacity","quarterTurn","layerRise"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=models.map((piece,index)=>{
     const data=piece.mesh??buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -186,13 +187,13 @@ export function createArt(art,models=pieces) {
       }
       gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     },
-    render(scale,poses,time,orthographic=false,cameraSide=1) {
+    render(scale,poses,time,orthographic=false,quarterTurn=0) {
       if (scale<=0||!width||!height) return;
       gl.uniform2f(uniforms.origin,width*.5,height*.5);
       gl.uniform1f(uniforms.scale,scale);
       gl.uniform1f(uniforms.time,time);
       gl.uniform1f(uniforms.orthographic,Number(orthographic));
-      gl.uniform1f(uniforms.cameraSide,cameraSide);
+      gl.uniform1f(uniforms.quarterTurn,quarterTurn);
       if (orthographic) { gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA); }
       meshes.forEach(({buffer,count,color},index)=>{
         const pose=poses[index];
@@ -200,6 +201,7 @@ export function createArt(art,models=pieces) {
         gl.uniform3fv(uniforms.position,pose.position??[0,0,0]);
         gl.uniform2f(uniforms.origin,width*(pose.origin??.5),height*.5);
         gl.uniform1f(uniforms.opacity,pose.opacity??1);
+        gl.uniform1f(uniforms.layerRise,pose.layerRise??0);
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
         gl.vertexAttribPointer(vertex,3,gl.FLOAT,false,32,0);
         gl.vertexAttribPointer(normal,3,gl.FLOAT,false,32,12);
@@ -313,11 +315,11 @@ function solid(width,depth,height,radius) {
   return buildBands({width,depth,radius},null,1,height);
 }
 
-function sleeve(size,wall,height,radius) {
+function sleeve(size,wall,height,radius,bands=1) {
   return buildBands(
     {width:size,depth:size,radius},
     {width:size-2*wall,depth:size-2*wall,radius:radius-wall},
-    1,height
+    bands,height,false,bands===1?.023:.006
   );
 }
 
@@ -336,9 +338,9 @@ function trainingModels() {
   return [.55,1.02,1.65].flatMap((height,stage)=>{
     const x=(stage-1)*1.95;
     return [
-      [sleeve(1.45,.14,height,.25),chalk,height],
-      [sleeve(1.07,.13,height+.17,.20),petrol,height+.17],
-      [solid(.70,.70,height+.34,.14),chalk,height+.34]
+      [sleeve(1.45,.17,height,.25,3),chalk,height],
+      [sleeve(1.07,.15,height+.17,.20,3),petrol,height+.17],
+      [buildBands({width:.70,depth:.70,radius:.16},{width:.38,depth:.38,radius:.09},2,height+.34,true,.008),chalk,height+.34]
     ].map(([mesh,color,h])=>({mesh,color,stage,origin:.5,position:[x,h/2-1.2,0]}));
   });
 }
@@ -393,9 +395,9 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const [x,y,z]=model.position;
       return {
         origin:model.origin,position:[x,y-(1-opacity)*.16,z],opacity,
-        pyramid:0,stretch:0,bobPhase:0,ripple:0
+        pyramid:0,stretch:0,bobPhase:0,ripple:0,layerRise:training?.095:0
       };
-    }),0,true,training?1:-1);
+    }),0,true,training?0:1);
     if (!reduced.matches&&elapsed<(training?800:1530)) frame=requestAnimationFrame(draw);
   }
   function queue() {

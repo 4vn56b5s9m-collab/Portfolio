@@ -53,7 +53,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=escenas-3d">
+<link rel="stylesheet" href="portfolio.css?v=ritmo-capas">
 <script defer src="portfolio-interactions.js?v=escenas-3d"></script>
 </head>
 <body>
@@ -82,7 +82,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     </div>
     <div class="accordion-visual" id="accordion-visual">
       <div class="accordion-panel" data-accordion-panel="0"></div>
-      <div class="accordion-panel light-panel" data-accordion-panel="1" hidden><p class="motion-caption"><strong class="motion-line">Una microinteracción<span class="motion-ink" aria-hidden="true">Una microinteracción</span><span class="motion-orbit" aria-hidden="true"><i></i></span></strong><strong class="motion-line">puede cambiar tu foco<span class="motion-ink" aria-hidden="true">puede cambiar tu foco</span><span class="motion-orbit" aria-hidden="true"><i></i></span></strong><strong class="motion-line">de atención.<span class="motion-ink" aria-hidden="true">de atención.</span><span class="motion-orbit" aria-hidden="true"><i></i></span></strong></p></div>
+      <div class="accordion-panel light-panel" data-accordion-panel="1" hidden><p class="motion-caption"><span class="motion-line">Una microinteracción<span class="motion-ink" aria-hidden="true">Una microinteracción</span><span class="motion-orbit" aria-hidden="true"><i></i></span></span> <span class="motion-continuation"><span class="motion-line">puede cambiar tu foco<span class="motion-ink" aria-hidden="true">puede cambiar tu foco</span><span class="motion-orbit" aria-hidden="true"><i></i></span></span> <span class="motion-line motion-line-final">de atención<span class="motion-period">.</span><span class="motion-ink" aria-hidden="true">de atención<span class="motion-period">.</span></span><span class="motion-orbit" aria-hidden="true"><i></i></span></span></span></p></div>
       <div class="accordion-panel growth-panel" data-accordion-panel="2" hidden>
         <div class="branch-scene training-scene">
           <canvas data-branch-canvas="training" role="img" aria-label="Tres torres de altura creciente, con tres piezas concéntricas cada una"></canvas>
@@ -128,7 +128,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=encuadre-3d";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=ritmo-capas";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
