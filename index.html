@@ -234,14 +234,15 @@ function createArt() {
     attribute float profile;
     uniform vec2 viewport;
     uniform vec2 origin;
-    uniform float scale, pyramid, stretch, bobAmount, bobPhase;
+    uniform float scale, pyramid, terrace, stretch, bobAmount, bobPhase;
     varying vec3 surfaceNormal, surfacePosition;
     void main() {
       float top=(vertex.y+0.15)/0.3;
       vec3 p=vertex;
       float rise=0.31+0.69*band*band;
       float wave=sin(bobPhase-profile*5.4);
-      float heroHeight=pyramid*(1.25*pow(profile,0.9)+0.047*wave);
+      float withinTerrace=clamp(profile*4.0-terrace,0.0,1.0);
+      float heroHeight=pyramid*(terrace*0.39+withinTerrace*0.105+0.038*wave);
       float branchHeight=stretch*rise+bobAmount*sin(bobPhase-band*1.25);
       p.y+=top*(heroHeight+branchHeight);
       float u=p.x*0.808027+p.z*0.589145;
@@ -279,7 +280,7 @@ function createArt() {
   const normal=gl.getAttribLocation(program,"normal");
   const band=gl.getAttribLocation(program,"band");
   const profile=gl.getAttribLocation(program,"profile");
-  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","stretch","bobAmount","bobPhase","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
+  const uniforms=Object.fromEntries(["viewport","origin","scale","pyramid","terrace","stretch","bobAmount","bobPhase","color","time"].map(name=>[name,gl.getUniformLocation(program,name)]));
   const meshes=pieces.map((piece,index)=>{
     const data=buildMesh(piece,index);
     const buffer=gl.createBuffer();
@@ -321,6 +322,7 @@ function createArt() {
         gl.vertexAttribPointer(band,1,gl.FLOAT,false,32,24);
         gl.vertexAttribPointer(profile,1,gl.FLOAT,false,32,28);
         gl.uniform1f(uniforms.pyramid,poses[index].pyramid);
+        gl.uniform1f(uniforms.terrace,3-index);
         gl.uniform1f(uniforms.bobAmount,poses[index].bobAmount);
         gl.uniform1f(uniforms.bobPhase,poses[index].bobPhase);
         gl.uniform1f(uniforms.stretch,poses[index].stretch);
