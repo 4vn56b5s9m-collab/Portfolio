@@ -122,3 +122,13 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 
 .demo-tool [hidden]{display:none!important}
 .status.is-confirmed{background:#d8eee5;color:#145349;animation:status-in 340ms cubic-bezier(.2,.7,.3,1)}
+
+.contact-item{min-width:0;position:relative;display:flex;flex-direction:column;align-items:flex-start;border-radius:.85rem;background:#124d56;border:1px solid #ffffff22}
+.contact-item a{width:100%;min-height:3.25rem;background:transparent;border:0;border-radius:.85rem .85rem 0 0;font-size:clamp(.88rem,1.35vw,1.12rem)}
+.contact-value{overflow-wrap:anywhere;user-select:text;-webkit-user-select:text}
+.contact-copy{margin:0 .9rem .65rem;min-height:36px;border:1px solid #ffffff60;border-radius:999px;background:transparent;color:#f4f2ed;padding:.25rem .72rem;font:600 .78rem "Instrument Sans",system-ui,sans-serif;cursor:pointer}
+.contact-copy:hover{background:#ffffff22}
+.contact-copy:focus-visible{outline:2px solid #f4f2ed;outline-offset:3px}
+.site-footer .contact-status{margin:.55rem 0 0;font-size:.86rem}
+.contact-status:empty{display:none}
+@media(max-width:700px){.contact-item a{font-size:1rem}}

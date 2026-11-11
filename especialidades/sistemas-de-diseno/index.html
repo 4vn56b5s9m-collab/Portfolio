@@ -6,8 +6,8 @@
   <meta name="description" content="Diseño sistemas que permiten compartir componentes, patrones y criterios entre productos o unidades de negocio, con espacio para que cada marca y cada servicio tengan sus propias necesidades.">
   <title>Sistemas de diseño para múltiples marcas · Alejandro Sánchez Bretones</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
-  <link rel="stylesheet" href="../../portfolio.css">
-<script defer src="../../portfolio-interactions.js"></script>
+  <link rel="stylesheet" href="../../portfolio.css?v=contacto">
+<script defer src="../../portfolio-interactions.js?v=contacto"></script>
 </head>
 <body class="detail">
 <header id="inicio" class="site-header"><a class="site-name" href="../../#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="../../#especialidades">Especialidades</a><a href="../../#trayectoria">Trayectoria</a><a href="../../#contacto">Contacto</a></nav></header>
@@ -24,9 +24,10 @@
     <p>Si quieres conocer un caso o hablar de un proyecto, puedes encontrarme aquí.</p>
     <nav class="contact-blocks" aria-label="Opciones de contacto">
       <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span>LinkedIn</span><span aria-hidden="true">↗</span></a>
-      <a href="mailto:alejandrosanchezbretones@gmail.com"><span>Correo</span><span aria-hidden="true">↗</span></a>
-      <a href="tel:+34648246290"><span>Llamar</span><span aria-hidden="true">↗</span></a>
+      <div class="contact-item"><a href="mailto:alejandrosanchezbretones@gmail.com"><span class="contact-value">alejandrosanchezbretones@gmail.com</span><span aria-hidden="true">↗</span></a><button type="button" class="contact-copy" data-copy-contact aria-label="Copiar correo electrónico" hidden>Copiar</button></div>
+      <div class="contact-item"><a href="tel:+34648246290"><span class="contact-value">+34 648 246 290</span><span aria-hidden="true">↗</span></a><button type="button" class="contact-copy" data-copy-contact aria-label="Copiar número de teléfono" hidden>Copiar</button></div>
     </nav>
+    <p class="contact-status" role="status" aria-live="polite"></p>
     <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="../../#inicio">Volver al inicio ↑</a></div>
   </div>
 </footer>

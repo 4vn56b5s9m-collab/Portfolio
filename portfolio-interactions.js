@@ -94,3 +94,50 @@ for (const demo of document.querySelectorAll("[data-demo]")) {
     });
   }
 }
+
+function copyOnHttp(value) {
+  const field=document.createElement("textarea");
+  field.value=value;
+  field.readOnly=true;
+  field.style.cssText="position:fixed;left:0;top:0;opacity:0";
+  document.body.append(field);
+  const previous=document.activeElement;
+  field.focus({preventScroll:true});
+  field.select();
+  field.setSelectionRange(0,value.length);
+  try {
+    return document.execCommand("copy");
+  } finally {
+    field.remove();
+    previous?.focus({preventScroll:true});
+  }
+}
+
+for (const button of document.querySelectorAll("[data-copy-contact]")) {
+  button.hidden=false;
+  button.addEventListener("click",async()=>{
+    const value=button.closest(".contact-item").querySelector(".contact-value");
+    const status=button.closest(".site-footer").querySelector(".contact-status");
+    let copied=false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(value.textContent);
+        copied=true;
+      } else {
+        copied=copyOnHttp(value.textContent);
+      }
+    } catch {
+      copied=false;
+    }
+    if (copied) {
+      status.textContent="Copiado al portapapeles.";
+    } else {
+      const selection=window.getSelection();
+      const range=document.createRange();
+      range.selectNodeContents(value);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent="Mantén pulsado el dato para copiarlo.";
+    }
+  });
+}
