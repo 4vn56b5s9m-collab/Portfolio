@@ -95,8 +95,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .career-list strong{font-weight:600}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=selectores">
-<script defer src="portfolio-interactions.js?v=selectores"></script>
+<link rel="stylesheet" href="portfolio.css?v=escenas">
+<script defer src="portfolio-interactions.js?v=escenas"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="#inicio" aria-current="page">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -127,11 +127,37 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <article class="stage"><h2>Sistemas de diseño para múltiples marcas</h2><div class="branch-card"><p>Estructuro componentes y patrones que pueden compartirse entre productos y unidades de negocio. Defino qué se mantiene en común y qué puede adaptar cada marca.</p><ul class="branch-tags"><li>Componentes compartidos</li><li>Variantes por marca</li><li>Entrega a desarrollo</li></ul><a class="branch-link" href="especialidades/sistemas-de-diseno/">Explorar sistemas de diseño</a></div></article>
     </div>
   </section>
-  <section class="specialty-selector" id="explorar-especialidades" data-specialty-selector>
+  <section class="specialty-selector" id="explorar-especialidades" data-branch-scenes>
   <div class="specialty-inner">
     <h2>Cada proyecto pide algo distinto.</h2>
-    <div class="specialty-cards"><a class="specialty-card" href="especialidades/ui-behavioral-design/" data-piece="0"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/motion-e-inmersion/" data-piece="1"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/liderazgo-y-formacion/" data-piece="2"><strong>Liderazgo y formación de equipos</strong><span>Criterios y formas de trabajar que el equipo comparte.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/sistemas-de-diseno/" data-piece="3"><strong>Sistemas de diseño para múltiples marcas</strong><span>Componentes comunes que cada marca puede adaptar.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a></div>
-    <div class="selector-visual" aria-hidden="true"><canvas></canvas></div>
+    <div class="specialty-cards"><a class="specialty-card" href="especialidades/ui-behavioral-design/" data-piece="0"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/motion-e-inmersion/" data-piece="1"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/liderazgo-y-formacion/" data-piece="2"><strong>Formación de equipos de diseño</strong><span>Ejercicios y acuerdos para trabajar con criterios compartidos.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a><a class="specialty-card" href="especialidades/sistemas-de-diseno/" data-piece="3"><strong>Sistemas de diseño para múltiples marcas</strong><span>Componentes comunes que cada marca puede adaptar.</span><span class="specialty-arrow" aria-hidden="true">↗</span></a></div>
+    <div class="branch-scenes" aria-label="Ejemplos de cada especialidad">
+      <div class="branch-scene behavior-scene" data-branch-scene="0">
+        <article class="scene-tile scene-left"><span class="scene-label">Meta visible</span><strong>Te faltan 2 € para el envío gratis</strong><div class="scene-progress" aria-hidden="true"><span></span></div></article>
+        <article class="scene-tile scene-top behavior-copy"><span class="scene-label">Reencuadre</span><del>Nunca dejes tu casa sola.</del><strong>Tu casa,<br><em>siempre vigilada.</em></strong></article>
+        <article class="scene-tile scene-right"><span class="scene-label">Precio transparente</span><strong>49 € en total</strong><small>Envío e impuestos incluidos.</small></article>
+        <article class="scene-tile scene-left"><span class="scene-label">Expectativa clara</span><strong>Envío en 48 h</strong><small>Consulta la fecha antes de pagar.</small></article>
+        <article class="scene-tile scene-bottom"><span class="scene-label">Control</span><strong>Puedes cambiar la fecha después</strong><small>Desde el seguimiento de tu pedido.</small></article>
+        <article class="scene-tile scene-right"><span class="scene-label">Opciones comparables</span><strong>En casa o en un punto cercano</strong><small>Compara coste y plazo de entrega.</small></article>
+      </div>
+      <div class="branch-scene motion-scene" data-branch-scene="1" hidden>
+        <div class="motion-frame scene-top">
+          <span class="motion-pulse" aria-hidden="true"></span>
+          <div class="motion-target"><span class="target-rings" aria-hidden="true"></span><strong>Tu foco de atención</strong><small>El movimiento orienta la mirada.</small></div>
+        </div>
+      </div>
+      <div class="branch-scene training-scene" data-branch-scene="2" hidden>
+        <article class="scene-tile scene-left"><span class="scene-label">Punto de partida</span><strong>Dos equipos, dos formas de entregar</strong><small>Los archivos, estados y nombres siguen criterios distintos.</small></article>
+        <article class="scene-tile scene-top training-exercise"><span class="scene-label">Ejercicio de formación</span><strong>Revisamos una entrega juntos</strong><small>Comparamos archivos y acordamos qué necesita ver quien recibe el trabajo.</small></article>
+        <article class="scene-tile scene-right"><span class="scene-label">Acuerdo de equipo</span><strong>Una pauta para la próxima entrega</strong><small>Flujo, estados, decisiones y cuestiones abiertas.</small></article>
+      </div>
+      <div class="branch-scene systems-scene" data-branch-scene="3" hidden>
+        <article class="scene-tile scene-left"><span class="scene-label">Primitiva</span><span class="token-swatch" aria-hidden="true"></span><strong>Petróleo 600</strong><small>#124D56</small></article>
+        <article class="scene-tile scene-top"><span class="scene-label">Semántica</span><strong>Acción principal</strong><small>La marca asigna el color.</small></article>
+        <article class="scene-tile scene-bottom"><span class="scene-label">Componente</span><strong>Botón</strong><span class="token-button">Continuar</span></article>
+        <article class="scene-tile scene-right"><span class="scene-label">Interfaz</span><div class="token-layout"><strong>Configura tu entrega</strong><small>Selecciona una franja.</small><span class="token-button">Continuar</span></div></article>
+      </div>
+    </div>
   </div>
 </section>
   <section class="notes" id="trayectoria">

@@ -141,3 +141,21 @@ for (const button of document.querySelectorAll("[data-copy-contact]")) {
     }
   });
 }
+
+for (const selector of document.querySelectorAll("[data-branch-scenes]")) {
+  const cards=[...selector.querySelectorAll("[data-piece]")];
+  const scenes=[...selector.querySelectorAll("[data-branch-scene]")];
+  let selected=-1;
+  function show(index) {
+    if (index===selected) return;
+    selected=index;
+    cards.forEach(card=>card.classList.toggle("is-previewed",Number(card.dataset.piece)===index));
+    scenes.forEach(scene=>{scene.hidden=Number(scene.dataset.branchScene)!==index;});
+  }
+  for (const card of cards) {
+    const index=Number(card.dataset.piece);
+    card.addEventListener("pointerenter",event=>{if(event.pointerType!=="touch")show(index);});
+    card.addEventListener("focus",()=>show(index));
+  }
+  show(0);
+}
