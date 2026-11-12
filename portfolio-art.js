@@ -501,7 +501,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     const widthSpan=compact.matches
       ? training?5.9:behavioral?7.5:focus?4.9:8.55
       : training?6.9:behavioral?8.5:focus?7.3:9.8;
-    const scale=Math.min(width/widthSpan,height/5.25);
+    const spaced=behavioral||focus||(training&&compact.matches);
+    const scale=Math.min(width/widthSpan,height/(spaced?8.1:5.25));
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
@@ -526,21 +527,17 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    const fontSize=compact.matches?Math.max(23,Math.min(40,width*.093)):Math.max(26,Math.min(110,width*.135));
+    const fontSize=compact.matches?Math.max(23,Math.min(36,width*.078)):Math.max(28,Math.min(86,width*.105));
     floor.style.setProperty("--scene-type",fontSize+"px");
     labels.forEach((label,index)=>{
       let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
-      if (!focus&&!compact.matches) {
+      if (!spaced&&!compact.matches) {
         label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
         return;
       }
       if (width!==captionWidth||!captionBounds[index]?.width) {
         const length=width*(index===0?.64:.75);
         const base=focus?label.querySelector("text"):label;
-        for (const text of focus?label.querySelectorAll("text"):[]) {
-          text.setAttribute("textLength",length);
-          text.setAttribute("lengthAdjust","spacingAndGlyphs");
-        }
         const bounds=base.getBBox();
         captionBounds[index]=bounds.width?bounds:{x:-length/2,y:-fontSize,width:length,height:fontSize*1.2};
       }
@@ -552,15 +549,19 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const left=Math.min(...projectedX), farRight=Math.max(...projectedX);
       const top=Math.min(...projectedY), low=Math.max(...projectedY);
       const margin=Math.min(20,width*.05);
-      const fit=Math.min(1,(width-2*margin)/(farRight-left),(height-2*margin)/(low-top));
+      const bandTop=spaced?(index===0?0:height*.73):0;
+      const bandBottom=spaced?(index===0?height*.27:height):height;
+      const verticalPad=spaced?4:margin;
+      const fit=Math.min(1,(width-2*margin)/(farRight-left),(bandBottom-bandTop-2*verticalPad)/(low-top));
+      if (spaced) y=(bandTop+bandBottom-(top+low)*fit)/2;
       x=Math.max(margin-left*fit,Math.min(width-margin-farRight*fit,x));
-      y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));
+      y=Math.max(bandTop+verticalPad-top*fit,Math.min(bandBottom-verticalPad-low*fit,y));
       label.setAttribute("transform",`matrix(${.808*fit} ${-.323*fit} ${.589*fit} ${.443*fit} ${x} ${y})`);
 
       if (!focus) return;
       const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
       const ratio=reduced.matches?1:Math.max(0,Math.min(1,time));
-      const progress=ratio*ratio*(3-2*ratio);
+      const progress=ratio*ratio*ratio*(ratio*(6*ratio-15)+10);
       const inkPadding=4;
       masks[index].setAttribute("x",bounds.x-inkPadding);
       masks[index].setAttribute("y",bounds.y-inkPadding);
@@ -569,7 +570,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       if ((index===0&&elapsed<1680)||(index===1&&elapsed>=1680)||reduced.matches&&index===1) {
         const final=index===1&&ratio===1;
         const along=bounds.x+bounds.width*progress+(final?fontSize*.11:0);
-        const lift=final?-fontSize*.05:-fontSize*.22-Math.sin(ratio*Math.PI)*fontSize*.09;
+        const wave=Math.sin(ratio*Math.PI)*Math.sin(ratio*Math.PI*3.2);
+        const lift=final?-fontSize*.05:-fontSize*.13-wave*fontSize*.32;
         focusDot.setAttribute("transform",`translate(${x+(.808*along+.589*lift)*fit} ${y+(-.323*along+.443*lift)*fit})`);
         focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
       }
@@ -593,13 +595,19 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         const end=footprints[index+1].left-.17;
         const [x1,y1]=project(start,-.44,0), [x2,y2]=project(end,-.44,0);
         const path=end>start?`M${x1},${y1} L${x2},${y2}`:"";
-        const elapsedRatio=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-190-index*450)/260));
+        const local=elapsed-110-index*450;
+        const elapsedRatio=reduced.matches?1:Math.max(0,Math.min(1,local/300));
         const progress=elapsedRatio*elapsedRatio*(3-2*elapsedRatio);
         track.setAttribute("d",path);
         fills[index].setAttribute("d",path);
         fills[index].style.strokeDashoffset=1-progress;
-        if (end>start&&progress>0&&progress<1) {
-          pulse.setAttribute("transform",`translate(${x1+(x2-x1)*progress} ${y1+(y2-y1)*progress})`);
+        if (!reduced.matches&&end>start&&local>=0&&local<450) {
+          const crossing=Math.max(0,(local-300)/150);
+          const nextStart=footprints[index+1].right+.17;
+          const x=crossing>0?end+(nextStart-end)*crossing:start+(end-start)*progress;
+          const [px,py]=project(x,-.44,0);
+          pulse.setAttribute("transform",`translate(${px} ${py})`);
+          pulse.style.opacity=crossing>0?".92":".76";
           pulse.style.visibility="visible";
         }
       });

@@ -53,7 +53,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=posicion-figura">
+<link rel="stylesheet" href="portfolio.css?v=escenas-y-ritmo">
 <script defer src="portfolio-interactions.js?v=barras-isometria"></script>
 </head>
 <body>
@@ -64,7 +64,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <div class="hero-copy">
       <div class="hero-title"><h1 id="saludo">Hola, soy Álex</h1>
         <p class="tagline">Experto en diseño de interfaces mediante
-          <span class="hero-typed" aria-hidden="true">Behavioral Design</span>
+          <span class="hero-typed" aria-hidden="true"><span class="hero-typed-box"><span class="hero-typed-size">Behavioral Design</span><span class="hero-typed-ink">Behavioral Design</span></span></span>
           <span class="hero-specialties-reader">Behavioral Design, sistemas de diseño, motion e inmersión y formación de equipos.</span>
         </p>
         <div class="hero-rotation" role="group" aria-label="Especialidades de la cabecera">
@@ -87,14 +87,14 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <div><dd aria-label="Más de 25"><span aria-hidden="true">+<span data-count="25">25</span></span></dd><dt>clientes</dt></div>
       <div><dd data-count="6">6</dd><dt>países</dt></div>
     </dl>
-  </section>
-  </div>
-  <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
     <div class="intro-next">
       <a class="intro-next-link" href="#especialidades">Descubre cómo trabajo <span aria-hidden="true">↓</span></a>
     </div>
+  </section>
+  </div>
+  <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
-    <h2 id="especialidades" tabindex="-1">Cada proyecto pide algo distinto.</h2>
+    <h2 id="especialidades" tabindex="-1">Cada proyecto<br class="specialty-mobile-break"> pide algo<br class="specialty-mobile-break"> distinto.</h2>
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
       <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">UI y Behavioral Design <b>↗</b></span></a>
       <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><div class="branch-card-copy"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Motion e inmersión <b>↗</b></span></a>
@@ -188,7 +188,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=barras-isometria";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=escenas-y-ritmo";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
@@ -201,7 +201,8 @@ new ResizeObserver(updateHeader).observe(header);
 updateHeader();
 
 const branches=["Behavioral Design","Sistemas de diseño","Motion e inmersión","Formación de equipos"];
-const typed=hero.querySelector(".hero-typed");
+const typed=hero.querySelector(".hero-typed-ink");
+const typedSize=hero.querySelector(".hero-typed-size");
 const pages=[...hero.querySelectorAll("[data-hero-page]")];
 const toggle=hero.querySelector(".hero-rotation-toggle");
 const cycleDuration=3100;
@@ -210,29 +211,50 @@ let progressAnimations=[], cycleLeft=cycleDuration, cycleStarted=0;
 let requestHeroFrame=()=>{};
 hero.dataset.litPiece="0";
 
+let pendingBranch=-1;
+const eraseLead=245;
+
 function showBranch(index) {
-  if (index===active) return;
-  resetCycle();
-  active=index;
-  hero.dataset.litPiece=String(index);
-  pages.forEach((page,i)=>{
-    if (i===index) page.setAttribute("aria-current","true");
-    else page.removeAttribute("aria-current");
-  });
-  requestHeroFrame();
+  if (index===pendingBranch||(index===active&&pendingBranch<0)) return;
+  pendingBranch=index;
   clearTimeout(typeTimer);
-  const label=branches[index];
-  if (reduced.matches) {
-    typed.textContent=label;
+  function enter() {
+    resetCycle();
+    pendingBranch=-1;
+    active=index;
+    hero.dataset.litPiece=String(index);
+    pages.forEach((page,i)=>{
+      if (i===index) page.setAttribute("aria-current","true");
+      else page.removeAttribute("aria-current");
+    });
+    requestHeroFrame();
+    const label=branches[index];
+    typedSize.textContent=label;
+    if (reduced.matches) {
+      typed.textContent=label;
+    } else {
+      let length=0;
+      function typeNext() {
+        typed.textContent=label.slice(0,++length);
+        if (length<label.length) typeTimer=setTimeout(typeNext,36);
+      }
+      typeNext();
+    }
+    scheduleCycle();
+  }
+  const old=typed.textContent;
+  if (reduced.matches||!old.length) {
+    enter();
     return;
   }
-  let length=0;
-  typed.textContent="";
-  function typeNext() {
-    typed.textContent=label.slice(0,++length);
-    if (length<label.length) typeTimer=setTimeout(typeNext,42);
+  const delay=Math.max(9,Math.floor(eraseLead/old.length));
+  let length=old.length;
+  function eraseNext() {
+    typed.textContent=old.slice(0,--length);
+    if (length>0) typeTimer=setTimeout(eraseNext,delay);
+    else enter();
   }
-  typeNext();
+  eraseNext();
 }
 
 function resetCycle() {
@@ -244,6 +266,7 @@ function resetCycle() {
 }
 
 function scheduleCycle() {
+  if (pendingBranch>=0) return;
   if (cycleTimer) {
     cycleLeft=Math.max(0,cycleLeft-(performance.now()-cycleStarted));
     clearTimeout(cycleTimer);
@@ -270,7 +293,7 @@ function scheduleCycle() {
   cycleTimer=setTimeout(()=>{
     showBranch((active+1)%branches.length);
     scheduleCycle();
-  },cycleLeft);
+  },Math.max(0,cycleLeft-eraseLead));
 }
 
 pages.forEach((page,index)=>{
@@ -300,6 +323,12 @@ introCue.querySelector("a").addEventListener("click",event=>{
 });
 document.addEventListener("visibilitychange",scheduleCycle);
 reduced.addEventListener("change",()=>{
+  if (pendingBranch>=0) {
+    const next=pendingBranch;
+    pendingBranch=-1;
+    showBranch(next);
+    return;
+  }
   clearTimeout(typeTimer);
   typed.textContent=branches[active];
   scheduleCycle();
