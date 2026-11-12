@@ -234,3 +234,18 @@
 .cv-profile-fill-track{display:block}
 .cv-profile-fill-track:first-child>.cv-profile-fill{max-width:none}
 .cv-profile-fill-track:last-child>.cv-profile-fill{max-width:min(100%,32ch)}
+
+.cv-profile-camera{display:block}
+.cv-profile-disciplines.is-sliding [data-profile-slide]{transform:translate3d(var(--profile-shift,0px),0,0)}
+.cv-hero.is-outside-viewport::before{animation-play-state:paused}
+@media(max-width:700px){
+  .cv-profile-camera.is-moving{padding-bottom:var(--camera-extra,0px)}
+  .cv-profile-camera.is-moving>.cv-profile-disciplines{transform:translate3d(0,var(--camera-offset,0px),0)}
+  .cv-profile-disciplines.is-sliding .cv-profile-slide-track{padding-bottom:0}
+  .cv-profile-disciplines.is-sliding .cv-profile-slide-track>[data-profile-slide]{position:static}
+}
+@media print{
+  .cv-profile-camera.is-moving{padding-bottom:0}
+  .cv-profile-camera.is-moving>.cv-profile-disciplines,
+  .cv-profile-disciplines.is-sliding [data-profile-slide]{transform:none}
+}
