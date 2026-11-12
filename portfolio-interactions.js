@@ -11,8 +11,9 @@ if (siteNav) {
 
   function setMenu(open) {
     siteHeader.classList.toggle("is-menu-open",open);
+    siteNav.inert=mobileMenu.matches&&!open;
     menuButton.setAttribute("aria-expanded",String(open));
-    menuButton.setAttribute("aria-label",open?"Cerrar menú":"Abrir menú");
+    menuButton.setAttribute("aria-label",open?siteText("Cerrar menú","Close menu"):siteText("Abrir menú","Open menu"));
     menuButton.querySelector("path").setAttribute("d",open?"M5 5l14 14M19 5 5 19":"M4 6h16M4 12h16M4 18h16");
   }
 
@@ -30,7 +31,7 @@ if (siteNav) {
   siteNav.before(menuButton);
   siteHeader.classList.add("has-mobile-menu");
 }
-if (siteHeader && document.body.classList.contains("detail")) {
+if (siteHeader) {
   const updateHeader=()=>document.documentElement.style.setProperty("--nav-height",siteHeader.offsetHeight+"px");
   new ResizeObserver(updateHeader).observe(siteHeader);
   updateHeader();
@@ -58,8 +59,8 @@ for (const demo of document.querySelectorAll("[data-demo]")) {
     buttons.forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
     if (preview) preview.dataset.step=String(index);
     panels.forEach((panel,i)=>{panel.hidden=i!==index;});
-    if (slot) slot.textContent=["Necesita estados y reglas de uso","Faltan el estado de error y sus reglas","Estados y reglas compartidos"][index];
-    caption.textContent=captions[kind][index];
+    if (slot) slot.textContent=siteText(["Necesita estados y reglas de uso","Faltan el estado de error y sus reglas","Estados y reglas compartidos"][index]);
+    caption.textContent=siteText(captions[kind][index]);
   }
   buttons.forEach((button,index)=>button.addEventListener("click",()=>{
     select(index);
@@ -71,7 +72,7 @@ for (const demo of document.querySelectorAll("[data-demo]")) {
     cart.addEventListener("click",()=>{
       const added=cart.getAttribute("aria-pressed")!=="true";
       cart.setAttribute("aria-pressed",String(added));
-      cart.textContent=added?"Añadido · deshacer":"Añadir al carrito";
+      cart.textContent=added?siteText("Añadido · deshacer"):siteText("Añadir al carrito");
     });
   }
   if (kind==="motion") {
@@ -82,7 +83,7 @@ for (const demo of document.querySelectorAll("[data-demo]")) {
     function expand(card,button,expanded) {
       card.classList.toggle("is-reading",expanded);
       button.setAttribute("aria-expanded",String(expanded));
-      button.textContent=expanded?"Cerrar detalle":"Mostrar detalle";
+      button.textContent=expanded?siteText("Cerrar detalle"):siteText("Mostrar detalle");
     }
     const observer=new IntersectionObserver(entries=>{
       for (const entry of entries) {
@@ -107,9 +108,9 @@ for (const demo of document.querySelectorAll("[data-demo]")) {
     confirm.addEventListener("click",()=>{
       const sent=confirm.dataset.sent!=="true";
       confirm.dataset.sent=String(sent);
-      status.textContent=sent?"Solicitud enviada":"Lista para enviar";
+      status.textContent=sent?siteText("Solicitud enviada"):siteText("Lista para enviar");
       status.classList.toggle("is-confirmed",sent);
-      confirm.textContent=sent?"Repetir demo":"Enviar solicitud";
+      confirm.textContent=sent?siteText("Repetir demo"):siteText("Enviar solicitud");
     });
     const detail=demo.querySelector("[data-detail]");
     detail.addEventListener("click",()=>{
@@ -154,14 +155,14 @@ for (const button of document.querySelectorAll("[data-copy-contact]")) {
       copied=false;
     }
     if (copied) {
-      status.textContent="Copiado al portapapeles.";
+      status.textContent=siteText("Copiado al portapapeles.");
     } else {
       const selection=window.getSelection();
       const range=document.createRange();
       range.selectNodeContents(value);
       selection.removeAllRanges();
       selection.addRange(range);
-      status.textContent="Mantén pulsado el dato para copiarlo.";
+      status.textContent=siteText("Mantén pulsado el dato para copiarlo.");
     }
   });
 }
@@ -171,10 +172,20 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   const gallery = accordion.querySelector(".accordion-branches");
   const cards = [...gallery.querySelectorAll("[data-accordion-branch]")];
   const panels = [...accordion.querySelectorAll("[data-accordion-panel]")];
-  const dots = [...accordion.querySelectorAll("[data-branch-page]")];
+  const arrows = [...accordion.querySelectorAll("[data-branch-step]")];
+  const borderObserver = new ResizeObserver(entries => {
+    for (const {target: card} of entries) {
+      const rect = card.querySelector(".branch-border rect");
+      rect.setAttribute("width", Math.max(0, card.clientWidth - 1));
+      rect.setAttribute("height", Math.max(0, card.clientHeight - 1));
+    }
+  });
+  for (const card of cards) {
+    card.insertAdjacentHTML("afterbegin", '<svg class="branch-border" aria-hidden="true"><rect x=".5" y=".5" rx="13" pathLength="1"/></svg>');
+    borderObserver.observe(card);
+  }
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width: 700px)");
-  const toggle = accordion.querySelector('.branch-rotation-toggle');
   const duration = 4600;
   let active = 0, target = -1;
   let visible = false, hovered = false, paused = false;
@@ -189,11 +200,6 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     accordion.dataset.litPiece = String([0, 2, 3, 1][index]);
     cards.forEach((card, i) => card.classList.toggle("is-previewed", i === index));
     panels.forEach((panel, i) => { panel.hidden = i !== index; });
-    dots.forEach((dot, i) => {
-      if (i === index) dot.setAttribute("aria-current", "true");
-      else dot.removeAttribute("aria-current");
-    });
-    sizeGallery();
     scheduleRotation();
   }
 
@@ -238,8 +244,8 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       return;
     }
     if (!progress) {
-      const fill = dots[active].querySelector(".branch-progress > span");
-      progress = fill.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}],
+      const fill = cards[active].querySelector(".branch-border rect");
+      progress = fill.animate([{strokeDashoffset:1},{strokeDashoffset:0}],
         {duration,fill:"forwards"});
     } else {
       progress.play();
@@ -248,14 +254,10 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       Math.max(0,duration - (Number(progress.currentTime) || 0)));
   }
 
-  function setPaused(value) {
-    paused = value;
-    toggle.setAttribute("aria-label", value ? "Reanudar rotación de especialidades" : "Pausar rotación de especialidades");
-    toggle.firstElementChild.textContent = value ? "▶" : "Ⅱ";
+  function pauseRotation() {
+    paused = true;
     scheduleRotation();
   }
-
-  toggle.addEventListener("click", () => setPaused(!paused));
   gallery.addEventListener("pointermove", event => {
     if (event.pointerType === "touch" || mobile.matches) return;
     if (!hovered) {
@@ -263,7 +265,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       scheduleRotation();
     }
     const card=event.target.closest("[data-accordion-branch]");
-    if (card) preview(cards.indexOf(card));
+    if (card && cards.includes(card)) preview(cards.indexOf(card));
   });
   gallery.addEventListener("pointerleave", () => {
     hovered = false;
@@ -271,7 +273,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   });
   function stopForGesture() {
     target = -1;
-    setPaused(true);
+    pauseRotation();
   }
   gallery.addEventListener("touchstart", stopForGesture, {passive:true});
   gallery.addEventListener("wheel", event => {
@@ -280,54 +282,20 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
 
   cards.forEach((card, index) => {
     card.addEventListener("focus", () => {
-      setPaused(true);
+      pauseRotation();
       preview(index);
     });
   });
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      setPaused(true);
-      goTo(index);
-    });
-    dot.addEventListener("keydown", event => {
-      const offset = event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : 0;
-      const next = offset ? (index + offset + dots.length) % dots.length
-        : event.key === "Home" ? 0 : event.key === "End" ? dots.length - 1 : null;
-      if (next === null) return;
-      event.preventDefault();
-      dots[next].focus();
-      dots[next].click();
+  arrows.forEach(button => {
+    button.addEventListener("click", () => {
+      pauseRotation();
+      goTo((active + Number(button.dataset.branchStep) + cards.length) % cards.length);
     });
   });
   gallery.addEventListener("scroll", () => {
     if (mobile.matches && !frame) frame = requestAnimationFrame(previewCenteredCard);
   }, { passive: true });
-  function sizeGallery() {
-    if (!mobile.matches) return;
-    const tallest = Math.max(...cards.map(card => {
-      const style = getComputedStyle(card);
-      const copy = card.querySelector(".branch-card-copy").getBoundingClientRect().height;
-      const cta = card.querySelector(".branch-card-cta").getBoundingClientRect().height;
-      const extra = ["paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth", "rowGap"]
-        .reduce((sum, name) => sum + (parseFloat(style[name]) || 0), 0);
-      return Math.max(parseFloat(style.minHeight)||0, copy + cta + extra);
-    }));
-    const style = getComputedStyle(gallery);
-    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-    gallery.style.setProperty("--gallery-height", Math.ceil(tallest + padding) + "px");
-    const unused = gallery.getBoundingClientRect().bottom - cards[active].getBoundingClientRect().bottom;
-    accordion.style.setProperty("--branch-control-shift", Math.max(0,unused) + "px");
-  }
-  const galleryObserver = new ResizeObserver(sizeGallery);
-  cards.forEach(card => {
-    galleryObserver.observe(card.querySelector(".branch-card-copy"));
-    galleryObserver.observe(card.querySelector(".branch-card-cta"));
-  });
-  mobile.addEventListener("change", () => {
-    sizeGallery();
-    previewCenteredCard();
-  });
-  sizeGallery();
+  mobile.addEventListener("change", previewCenteredCard);
   previewCenteredCard();
   new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting && entry.intersectionRatio >= .55;

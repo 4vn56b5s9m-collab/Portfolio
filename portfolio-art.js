@@ -527,7 +527,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    const fontSize=compact.matches?Math.max(29,Math.min(47,width*.103)):Math.max(28,Math.min(86,width*.105));
+    const fontSize=compact.matches?Math.max(31,Math.min(51,width*.111)):Math.max(28,Math.min(86,width*.105));
     floor.style.setProperty("--scene-type",fontSize+"px");
     labels.forEach((label,index)=>{
       let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
