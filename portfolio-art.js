@@ -521,7 +521,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         :1;
       return {
         origin:model.origin,
-        position:[x,y-(training||systems?0:remaining*.16),z],
+        position:[x,y-(training||systems?0:remaining*.16)+(focus?height*.055/(scale*.836463):0),z],
         opacity:training?Math.min(1,progress*8):systems?eased:settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
@@ -554,7 +554,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         const bias=index===0?-.19:.19;
         x=width*(.5+bias);
         const center=(top+low)*fit/2;
-        y=height*(index===0?.20:.81)-center;
+        y=height*(index===0?.20:focus?.92:.86)-center;
       }
       x=Math.max(margin-left*fit,Math.min(width-margin-farRight*fit,x));
       y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));
