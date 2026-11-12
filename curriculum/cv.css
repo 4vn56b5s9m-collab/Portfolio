@@ -196,3 +196,16 @@
 
 .cv-profile-disciplines{justify-items:center}
 .cv-profile-disciplines [data-profile-slide]{margin-inline:0}
+
+.cv-profile{padding-top:clamp(4.5rem,8vw,8rem)}
+.cv-profile .cv-copy{padding-top:clamp(2.5rem,5vw,5rem)}
+.cv-profile-fill em{font-weight:600}
+@media(max-width:700px){
+  .cv-hero-inner{padding-block:3.7rem 1.75rem}
+  .cv-profile{padding-top:3.25rem}
+  .cv-profile .cv-copy{padding-top:2.25rem}
+}
+@media print{
+  .cv-hero-inner{padding-block:1rem}
+  .cv-profile,.cv-profile .cv-copy{padding-top:1rem}
+}
