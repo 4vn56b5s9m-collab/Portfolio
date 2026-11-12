@@ -212,7 +212,7 @@ let requestHeroFrame=()=>{};
 hero.dataset.litPiece="0";
 
 let pendingBranch=-1;
-const eraseLead=245;
+const typingInterval=36;
 
 function showBranch(index) {
   if (index===pendingBranch||(index===active&&pendingBranch<0)) return;
@@ -236,7 +236,7 @@ function showBranch(index) {
       let length=0;
       function typeNext() {
         typed.textContent=label.slice(0,++length);
-        if (length<label.length) typeTimer=setTimeout(typeNext,36);
+        if (length<label.length) typeTimer=setTimeout(typeNext,typingInterval);
       }
       typeNext();
     }
@@ -247,11 +247,10 @@ function showBranch(index) {
     enter();
     return;
   }
-  const delay=Math.max(9,Math.floor(eraseLead/old.length));
   let length=old.length;
   function eraseNext() {
     typed.textContent=old.slice(0,--length);
-    if (length>0) typeTimer=setTimeout(eraseNext,delay);
+    if (length>0) typeTimer=setTimeout(eraseNext,typingInterval);
     else enter();
   }
   eraseNext();
@@ -293,7 +292,7 @@ function scheduleCycle() {
   cycleTimer=setTimeout(()=>{
     showBranch((active+1)%branches.length);
     scheduleCycle();
-  },Math.max(0,cycleLeft-eraseLead));
+  },Math.max(0,cycleLeft-(branches[active].length-1)*typingInterval));
 }
 
 pages.forEach((page,index)=>{
