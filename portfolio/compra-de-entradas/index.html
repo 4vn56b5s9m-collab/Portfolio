@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rediseño de la compra de entradas · Alejandro Sánchez Bretones</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap">
+<link rel="stylesheet" href="../../portfolio.css?v=casos">
+<link rel="stylesheet" href="../../case-studies.css?v=1">
+<script defer src="../../portfolio-interactions.js?v=menu-y-escenas"></script>
+<script defer src="../../ticket-case.js?v=1"></script>
+</head>
+<body class="detail case-page">
+<header id="inicio" class="site-header"><a class="site-name" href="../../#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="../../">Inicio</a><a href="../../portfolio/" aria-current="page">Portfolio</a><a href="../../formaciones-a-empresas/">Formaciones a empresas</a><a href="../../curriculum/">Currículum</a></nav></header>
+<main><article>
+<section class="case-wrap case-intro">
+  <a class="case-back" href="../">← Portfolio</a>
+  <p class="case-kicker">Caso anónimo · UI y Behavioral Design</p>
+  <h1>Rediseño de la compra de entradas</h1>
+  <p>Cómo cambiamos la forma de comparar tres entradas para que las personas entendieran qué experiencia compraban en cada una.</p>
+  <dl class="case-results">
+    <div><dt>+33 %</dt><dd>Ventas de la opción intermedia frente a la básica</dd></div>
+    <div><dt>+7 %</dt><dd>Ventas de la opción Premium</dd></div>
+    <div><dt>20 %</dt><dd>Cuota diaria de ventas recuperada por la opción intermedia</dd></div>
+  </dl>
+</section>
+<section class="case-wrap case-brief">
+  <div><h2>El reto</h2><p>Las prestaciones se presentaban con el mismo énfasis. Las opciones con mejor ubicación o servicios adicionales resultaban difíciles de distinguir de la entrada básica.</p></div>
+  <div><h2>Mi aportación</h2><p>Colaboré en el análisis de cómo se comparaban las entradas y en la traducción de los principios de anclaje, encuadre y simulación a decisiones de interfaz.</p></div>
+</section>
+<section class="case-wrap case-demo" data-ticket-demo data-step="0">
+  <h2>De comparar entradas a elegir una experiencia</h2>
+  <p>Avanza por las intervenciones o activa cada cambio por separado para ver cómo cambia la comparativa.</p>
+  <div class="case-demo-layout">
+    <div class="case-demo-controls">
+      <ol class="case-timeline" aria-label="Pasos de la comparativa"><li><button type="button" data-case-step="0" aria-current="step" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Comparativa inicial</strong><span>La opción básica abría la comparación. Las llamadas a la acción aparecían antes de las prestaciones y las tres fichas tenían una jerarquía similar.</span></span></button></li>
+<li><button type="button" data-case-step="1" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Orden de comparación</strong><span>La opción Premium pasa a la izquierda. Abre la comparación y sirve de referencia para entender las diferencias entre las tres entradas.</span></span></button></li>
+<li><button type="button" data-case-step="2" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Encuadre de la experiencia</strong><span>La ficha Premium explica la experiencia desde el asiento, hace visibles sus prestaciones y distingue lo incluido de lo opcional.</span></span></button></li>
+<li><button type="button" data-case-step="3" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Imaginarse allí</strong><span>Una escena con público aporta contexto. En la ficha Premium, la ilustración cobra vida al pasar el ratón o pulsar el control de reproducción.</span></span></button></li></ol>
+      <p class="case-mobile-step" aria-hidden="true"><strong>Comparativa inicial</strong><span>La opción básica abría la comparación. Las llamadas a la acción aparecían antes de las prestaciones y las tres fichas tenían una jerarquía similar.</span></p>
+      <fieldset class="case-switches"><legend>Aplicar cambios</legend>
+        <label><input type="checkbox" data-ticket-change="order"> Orden de comparación</label>
+        <label><input type="checkbox" data-ticket-change="framing"> Encuadre de la experiencia</label>
+        <label><input type="checkbox" data-ticket-change="imagery"> Escena con público</label>
+      </fieldset>
+      <p class="case-sr" aria-live="polite" data-ticket-status></p>
+    </div>
+    <div><div class="ticket-comparison" id="ticket-comparison" tabindex="0" aria-label="Comparativa ilustrativa de entradas">
+      <article class="ticket-card ticket-basic" aria-labelledby="ticket-basic-title">
+  <div class="ticket-art"><svg viewBox="0 0 170 97" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect width="170" height="97" fill="#243741"/>
+  <circle class="ticket-light" cx="126" cy="22" r="12" fill="#dac293"/>
+  <path d="M0 64Q85 30 170 64V97H0Z" fill="#47606a"/>
+  <path d="M0 78Q85 50 170 78V97H0Z" fill="#172830"/>
+  <path d="M0 64Q85 30 170 64" fill="none" stroke="#acb7b2" stroke-opacity=".5"/>
+  <g class="ticket-crowd" fill="#e7d8b8"><circle cx="53" cy="77" r="6"/><path d="M45 97v-7a8 8 0 0 1 16 0v7z"/><circle cx="88" cy="72" r="7"/><path d="M79 97v-11a9 9 0 0 1 18 0v11z"/></g>
+</svg></div>
+  <div class="ticket-copy"><h3 id="ticket-basic-title">Básica</h3>
+  <p>Acceso al evento.</p>
+  <span class="ticket-action" aria-hidden="true">Elegir entrada</span>
+  <ul><li>Asiento estándar</li></ul>
+  
+  </div>
+</article>
+      <article class="ticket-card ticket-plus" aria-labelledby="ticket-plus-title">
+  <div class="ticket-art"><svg viewBox="0 0 170 97" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect width="170" height="97" fill="#243741"/>
+  <circle class="ticket-light" cx="126" cy="22" r="12" fill="#dac293"/>
+  <path d="M0 64Q85 30 170 64V97H0Z" fill="#47606a"/>
+  <path d="M0 78Q85 50 170 78V97H0Z" fill="#172830"/>
+  <path d="M0 64Q85 30 170 64" fill="none" stroke="#acb7b2" stroke-opacity=".5"/>
+  <g class="ticket-crowd" fill="#e7d8b8"><circle cx="53" cy="77" r="6"/><path d="M45 97v-7a8 8 0 0 1 16 0v7z"/><circle cx="88" cy="72" r="7"/><path d="M79 97v-11a9 9 0 0 1 18 0v11z"/></g>
+</svg></div>
+  <div class="ticket-copy"><h3 id="ticket-plus-title">Intermedia</h3>
+  <p>Una ubicación con más opciones.</p>
+  <span class="ticket-action" aria-hidden="true">Elegir entrada</span>
+  <ul><li>Asiento con preferencia</li><li>Acceso prioritario</li></ul>
+  
+  </div>
+</article>
+      <article class="ticket-card ticket-premium" aria-labelledby="ticket-premium-title">
+  <div class="ticket-art"><svg viewBox="0 0 170 97" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect width="170" height="97" fill="#243741"/>
+  <circle class="ticket-light" cx="126" cy="22" r="12" fill="#dac293"/>
+  <path d="M0 64Q85 30 170 64V97H0Z" fill="#47606a"/>
+  <path d="M0 78Q85 50 170 78V97H0Z" fill="#172830"/>
+  <path d="M0 64Q85 30 170 64" fill="none" stroke="#acb7b2" stroke-opacity=".5"/>
+  <g class="ticket-crowd" fill="#efd9ad">
+  <circle cx="39" cy="77" r="6"/><path d="M31 97v-7a8 8 0 0 1 16 0v7z"/>
+  <g class="ticket-fan"><circle cx="69" cy="70" r="7"/><path d="M59 97V84a10 10 0 0 1 20 0v13z"/><path d="M61 84L50 68m27 16 11-16" fill="none" stroke="#efd9ad" stroke-width="5" stroke-linecap="round"/></g>
+  <circle cx="101" cy="79" r="5"/><path d="M94 97v-6a7 7 0 0 1 14 0v6z"/>
+</g>
+</svg><button class="ticket-play" type="button" aria-pressed="false" aria-label="Reproducir la ilustración de Premium"><span aria-hidden="true">▶</span></button></div>
+  <div class="ticket-copy"><h3 id="ticket-premium-title">Premium</h3>
+  <p class="ticket-legacy">Incluye las ventajas de la entrada intermedia y servicios adicionales.</p><p class="ticket-reframed">Vive el evento desde una ubicación preferente, con espacio reservado y restauración.</p>
+  <span class="ticket-action" aria-hidden="true"><span class="ticket-legacy">Elegir entrada</span><span class="ticket-reframed">Elegir experiencia Premium</span></span>
+  <ul><li>Ubicación preferente</li><li>Espacio reservado</li><li>Restauración</li></ul>
+  <p class="ticket-reframed ticket-optional">Extras opcionales disponibles por separado.</p>
+  </div>
+</article>
+    </div><p class="case-demo-note">Reconstrucción ilustrativa con nombres y gráficos genéricos.</p></div>
+  </div>
+</section>
+</article></main>
+<footer class="case-footer"><a href="../../#inicio">Alejandro Sánchez Bretones</a><a href="../../portfolio/">Portfolio</a></footer>
+</body>
+</html>
