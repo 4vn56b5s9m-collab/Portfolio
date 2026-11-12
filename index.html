@@ -53,7 +53,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=menu-y-escenas">
+<link rel="stylesheet" href="portfolio.css?v=barras-movil">
 <script defer src="portfolio-interactions.js?v=menu-y-escenas"></script>
 </head>
 <body>
@@ -71,10 +71,10 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
           <button class="hero-rotation-toggle" type="button" aria-label="Pausar rotación automática"><span aria-hidden="true">Ⅱ</span></button>
           <div class="hero-progress" aria-hidden="true"><span></span></div>
           <div class="hero-pagination">
-            <button type="button" data-hero-page="0" aria-label="Behavioral Design" aria-current="true"></button>
-            <button type="button" data-hero-page="1" aria-label="Sistemas de diseño"></button>
-            <button type="button" data-hero-page="2" aria-label="Motion e inmersión"></button>
-            <button type="button" data-hero-page="3" aria-label="Formación de equipos"></button>
+            <button type="button" data-hero-page="0" aria-label="Behavioral Design" aria-current="true"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
+            <button type="button" data-hero-page="1" aria-label="Sistemas de diseño"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
+            <button type="button" data-hero-page="2" aria-label="Motion e inmersión"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
+            <button type="button" data-hero-page="3" aria-label="Formación de equipos"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
           </div>
         </div>
       </div>
@@ -208,12 +208,13 @@ const pages=[...hero.querySelectorAll("[data-hero-page]")];
 const toggle=hero.querySelector(".hero-rotation-toggle");
 const cycleDuration=3300;
 let active=0,hovered=-1,heroVisible=false,paused=false,cycleTimer=0,typeTimer=0;
-let progressAnimation;
+let progressAnimations=[], cycleLeft=cycleDuration, cycleStarted=0;
 let requestHeroFrame=()=>{};
 hero.dataset.litPiece="0";
 
 function showBranch(index) {
   if (index===active) return;
+  resetCycle();
   active=index;
   hero.dataset.litPiece=String(index);
   pages.forEach((page,i)=>{
@@ -236,18 +237,42 @@ function showBranch(index) {
   typeNext();
 }
 
-function scheduleCycle() {
+function resetCycle() {
   clearTimeout(cycleTimer);
-  progressAnimation?.cancel();
-  if (reduced.matches||paused||document.hidden||!heroVisible||hovered>=0) return;
-  progressAnimation=progress.animate(
-    [{transform:"scaleX(0)"},{transform:"scaleX(1)"}],
-    {duration:cycleDuration,fill:"forwards"}
-  );
+  cycleTimer=0;
+  cycleLeft=cycleDuration;
+  progressAnimations.forEach(animation=>animation.cancel());
+  progressAnimations=[];
+}
+
+function scheduleCycle() {
+  if (cycleTimer) {
+    cycleLeft=Math.max(0,cycleLeft-(performance.now()-cycleStarted));
+    clearTimeout(cycleTimer);
+    cycleTimer=0;
+  }
+  if (reduced.matches) {
+    resetCycle();
+    return;
+  }
+  if (paused||document.hidden||!heroVisible||hovered>=0) {
+    progressAnimations.forEach(animation=>animation.pause());
+    return;
+  }
+  if (!progressAnimations.length) {
+    const fill=pages[active].querySelector(".hero-segment > span");
+    progressAnimations=[progress,fill].map(bar=>bar.animate(
+      [{transform:"scaleX(0)"},{transform:"scaleX(1)"}],
+      {duration:cycleDuration,fill:"forwards"}
+    ));
+  } else {
+    progressAnimations.forEach(animation=>animation.play());
+  }
+  cycleStarted=performance.now();
   cycleTimer=setTimeout(()=>{
     showBranch((active+1)%branches.length);
     scheduleCycle();
-  },cycleDuration);
+  },cycleLeft);
 }
 
 pages.forEach((page,index)=>{
