@@ -216,10 +216,24 @@ let progressAnimations=[], cycleLeft=cycleDuration, cycleStarted=0;
 let requestHeroFrame=()=>{};
 hero.dataset.litPiece="0";
 
-let pendingBranch=-1;
+let pendingBranch=-1, visualActive=0;
 const typingInterval=36;
 
-function showBranch(index) {
+function highlightBranch(index) {
+  visualActive=index;
+  hero.dataset.litPiece=String(index);
+  pages.forEach((page,i)=>{
+    if (i===index) page.setAttribute("aria-current","true");
+    else page.removeAttribute("aria-current");
+  });
+  requestHeroFrame();
+}
+
+function showBranch(index, immediate=false) {
+  if (immediate) {
+    resetCycle();
+    highlightBranch(index);
+  }
   if (index===pendingBranch||(index===active&&pendingBranch<0)) return;
   pendingBranch=index;
   clearTimeout(typeTimer);
@@ -227,12 +241,7 @@ function showBranch(index) {
     resetCycle();
     pendingBranch=-1;
     active=index;
-    hero.dataset.litPiece=String(index);
-    pages.forEach((page,i)=>{
-      if (i===index) page.setAttribute("aria-current","true");
-      else page.removeAttribute("aria-current");
-    });
-    requestHeroFrame();
+    highlightBranch(index);
     const label=branches[index];
     typedSize.textContent=label;
     if (reduced.matches) {
@@ -357,7 +366,7 @@ if (renderer) {
       const blend=reduced.matches?1:1-Math.exp(-elapsed/105);
       renderer.clear(surface);
       renderer.render(scale,pieces.map((_,i)=>{
-        heights[i]+=((active===i?.55:0)-heights[i])*blend;
+        heights[i]+=((visualActive===i?.55:0)-heights[i])*blend;
         return {pyramid:1,stretch:heights[i],bobPhase:time*.78,ripple:reduced.matches?0:.10};
       }),time);
     }
@@ -367,8 +376,7 @@ if (renderer) {
     if (index===hovered) return;
     hovered=index;
     if (index>=0) {
-      showBranch(index);
-      queue();
+      showBranch(index,true);
     }
     scheduleCycle();
   }
