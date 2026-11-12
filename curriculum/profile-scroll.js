@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const row = element.getBoundingClientRect();
       const amount = clamp((innerHeight - row.top) / (innerHeight + row.height));
       const style = getComputedStyle(element);
-      const travel = Math.max(0, group.width - element.offsetWidth - 2 * parseFloat(style.marginInlineStart));
+      const travel = group.width - element.offsetWidth - 2 * parseFloat(style.marginInlineStart);
       element.style.setProperty("--profile-shift", travel * (index % 2 === 0 ? amount : 1 - amount) + "px");
     });
     measure = false;
