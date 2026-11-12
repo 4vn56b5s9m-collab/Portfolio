@@ -1,7 +1,8 @@
 const demo = document.querySelector("[data-ticket-demo]");
 if (demo) {
   const timeline = demo.querySelector(".case-timeline");
-  const steps = [...timeline.querySelectorAll("[data-case-step]")];
+  const steps = [...timeline.querySelectorAll("[data-story-node]")];
+  const story = timeline.closest("[data-scroll-story]");
   const checks = [...demo.querySelectorAll("[data-ticket-change]")];
   const comparison = demo.querySelector("#ticket-comparison");
   const premium = comparison.querySelector(".ticket-premium");
@@ -9,8 +10,6 @@ if (demo) {
   const mobileCopy = demo.querySelector(".case-mobile-step span");
   const status = demo.querySelector("[data-ticket-status]");
   const play = premium.querySelector(".ticket-play");
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  let arrivalTimer = 0;
 
   function stopIllustration() {
     premium.classList.remove("is-playing");
@@ -45,29 +44,10 @@ if (demo) {
     render();
   }
 
-  function goTo(index) {
-    clearTimeout(arrivalTimer);
-    timeline.style.setProperty("--case-progress", String(index / (steps.length - 1)));
-    if (reduced.matches) arrive(index, true);
-    else arrivalTimer = setTimeout(() => arrive(index, true), 320);
-  }
-
-  steps.forEach((button, index) => {
-    button.addEventListener("click", () => goTo(index));
-    button.addEventListener("keydown", event => {
-      const moves = { ArrowUp: -1, ArrowLeft: -1, ArrowDown: 1, ArrowRight: 1 };
-      const next = event.key === "Home" ? 0 : event.key === "End" ? steps.length - 1
-        : moves[event.key] ? (index + moves[event.key] + steps.length) % steps.length : null;
-      if (next === null) return;
-      event.preventDefault();
-      steps[next].focus();
-      goTo(next);
-    });
-  });
+  story.addEventListener("story:step", event => arrive(event.detail, true));
 
   checks.forEach((input, index) => {
     input.addEventListener("change", () => {
-      clearTimeout(arrivalTimer);
       const active = input.checked ? index + 1 : checks.findLastIndex(check => check.checked) + 1;
       timeline.style.setProperty("--case-progress", String(active / (steps.length - 1)));
       arrive(active, false);

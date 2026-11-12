@@ -90,3 +90,23 @@
   .has-imagery .ticket-premium:is(:hover,.is-playing) :is(.ticket-fan,.ticket-light){animation:none}
   .has-imagery .ticket-play{display:none}
 }
+
+.detail-section.example .wrap:has(.scroll-story){display:block}
+.example .wrap:has(.scroll-story)>div:first-child p{max-width:62ch}
+.scroll-story{position:relative;margin-top:1.65rem}
+.scroll-story-stage{position:sticky;top:calc(var(--nav-height,4.5rem) + .75rem);margin:0;align-items:start;z-index:1;overflow-anchor:none}
+.scroll-story-distance{box-sizing:content-box;height:calc(var(--story-steps) * clamp(13rem,48svh,27rem));padding-bottom:clamp(5rem,22svh,12rem);pointer-events:none}
+.scroll-story .case-timeline::after{transition:transform 100ms linear}
+.scroll-story-stage .demo-tool{min-height:19rem}
+.scroll-story-stage .demo-caption{margin-bottom:0}
+.scroll-story + .case-switches{max-width:28rem}
+.case-timeline button:focus-visible{outline:2px solid #18717e;outline-offset:-2px}
+@media(max-width:700px){
+  .scroll-story-stage{gap:.65rem;top:calc(var(--nav-height,4.5rem) + .4rem)}
+  .scroll-story-stage .demo-tool{min-height:16rem}
+  .scroll-story-stage .case-mobile-step{min-height:4.6rem}
+  .scroll-story-stage .case-timeline{grid-template-columns:repeat(calc(var(--story-steps) + 1),minmax(0,1fr))}
+  .scroll-story-stage .case-timeline::before,.scroll-story-stage .case-timeline::after{inset-inline:calc(50% / (var(--story-steps) + 1))}
+  .scroll-story-stage .ticket-comparison{grid-auto-columns:minmax(72%,1fr)}
+}
+@media(prefers-reduced-motion:reduce){.scroll-story .case-timeline::after{transition:none}}

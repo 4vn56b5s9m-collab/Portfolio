@@ -45,13 +45,13 @@ const captions={
 
 for (const demo of document.querySelectorAll("[data-demo]")) {
   const kind=demo.dataset.demo;
+  const story=demo.closest("[data-scroll-story]");
   const buttons=[...demo.querySelectorAll("[data-select]")];
   const preview=demo.querySelector("[data-preview]");
   const caption=demo.querySelector("[data-caption]");
   const panels=[...demo.querySelectorAll("[data-motion-panel]")];
   const slot=demo.querySelector("[data-slot]");
   let current=-1;
-  let lastManual=-Infinity;
   function select(index) {
     if (index===current) return;
     current=index;
@@ -62,18 +62,11 @@ for (const demo of document.querySelectorAll("[data-demo]")) {
     caption.textContent=captions[kind][index];
   }
   buttons.forEach((button,index)=>button.addEventListener("click",()=>{
-    lastManual=performance.now();
     select(index);
   }));
+  story?.addEventListener("story:step",event=>select(event.detail));
   select(0);
   if (kind==="ui") {
-    const steps=[...demo.closest("section").querySelectorAll("[data-scroll-step]")];
-    const observer=new IntersectionObserver(entries=>{
-      if (performance.now()-lastManual<1300) return;
-      const next=entries.filter(entry=>entry.isIntersecting).at(-1);
-      if (next) select(Number(next.target.dataset.scrollStep));
-    },{rootMargin:"-37% 0px -48% 0px"});
-    steps.forEach(step=>observer.observe(step));
     const cart=preview.querySelector(".product-cta");
     cart.addEventListener("click",()=>{
       const added=cart.getAttribute("aria-pressed")!=="true";

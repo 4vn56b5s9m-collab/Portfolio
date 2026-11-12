@@ -6,10 +6,10 @@
 <title>Rediseño de la compra de entradas · Alejandro Sánchez Bretones</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap">
 <link rel="stylesheet" href="../../portfolio.css?v=casos">
-<link rel="stylesheet" href="../../case-studies.css?v=1">
+<link rel="stylesheet" href="../../case-studies.css?v=nodos-scroll">
 <script defer src="../../portfolio-interactions.js?v=menu-y-escenas"></script>
-<script defer src="../../ticket-case.js?v=1"></script>
-</head>
+<script defer src="../../ticket-case.js?v=nodos-scroll"></script>
+<script defer src="../../scroll-demos.js?v=1"></script></head>
 <body class="detail case-page">
 <header id="inicio" class="site-header"><a class="site-name" href="../../#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="../../">Inicio</a><a href="../../portfolio/" aria-current="page">Portfolio</a><a href="../../formaciones-a-empresas/">Formaciones a empresas</a><a href="../../curriculum/">Currículum</a></nav></header>
 <main><article>
@@ -30,19 +30,14 @@
 </section>
 <section class="case-wrap case-demo" data-ticket-demo data-step="0">
   <h2>De comparar entradas a elegir una experiencia</h2>
-  <p>Avanza por las intervenciones o activa cada cambio por separado para ver cómo cambia la comparativa.</p>
-  <div class="case-demo-layout">
+  <p>Desplázate para recorrer las intervenciones. También puedes elegir un nodo o activar los cambios por separado al final.</p>
+  <div class="scroll-story" data-scroll-story style="--story-steps:3"><div class="case-demo-layout scroll-story-stage">
     <div class="case-demo-controls">
-      <ol class="case-timeline" aria-label="Pasos de la comparativa"><li><button type="button" data-case-step="0" aria-current="step" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Comparativa inicial</strong><span>La opción básica abría la comparación. Las llamadas a la acción aparecían antes de las prestaciones y las tres fichas tenían una jerarquía similar.</span></span></button></li>
-<li><button type="button" data-case-step="1" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Orden de comparación</strong><span>La opción Premium pasa a la izquierda. Abre la comparación y sirve de referencia para entender las diferencias entre las tres entradas.</span></span></button></li>
-<li><button type="button" data-case-step="2" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Encuadre de la experiencia</strong><span>La ficha Premium explica la experiencia desde el asiento, hace visibles sus prestaciones y distingue lo incluido de lo opcional.</span></span></button></li>
-<li><button type="button" data-case-step="3" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Imaginarse allí</strong><span>Una escena con público aporta contexto. En la ficha Premium, la ilustración cobra vida al pasar el ratón o pulsar el control de reproducción.</span></span></button></li></ol>
+      <ol class="case-timeline" aria-label="Pasos de la comparativa"><li><button type="button" data-story-node="0" aria-current="step" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Comparativa inicial</strong><span>La opción básica abría la comparación. Las llamadas a la acción aparecían antes de las prestaciones y las tres fichas tenían una jerarquía similar.</span></span></button></li>
+<li><button type="button" data-story-node="1" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Orden de comparación</strong><span>La opción Premium pasa a la izquierda. Abre la comparación y sirve de referencia para entender las diferencias entre las tres entradas.</span></span></button></li>
+<li><button type="button" data-story-node="2" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Encuadre de la experiencia</strong><span>La ficha Premium explica la experiencia desde el asiento, hace visibles sus prestaciones y distingue lo incluido de lo opcional.</span></span></button></li>
+<li><button type="button" data-story-node="3" aria-controls="ticket-comparison"><span class="case-node" aria-hidden="true"></span><span class="case-step-copy"><strong>Imaginarse allí</strong><span>Una escena con público aporta contexto. En la ficha Premium, la ilustración cobra vida al pasar el ratón o pulsar el control de reproducción.</span></span></button></li></ol>
       <p class="case-mobile-step" aria-hidden="true"><strong>Comparativa inicial</strong><span>La opción básica abría la comparación. Las llamadas a la acción aparecían antes de las prestaciones y las tres fichas tenían una jerarquía similar.</span></p>
-      <fieldset class="case-switches"><legend>Aplicar cambios</legend>
-        <label><input type="checkbox" data-ticket-change="order"> Orden de comparación</label>
-        <label><input type="checkbox" data-ticket-change="framing"> Encuadre de la experiencia</label>
-        <label><input type="checkbox" data-ticket-change="imagery"> Escena con público</label>
-      </fieldset>
       <p class="case-sr" aria-live="polite" data-ticket-status></p>
     </div>
     <div><div class="ticket-comparison" id="ticket-comparison" tabindex="0" aria-label="Comparativa ilustrativa de entradas">
@@ -100,6 +95,13 @@
 </article>
     </div><p class="case-demo-note">Reconstrucción ilustrativa con nombres y gráficos genéricos.</p></div>
   </div>
+  <div class="scroll-story-distance" aria-hidden="true"></div></div>
+      <fieldset class="case-switches"><legend>Aplicar cambios</legend>
+        <label><input type="checkbox" data-ticket-change="order"> Orden de comparación</label>
+        <label><input type="checkbox" data-ticket-change="framing"> Encuadre de la experiencia</label>
+        <label><input type="checkbox" data-ticket-change="imagery"> Escena con público</label>
+      </fieldset>
+
 </section>
 </article></main>
 <footer class="case-footer"><a href="../../#inicio">Alejandro Sánchez Bretones</a><a href="../../portfolio/">Portfolio</a></footer>
