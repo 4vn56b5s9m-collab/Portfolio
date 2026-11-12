@@ -215,6 +215,10 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   });
   dots.forEach((dot, index) => {
     dot.addEventListener("click", () => {
+      if (!mobile.matches) {
+        preview(index);
+        return;
+      }
       const bounds = gallery.getBoundingClientRect();
       const card = cards[index].getBoundingClientRect();
       gallery.scrollTo({

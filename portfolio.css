@@ -236,11 +236,6 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
   .accordion-branches a:not(.is-previewed) .branch-card-cta{position:absolute;inset:auto 1rem 1rem;visibility:hidden}
   .accordion-branches a:focus-visible{outline-offset:-3px}
   .accordion-visual{height:clamp(12.5rem,54vw,17rem)}
-  .branch-pagination{display:flex;justify-content:center;align-items:center;gap:.1rem}
-  .branch-pagination button{position:relative;flex:0 0 44px;width:44px;height:44px;border:0;padding:0;background:transparent;cursor:pointer}
-  .branch-pagination button::before{content:"";position:absolute;inset:50% auto auto 50%;width:8px;height:8px;border-radius:999px;background:#c4cece80;transform:translate(-50%,-50%);transition:height .25s,background-color .25s}
-  .branch-pagination button[aria-current]::before{height:17px;background:#7bcddf;box-shadow:0 0 8px #7bcddf66}
-  .branch-pagination button:focus-visible{outline:2px solid #b1e6df;outline-offset:-5px;border-radius:8px}
   .action,.demo-action{width:100%}
 }
 @media(prefers-reduced-motion:reduce){
@@ -368,3 +363,12 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
   .scene-marquee-track,.scene-marquee-toggle{display:none}
   .scene-marquee-readable{position:static;width:auto;height:auto;clip-path:none;white-space:normal;padding:.55rem var(--gutter);font:400 1.25rem/1.2 var(--display)}
 }
+
+@media (max-width:700px), (any-pointer:coarse){
+  .branch-pagination{display:flex;justify-content:center;align-items:center;gap:.1rem}
+  .branch-pagination button{position:relative;flex:0 0 44px;width:44px;height:44px;border:0;padding:0;background:transparent;cursor:pointer}
+  .branch-pagination button::before{content:"";position:absolute;inset:50% auto auto 50%;width:8px;height:8px;border-radius:999px;background:#c4cece80;transform:translate(-50%,-50%);transition:height .25s,background-color .25s}
+  .branch-pagination button[aria-current]::before{height:17px;background:#7bcddf;box-shadow:0 0 8px #7bcddf66}
+  .branch-pagination button:focus-visible{outline:2px solid #b1e6df;outline-offset:-5px;border-radius:8px}
+}
+@media(prefers-reduced-motion:reduce){.branch-pagination button::before{transition:none}}
