@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (needsMeasure) measure();
     if (motion.matches) return;
     const scroll = scrollY;
-    const distance = compact.matches ? 40 : 200;
+    const distance = compact.matches ? 24 : 40;
     slides.forEach((element, index) => {
       const {start, end} = entries[index];
       const step = clamp((scroll - start) / (end - start));
@@ -182,4 +182,41 @@ document.addEventListener("DOMContentLoaded", () => {
     document.fonts?.ready.then(layout);
     layout();
   }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const picker = document.querySelector("[data-cv-switch]");
+  if (!picker) return;
+  const buttons = [...picker.querySelectorAll("button")];
+  const panels = buttons.map(button => document.getElementById(button.getAttribute("aria-controls")));
+  picker.setAttribute("role", "tablist");
+  picker.setAttribute("aria-label", siteText("Trayectoria", "Career and education"));
+  picker.hidden = false;
+
+  function select(index, focus = false, animate = true) {
+    picker.dataset.active = index;
+    buttons.forEach((button, i) => {
+      const active = index === i;
+      button.setAttribute("role", "tab");
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
+      panels[i].setAttribute("role", "tabpanel");
+      panels[i].setAttribute("aria-labelledby", button.id);
+      panels[i].hidden = !active;
+      panels[i].classList.toggle("is-entering", active && animate);
+    });
+    if (focus) buttons[index].focus();
+  }
+
+  buttons.forEach((button, index) => {
+    button.addEventListener("click", () => select(index));
+    button.addEventListener("keydown", event => {
+      const next = {ArrowLeft:1-index, ArrowRight:1-index, Home:0, End:1}[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      select(next, true);
+    });
+  });
+  const education = ["#formacion", "#herramientas", "#cv-education"].includes(location.hash);
+  select(education ? 1 : 0, false, false);
 });

@@ -3,8 +3,8 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Currículum · Alejandro Sánchez Bretones</title><meta name="description" content="Experto en diseño · Sistemas de diseño, motion, behavioral design y formación a empresas">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
 <link rel="stylesheet" href="../portfolio.css?v=contraste-escenas"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=cv-2026"></script>
-<link rel="stylesheet" href="cv.css?v=perfil-natural">
-<script defer src="profile-scroll.js?v=11"></script>
+<link rel="stylesheet" href="cv.css?v=trayectoria-tabs">
+<script defer src="profile-scroll.js?v=12"></script>
 </head>
 <body class="detail">
 <header id="inicio" class="site-header"><a class="site-name" href="../#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="../">Inicio</a><a href="../portfolio/">Portfolio</a><a href="../formaciones-a-empresas/">Formaciones a empresas</a><a href="../curriculum/" aria-current="page">Currículum</a></nav></header>
@@ -23,7 +23,12 @@
         <strong class="cv-profile-disciplines"><span data-profile-slide>Behavioral Design</span> <span data-profile-slide>Sistemas de Diseño</span> <span data-profile-slide>Microinteracciones</span> <span data-profile-slide>Formación de equipos</span></strong>
         <span class="cv-profile-fill" data-profile-fill><span>para que las</span> <em>interfaces sean claras y coherentes</em>.<br><br><span>Trabajo con</span> <em>clientes, producto y desarrollo</em><span>. También formo a equipos de diseño e investigo cómo integrar la IA en su trabajo.</span></span></p></div>
     </section>
-    <section class="cv-section" aria-labelledby="experiencia">
+    <div class="cv-section-switch" data-cv-switch hidden>
+      <span class="cv-section-indicator" aria-hidden="true"></span>
+      <button type="button" id="cv-experience-tab" aria-controls="cv-experience">Experiencia profesional</button>
+      <button type="button" id="cv-education-tab" aria-controls="cv-education">Formación</button>
+    </div>
+    <section class="cv-section cv-switch-panel" id="cv-experience" aria-labelledby="experiencia">
       <h2 id="experiencia">Experiencia profesional</h2>
       <article class="cv-row">
         <header><h3>Flat 101</h3><p class="cv-role">Experto de Diseño</p><p class="cv-date">2024–actualidad</p></header>
@@ -51,6 +56,7 @@
         <div class="cv-copy"><p>Colaboré en <strong>los comercios electrónicos de Glo y Vuse</strong> y en las reservas online de Fiat Store. Diseñé comunicaciones para Heineken y Cepsa.</p></div>
       </article>
     </section>
+    <div class="cv-switch-panel" id="cv-education">
     <section class="cv-section" aria-labelledby="formacion">
       <h2 id="formacion">Formación</h2>
       <article class="cv-row cv-education"><header><h3>Sistemas de diseño</h3><p class="cv-date">2024</p></header><div class="cv-copy"><p>Marcel School</p></div></article>
@@ -60,12 +66,13 @@
 <article class="cv-row cv-education"><header><h3>Dirección y Gestión de Marketing Digital y Social Media</h3><p class="cv-date">2019–2020</p></header><div class="cv-copy"><p>ENYD y Universidad Europea Miguel de Cervantes.</p></div></article>
 <article class="cv-row cv-education"><header><h3>Doble grado en Ingeniería de Diseño Industrial y Desarrollo de Productos y Bellas Artes</h3><p class="cv-date">2014–2020</p></header><div class="cv-copy"><p>Universidad Antonio de Nebrija. Intercambio en el Tecnológico de Monterrey, Campus Puebla, con una beca Santander.</p></div></article>
     </section>
-    <section class="cv-section" aria-labelledby="herramientas">
+    <section class="cv-section cv-education-tools" aria-labelledby="herramientas">
       <h2 id="herramientas">Herramientas e idiomas</h2>
       <div class="cv-skills"><div><h3>Diseño y prototipado</h3><p>Figma, prototipado interactivo, motion, microinteracciones e IA aplicada al diseño.</p></div>
 <div><h3>Desarrollo web</h3><p>Webflow, HTML, CSS y JavaScript básico.</p></div>
 <div><h3>Idiomas</h3><p>Inglés C1, francés A2 y japonés A1.</p></div></div>
     </section>
+    </div>
   </div>
 </main>
 <footer class="site-footer" id="contacto">

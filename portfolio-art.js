@@ -464,11 +464,11 @@ function behavioralModels() {
 }
 
 function focusModels() {
-  return [
-    [sleeve(1.88,.19,.16,.45),chalk,-.57],
-    [sleeve(1.27,.14,.17,.33),petrol,-.41],
-    [solid(.59,.59,.19,.22),chalk,-.23]
-  ].map(([mesh,color,y],stage)=>({mesh,color,stage,origin:.5,position:[0,y+.22,-.20]}));
+  const heights=[.13,.24,.4,.57,.49,.34,.2,.11];
+  return heights.map((height,stage)=>({
+    mesh:solid(.38,.43,height,.075),color:stage%3===1?petrol:chalk,stage,origin:.5,
+    baseY:-height/2,position:[(stage-3.5)*.48,height/2-.65,Math.sin(stage*.62)*.58-.22]
+  }));
 }
 
 for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
@@ -490,11 +490,14 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const reduced=matchMedia("(prefers-reduced-motion: reduce)");
   let renderer, frame=0, started=0, visible=false, captionWidth=0;
   const captionBounds=[];
-  let modelTop=Infinity, modelBottom=-Infinity;
+  let modelTop=Infinity, modelBottom=-Infinity, modelLeft=Infinity, modelRight=-Infinity;
   for (const {mesh,position:[x,y,z]} of models) {
     for (let i=0;i<mesh.length;i+=8) {
       const v=(-(x+mesh[i])*.589145+(z+mesh[i+2])*.808027)*.548024
         -(y+mesh[i+1])*.836463;
+      const u=(x+mesh[i])*.808027+(z+mesh[i+2])*.589145;
+      modelLeft=Math.min(modelLeft,u);
+      modelRight=Math.max(modelRight,u);
       modelTop=Math.min(modelTop,v);
       modelBottom=Math.max(modelBottom,v);
     }
@@ -507,8 +510,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const widthSpan=training?5.9:behavioral?7.5:focus?3.1:8.55;
-    const scale=Math.min(width*.83/widthSpan,height*.35/(modelBottom-modelTop));
+    const scale=Math.min(width*(focus?.53:compact.matches?.91:.83)/(2*Math.max(Math.abs(modelLeft),Math.abs(modelRight))),
+      height*(focus?.28:.54)/(modelBottom-modelTop));
     const sceneOffset=-(modelTop+modelBottom)*scale/2;
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
@@ -524,7 +527,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const settled=1-remaining**3;
       const eased=progress*progress*progress*(progress*(progress*6-15)+10);
       const [x,y,z]=model.position;
-      const growth=training?Math.max(.015,1-.30*remaining**1.6*Math.exp(-2.7*progress)*Math.cos(progress*Math.PI*4))
+      const growth=focus?Math.max(.01,settled):training?Math.max(.015,1-.30*remaining**1.6*Math.exp(-2.7*progress)*Math.cos(progress*Math.PI*4))
         :1;
       return {
         origin:model.origin,
@@ -535,12 +538,10 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
     // Use the same type size and baseline anchors in every specialty.
-    const fontSize=Math.min(width*.055,height*.12,48);
+    const fontSize=Math.min(width*.071,height*.115,63);
     floor.style.setProperty("--scene-type",fontSize+"px");
     labels.forEach((label,index)=>{
-      const x=width*(index===0?.37:.61);
-      const y=height*(index===0?.25:.765);
-      label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
+      const y=height*(index===0?.165:.84);
       if (width!==captionWidth||!captionBounds[index]?.width) {
         const base=focus?label.querySelector("text"):label;
         const bounds=base.getBBox();
@@ -548,6 +549,11 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       }
       const bounds=captionBounds[index];
       const fit=1;
+      const left=.808*bounds.x+.46*bounds.y;
+      const right=.808*(bounds.x+bounds.width)+.46*(bounds.y+bounds.height);
+      const margin=compact.matches?12:20;
+      const x=Math.max(margin-left,Math.min(width-margin-right,width*(index===0?.23:.77)));
+      label.setAttribute("transform",`matrix(.808 -.22 .46 .443 ${x} ${y})`);
 
       if (!focus) return;
       const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
@@ -563,7 +569,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         const along=bounds.x+bounds.width*progress+(final?fontSize*.11:0);
         const wave=Math.sin(ratio*Math.PI)*Math.sin(ratio*Math.PI*3.2);
         const lift=final?-fontSize*.05:-fontSize*.13-wave*fontSize*.32;
-        focusDot.setAttribute("transform",`translate(${x+(.808*along+.589*lift)*fit} ${y+(-.323*along+.443*lift)*fit})`);
+        focusDot.setAttribute("transform",`translate(${x+(.808*along+.46*lift)*fit} ${y+(-.22*along+.443*lift)*fit})`);
         focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
       }
     });

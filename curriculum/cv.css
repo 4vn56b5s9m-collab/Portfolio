@@ -211,3 +211,26 @@
 }
 
 @media(max-width:700px){.cv-profile-disciplines{row-gap:calc(.25em + 16px)}}
+
+.cv-section-switch{
+  position:relative;isolation:isolate;display:grid;grid-template-columns:1fr 1fr;gap:.2rem;
+  width:min(100%,30rem);padding:.25rem;margin:0 auto 1rem;border:1px solid var(--cv-rule);border-radius:999px
+}
+.cv-section-switch[hidden],.cv-switch-panel[hidden]{display:none}
+.cv-section-switch button{min-height:44px;border:0;border-radius:999px;background:transparent;color:inherit;padding:.4rem .55rem;font:600 .88rem/1.2 "Instrument Sans",system-ui,sans-serif;cursor:pointer}
+.cv-section-switch button[aria-selected=true]{color:var(--cv-page)}
+.cv-section-switch button:focus-visible{outline:2px solid currentColor;outline-offset:-3px}
+.cv-section-indicator{
+  position:absolute;inset-block:.25rem;inset-inline-start:.25rem;width:calc(50% - .35rem);
+  border-radius:999px;background:var(--cv-accent);z-index:-1;
+  transition:transform .38s cubic-bezier(.42,0,.22,1)
+}
+.cv-section-switch[data-active="1"] .cv-section-indicator{transform:translateX(calc(100% + .2rem))}
+.cv-switch-panel.is-entering{animation:cv-panel-in .24s ease-out both}
+@keyframes cv-panel-in{from{opacity:.5}to{opacity:1}}
+.cv-switch-panel.cv-section,.cv-switch-panel>.cv-section:first-child{padding-top:1.25rem}
+.cv-education-tools{padding-bottom:clamp(3rem,7vw,6rem)}
+@media(prefers-reduced-motion:reduce){.cv-section-indicator{transition:none}.cv-switch-panel.is-entering{animation:none}}
+@media print{.cv-section-switch{display:none}.cv-switch-panel[hidden]{display:block}}
+
+#cv-experience{padding-bottom:clamp(3rem,7vw,6rem)}

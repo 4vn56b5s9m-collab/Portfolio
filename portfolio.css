@@ -482,3 +482,7 @@ html[data-theme=dark]{--page:#202022;--home-ink:#f4f2ed;--line:#555357}
 .intro-next{margin-top:1.5rem}
 .intro-next-link{flex-direction:column;gap:.35rem;padding-block:.45rem}
 @media(min-width:701px){.intro-fold .hero{padding-inline:clamp(2.25rem,7vw,7rem)}}
+
+.accordion-specialties .branch-pagination{margin-top:12px}
+.accordion-specialties .accordion-visual{height:clamp(26rem,55vw,39rem)}
+@media(max-width:700px){.accordion-specialties .accordion-visual{height:clamp(20rem,90vw,27rem)}}
