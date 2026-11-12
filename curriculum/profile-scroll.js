@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const overlay = document.createElement("span");
     overlay.className = "cv-fill-overlay";
     overlay.setAttribute("aria-hidden", "true");
-    overlay.textContent = element.textContent;
+    overlay.replaceChildren(...[...element.childNodes].map(node => node.cloneNode(true)));
     element.append(overlay);
     return {element, range, overlay, lines: []};
   }));
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const {element, range, overlay} = fill;
       const box = element.getBoundingClientRect();
       if (measure) {
-        range.setEndAfter(element.firstChild);
+        range.setEndBefore(overlay);
         fill.lines = [...range.getClientRects()].filter(line => line.width > 0).map(line => ({
           left: line.left - box.left,
           right: line.right - box.left,
@@ -47,8 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
       element.classList.add("is-filling");
     }
     const group = disciplines.getBoundingClientRect();
-    const amount = clamp((innerHeight * .92 - group.top) / (innerHeight * .59 + group.height));
     slides.forEach((element, index) => {
+      const row = element.getBoundingClientRect();
+      const amount = clamp((innerHeight - row.top) / (innerHeight + row.height));
       const style = getComputedStyle(element);
       const travel = Math.max(0, group.width - element.offsetWidth - 2 * parseFloat(style.marginInlineStart));
       element.style.setProperty("--profile-shift", travel * (index % 2 === 0 ? amount : 1 - amount) + "px");
@@ -77,4 +78,59 @@ document.addEventListener("DOMContentLoaded", () => {
   document.fonts?.ready.then(resize);
   motion.addEventListener("change", updateMotion);
   updateMotion();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const list = document.querySelector(".cv-clients-flat");
+  if (!list) return;
+  const control = list.querySelector(".cv-client-control");
+  const button = control.querySelector("button");
+  const items = [...list.children].filter(item => item !== control);
+  const mobile = matchMedia("(max-width:700px)");
+  let expanded = false;
+  let previousWidth = 0;
+
+  function layout() {
+    control.hidden = false;
+    items.forEach(item => { item.hidden = false; });
+    if (expanded) return;
+    const gap = parseFloat(getComputedStyle(list).columnGap);
+    const rows = mobile.matches ? 2 : 1;
+    const available = list.clientWidth;
+    const reserved = control.getBoundingClientRect().width + gap;
+    let row = 1;
+    let used = 0;
+    let firstHidden = items.length;
+    for (const [index,item] of items.entries()) {
+      const width = item.getBoundingClientRect().width;
+      const next = used + (used ? gap : 0) + width;
+      if (next <= available - (row === rows ? reserved : 0)) {
+        used = next;
+      } else if (row < rows && width <= available - reserved) {
+        row++;
+        used = width;
+      } else {
+        firstHidden = index;
+        break;
+      }
+    }
+    items.slice(firstHidden).forEach(item => { item.hidden = true; });
+    control.hidden = firstHidden === items.length;
+  }
+
+  button.addEventListener("click", () => {
+    expanded = !expanded;
+    button.setAttribute("aria-expanded", String(expanded));
+    button.textContent = siteText(expanded ? "Ver menos" : "Ver todos los clientes",
+      expanded ? "See fewer" : "See all clients");
+    layout();
+  });
+  new ResizeObserver(([entry]) => {
+    if (entry.contentRect.width === previousWidth) return;
+    previousWidth = entry.contentRect.width;
+    layout();
+  }).observe(list);
+  mobile.addEventListener("change", layout);
+  document.fonts?.ready.then(layout);
+  layout();
 });

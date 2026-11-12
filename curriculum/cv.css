@@ -64,32 +64,27 @@
 .cv-profile-story{
   --profile-ink:#124d56;
   --profile-unfilled:#124d5640;
-  font-size:clamp(2.65rem,8.2vw,7.5rem);
-  line-height:1.05;
-  letter-spacing:-.035em
+  font-size:clamp(2rem,5.8vw,5rem);
+  line-height:1.16;
+  letter-spacing:-.028em
 }
 [data-theme=dark] .cv-profile-story{--profile-ink:#c2f6f2;--profile-unfilled:#c2f6f247}
-.cv-profile-fill{position:relative;display:block;max-width:24ch;color:var(--profile-ink)}
+.cv-profile-fill{position:relative;display:block;max-width:min(100%,32ch);color:var(--profile-ink)}
 .cv-profile-disciplines{
   position:relative;left:50%;margin-inline-start:-50vw;width:100vw;
   display:grid;gap:.18em;padding-block:clamp(3rem,8vw,8rem);
-  font:400 clamp(3.6rem,19vw,17rem)/.88 var(--display);letter-spacing:-.035em;
+  font:400 clamp(2.2rem,10vw,11rem)/.88 var(--display);letter-spacing:-.035em;
   overflow:clip
 }
 .cv-profile-disciplines span{
-  display:block;width:fit-content;max-width:76%;overflow-wrap:anywhere;
+  display:block;width:fit-content;white-space:nowrap;
   --profile-edge:clamp(.6rem,2vw,2rem);
   margin-inline:var(--profile-edge);color:var(--cv-accent)
 }
-.cv-profile .cv-profile-followup{margin-top:clamp(3.5rem,8vw,8rem)}
 .cv-fill-overlay{position:absolute;inset:0;pointer-events:none;user-select:none;color:var(--profile-ink);clip-path:var(--profile-mask, inset(0))}
 .cv-profile-fill.is-filling{color:var(--profile-unfilled)}
 .cv-profile-disciplines.is-sliding [data-profile-slide]{transform:translateX(var(--profile-shift,0px))}
 .cv-client-heading{margin:1.15rem 0 0;font:600 .9rem/1.3 "Instrument Sans",system-ui,sans-serif;color:var(--cv-accent)}
-@media(max-width:700px){
-  .cv-clients-flat{flex-wrap:nowrap;overflow-x:auto;padding-block:.15rem .6rem;scroll-snap-type:x proximity;scrollbar-width:thin}
-  .cv-clients-flat li{flex:none;scroll-snap-align:start}
-}
 @media(prefers-reduced-motion:reduce),(forced-colors:active){
   .cv-profile-fill.is-filling{color:inherit}
   .cv-fill-overlay{display:none}
@@ -107,3 +102,14 @@
 
 .cv-hero-tags{display:flex;flex-wrap:wrap;gap:.45rem;margin:.9rem 0 0;padding:0;list-style:none}
 .cv-hero-tags li{border:1px solid currentColor;border-radius:999px;padding:.2rem .65rem;font-size:.84rem}
+
+.cv .cv-profile h2{position:static}
+.cv-profile-fill:first-child{max-width:none}
+.cv-clients-flat [hidden]{display:none}
+.cv-clients-flat .cv-client-control{padding:0;border:0}
+.cv-client-control button{font:inherit;font-weight:600;min-height:32px;padding:.2rem .7rem;border-radius:999px;border:1px solid var(--cv-accent);background:var(--cv-accent);color:var(--cv-page);cursor:pointer;white-space:nowrap}
+@media(max-width:700px){
+  .cv .cv-section:not(.cv-profile) h2{box-shadow:0 -2px var(--cv-page)}
+  .cv-client-control button{min-height:44px}
+  .cv-clients-flat{align-items:center}
+}
