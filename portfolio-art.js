@@ -501,8 +501,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     const widthSpan=compact.matches
       ? training?5.9:behavioral?7.5:focus?4.9:8.55
       : training?6.9:behavioral?8.5:focus?7.3:9.8;
-    const spaced=behavioral||focus||(training&&compact.matches);
-    const scale=Math.min(width/widthSpan,height/(spaced?8.1:5.25));
+    const spaced=behavioral||focus||compact.matches;
+    const scale=Math.min(width/widthSpan,height/(compact.matches?8.65:spaced?8.1:5.25));
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
@@ -521,7 +521,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         :1;
       return {
         origin:model.origin,
-        position:[x,y-(training||systems?0:remaining*.16)+(focus?height*(compact.matches?.055:.145)/(scale*.836463):0),z],
+        position:[x,y-(training||systems?0:remaining*.16)+(compact.matches&&training?.24:0),z],
         opacity:training?Math.min(1,progress*8):systems?eased:settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
@@ -530,7 +530,13 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     const fontSize=compact.matches?Math.max(31,Math.min(51,width*.111)):Math.max(28,Math.min(86,width*.105));
     floor.style.setProperty("--scene-type",fontSize+"px");
     labels.forEach((label,index)=>{
-      let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
+      const captionScale=Math.min(width/9.8,height/5.25);
+      const anchorX=index===0?-.72:.72;
+      const anchorZ=index===0?-2.55:2.44;
+      let [x,y]=!spaced?project(anchorX,-1.12,anchorZ):[
+        width/2+(anchorX*.808027+anchorZ*.589145)*captionScale,
+        height/2+((-anchorX*.589145+anchorZ*.808027)*.548024+1.12*.836463)*captionScale
+      ];
       if (!spaced&&!compact.matches) {
         label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
         return;
@@ -550,11 +556,11 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const top=Math.min(...projectedY), low=Math.max(...projectedY);
       const margin=Math.min(20,width*.05);
       const fit=Math.min(1,(width-2*margin)/(farRight-left),(height-2*margin)/(low-top));
-      if (spaced) {
+      if (compact.matches) {
         const bias=index===0?-.19:.19;
         x=width*(.5+bias);
         const center=(top+low)*fit/2;
-        y=height*(index===0?.20:focus?.92:.86)-center;
+        y=height*(index===0?.14:.88)-center;
       }
       x=Math.max(margin-left*fit,Math.min(width-margin-farRight*fit,x));
       y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));

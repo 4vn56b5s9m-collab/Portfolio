@@ -374,8 +374,6 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .branch-nav{position:absolute;z-index:4;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:44px;height:44px;padding:0 0 .16rem;border:1px solid #c0dcdc80;border-radius:50%;background:#24373ce8;color:#f4f2ed;box-shadow:0 4px 16px #0005;font:400 1.85rem/1 system-ui;cursor:pointer}
 .branch-prev{left:-22px}.branch-next{right:-22px}
 .branch-nav:is(:hover,:focus-visible){background:#3c6470}
-.branch-border{position:absolute;z-index:1;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.branch-border rect{fill:none;stroke:#a9e9ef;stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 3px #7addea)}
 .accordion-branches{align-items:stretch}
 .intro-next-link{gap:.3rem;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
 .intro-next-link svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.4}
@@ -394,7 +392,6 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 [data-theme=light] .accordion-specialties::before{opacity:.24}
 [data-theme=light] .accordion-branches a{background:#fff9;color:#171719;border-color:#37636a55}
 [data-theme=light] .accordion-branches a .branch-card-copy span{color:#31474a}
-[data-theme=light] .branch-border rect{stroke:#087184;filter:drop-shadow(0 0 3px #458d9c)}
 [data-theme=light] .hero-rotation button{color:#173e47}
 [data-theme=light] .hero-segment{background:#193c4650}
 [data-theme=light] .hero-segment>span{background:#176478}
@@ -424,3 +421,34 @@ html[data-theme=dark]{--page:#202022;--home-ink:#f4f2ed;--line:#555357}
 
 [data-theme=dark] .demo-tool{color:#171719;color-scheme:light}
 @media(max-width:700px){html:has(.site-header.is-menu-open){overflow:hidden}}
+
+.branch-carousel{padding-inline:24px}
+.branch-nav{width:44px;height:44px;border:0;background:transparent;box-shadow:none;color:inherit;font-size:1.4rem}
+.branch-nav::before{content:"";position:absolute;inset:7px;z-index:-1;border:1px solid currentColor;border-radius:50%;opacity:.24;background:var(--nav-surface,#171719)}
+.branch-nav:is(:hover,:focus-visible){background:transparent}
+.branch-nav:is(:hover,:focus-visible)::before{opacity:.65}
+.branch-prev{left:-20px}.branch-next{right:-20px}
+.site-language{margin-inline-start:clamp(.75rem,2vw,1.8rem)}
+.site-language select{padding-inline:.7rem;border:1px solid #82969b80;border-radius:999px;min-height:36px;font-size:.88rem}
+.theme-switch{width:76px;height:42px;border-radius:999px;display:block;padding:4px;text-align:start}
+.theme-thumb{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#cce0e21b;transform:translateX(34px);transition:transform .28s ease,background .28s ease}
+.theme-thumb svg{width:22px;height:22px;overflow:visible}
+.theme-disc{transform-origin:center;transition:transform .28s ease;transform:scale(1.42)}
+.theme-cutout{transition:transform .28s ease;transform:translate(-3px,3px)}
+.theme-rays{opacity:0;transition:opacity .22s ease}
+[data-theme=light] .theme-thumb{transform:translateX(0);color:#785519;background:#e5d5b2}
+[data-theme=light] .theme-disc{transform:none}
+[data-theme=light] .theme-cutout{transform:none}
+[data-theme=light] .theme-rays{opacity:1}
+@media(max-width:700px){
+  .branch-carousel{padding-inline:0}
+  .accordion-specialties .accordion-branches{padding-inline:max(15%,49px);scroll-padding-inline:max(15%,49px)}
+  .branch-prev{left:calc(3px - var(--gutter))}.branch-next{right:calc(3px - var(--gutter))}
+  .accordion-branches a{transition:opacity .25s,border-color .35s,box-shadow .35s}
+  .accordion-branches a:not(.is-previewed){opacity:.63}
+  .accordion-branches .branch-card-cta{visibility:hidden;opacity:0;transform:translateY(4px)}
+  .accordion-branches a.is-cta-ready .branch-card-cta{visibility:visible;opacity:1;transform:none;transition:opacity .22s,transform .22s}
+  .site-language{margin:.9rem 0 0;align-self:flex-start}
+  .site-language select{min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){.theme-thumb,.theme-disc,.theme-cutout,.theme-rays,.accordion-branches a.is-cta-ready .branch-card-cta{transition:none}}

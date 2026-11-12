@@ -53,9 +53,9 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=preferencias-2026">
-<script defer src="portfolio-interactions.js?v=preferencias-2026"></script>
-<script src="site-preferences.js?v=2026"></script>
+<link rel="stylesheet" href="portfolio.css?v=ajustes-carrusel">
+<script defer src="portfolio-interactions.js?v=ajustes-carrusel"></script>
+<script src="site-preferences.js?v=ajustes-carrusel"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="./#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="./" aria-current="page">Inicio</a><a href="./portfolio/">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -105,6 +105,12 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     </div>
     <button class="branch-nav branch-prev" type="button" data-branch-step="-1" aria-label="Especialidad anterior" aria-controls="specialty-gallery">‹</button>
     <button class="branch-nav branch-next" type="button" data-branch-step="1" aria-label="Especialidad siguiente" aria-controls="specialty-gallery">›</button>
+    </div>
+    <div class="branch-pagination" role="group" aria-label="Elegir especialidad">
+      <button type="button" aria-label="UI y Behavioral Design" data-branch-page="0" aria-controls="specialty-gallery accordion-visual" aria-current="true"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
+      <button type="button" aria-label="Motion e inmersión" data-branch-page="1" aria-controls="specialty-gallery accordion-visual"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
+      <button type="button" aria-label="Formación de equipos de diseño" data-branch-page="2" aria-controls="specialty-gallery accordion-visual"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
+      <button type="button" aria-label="Sistemas de diseño para múltiples marcas" data-branch-page="3" aria-controls="specialty-gallery accordion-visual"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
     </div>
     <div class="accordion-visual" id="accordion-visual">
       <div class="accordion-panel" data-accordion-panel="0">
@@ -187,7 +193,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=preferencias-2026";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=ajustes-carrusel";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");

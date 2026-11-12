@@ -13,6 +13,8 @@
   const savedTheme = read("portfolio-theme");
   let chosenTheme = ["light", "dark"].includes(savedTheme) ? savedTheme : null;
   const copy = {
+  "Elegir especialidad":"Choose specialty",
+  "Cambiar idioma":"Change language",
   "Inicio": "Home",
   "Formaciones a empresas": "Training for companies",
   "Currículum": "Résumé",
@@ -376,7 +378,7 @@
     const label = document.createElement("label");
     label.className = "site-language";
     const select = document.createElement("select");
-    select.setAttribute("aria-label", siteText("Idioma", "Language"));
+    select.setAttribute("aria-label", siteText("Cambiar idioma"));
     select.add(new Option("Español", "es"));
     select.add(new Option("English", "en"));
     select.value = language;
@@ -393,7 +395,7 @@
     themeButton = document.createElement("button");
     themeButton.type = "button";
     themeButton.className = "theme-switch";
-    themeButton.innerHTML = '<svg class="sun" viewBox="0 0 28 28" aria-hidden="true"><path d="m14 2 10 6v11l-10 7-10-7V8Z" fill="none" stroke="currentColor" opacity=".52"/><path d="m14 6 7 4-7 4-7-4Z" fill="currentColor"/><path d="m7 10 7 4v8l-7-5Zm14 0-7 4v8l7-5Z" fill="currentColor" opacity=".55"/></svg><svg class="moon" viewBox="0 0 28 28" aria-hidden="true"><path d="m19 4-5 5v6l6 3 5-3-4 7-8 3-8-5-2-8 6-7Z" fill="currentColor" opacity=".58"/><path d="m19 2-5 5v6l6 3 5-3-4 7-8 3-8-5-2-8 6-7Z" fill="currentColor"/></svg>';
+    themeButton.innerHTML = '<span class="theme-thumb" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><mask id="theme-phase"><rect width="24" height="24" fill="white"/><circle class="theme-cutout" cx="20" cy="4" r="7" fill="black"/></mask></defs><circle class="theme-disc" cx="12" cy="12" r="5" fill="currentColor" mask="url(#theme-phase)"/><path class="theme-rays" d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>';
     themeButton.addEventListener("click", () => {
       chosenTheme = root.dataset.theme === "dark" ? "light" : "dark";
       save("portfolio-theme", chosenTheme);

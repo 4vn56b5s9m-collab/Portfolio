@@ -173,24 +173,21 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   const cards = [...gallery.querySelectorAll("[data-accordion-branch]")];
   const panels = [...accordion.querySelectorAll("[data-accordion-panel]")];
   const arrows = [...accordion.querySelectorAll("[data-branch-step]")];
-  const borderObserver = new ResizeObserver(entries => {
-    for (const {target: card} of entries) {
-      const rect = card.querySelector(".branch-border rect");
-      rect.setAttribute("width", Math.max(0, card.clientWidth - 1));
-      rect.setAttribute("height", Math.max(0, card.clientHeight - 1));
-    }
-  });
-  for (const card of cards) {
-    card.insertAdjacentHTML("afterbegin", '<svg class="branch-border" aria-hidden="true"><rect x=".5" y=".5" rx="13" pathLength="1"/></svg>');
-    borderObserver.observe(card);
-  }
+  const dots = [...accordion.querySelectorAll("[data-branch-page]")];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width: 700px)");
   const duration = 4600;
   let active = 0, target = -1;
   let visible = false, hovered = false, paused = false;
   let rotation = 0, progress;
-  let frame = 0;
+  let frame = 0, ctaTimer = 0;
+
+  function revealCTA() {
+    clearTimeout(ctaTimer);
+    ctaTimer = setTimeout(() => {
+      if (target < 0) cards[active].classList.add("is-cta-ready");
+    }, reduced.matches ? 0 : 160);
+  }
 
   function preview(index) {
     if (index === active) return;
@@ -198,7 +195,15 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     progress = null;
     active = index;
     accordion.dataset.litPiece = String([0, 2, 3, 1][index]);
-    cards.forEach((card, i) => card.classList.toggle("is-previewed", i === index));
+    cards.forEach((card, i) => {
+      card.classList.toggle("is-previewed", i === index);
+      card.classList.remove("is-cta-ready");
+    });
+    dots.forEach((dot, i) => {
+      if (i === index) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+    revealCTA();
     panels.forEach((panel, i) => { panel.hidden = i !== index; });
     scheduleRotation();
   }
@@ -221,6 +226,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     if (target >= 0 && closest !== target) return;
     target = -1;
     preview(closest);
+    if (!cards[active].classList.contains("is-cta-ready")) revealCTA();
   }
 
 
@@ -244,8 +250,8 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       return;
     }
     if (!progress) {
-      const fill = cards[active].querySelector(".branch-border rect");
-      progress = fill.animate([{strokeDashoffset:1},{strokeDashoffset:0}],
+      const fill = dots[active].querySelector(".branch-progress > span");
+      progress = fill.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}],
         {duration,fill:"forwards"});
     } else {
       progress.play();
@@ -292,6 +298,11 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       goTo((active + Number(button.dataset.branchStep) + cards.length) % cards.length);
     });
   });
+  dots.forEach((dot,index) => dot.addEventListener("click", () => {
+    pauseRotation();
+    goTo(index);
+  }));
+  revealCTA();
   gallery.addEventListener("scroll", () => {
     if (mobile.matches && !frame) frame = requestAnimationFrame(previewCenteredCard);
   }, { passive: true });
