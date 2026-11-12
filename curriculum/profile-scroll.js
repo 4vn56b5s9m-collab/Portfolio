@@ -5,6 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const compact = matchMedia("(max-width:700px)");
   const disciplines = story.querySelector(".cv-profile-disciplines");
   const slides = [...disciplines.querySelectorAll("[data-profile-slide]")];
+  function wrap(element, className) {
+    const track = document.createElement("span");
+    track.className = className;
+    element.before(track);
+    track.append(element);
+    return track;
+  }
+  const tracks = slides.map(slide => wrap(slide, "cv-profile-slide-track"));
   const fills = [...story.querySelectorAll("[data-profile-fill]")].map(element => {
     const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
     const text = [];
@@ -14,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.setAttribute("aria-hidden", "true");
     overlay.replaceChildren(...[...element.childNodes].map(node => node.cloneNode(true)));
     element.append(overlay);
-    return {element, overlay, text, lines: [], lastMask: ""};
+    return {element, track:wrap(element,"cv-profile-fill-track"), overlay, text, lines: [], lastMask: ""};
   });
   const range = document.createRange();
   const clamp = value => Math.max(0, Math.min(1, value));
@@ -31,19 +39,24 @@ document.addEventListener("DOMContentLoaded", () => {
       if (widest) disciplines.style.setProperty("--cv-disciplines-size",
         size * document.documentElement.clientWidth * .90 / widest + "px");
     }
-    const openingTop = fills[0].element.getBoundingClientRect().top + scrollY;
+    const openingTop = fills[0].track.getBoundingClientRect().top + scrollY;
     const openingStart = Math.max(24, openingTop - innerHeight * .76);
     const starts = [];
-    for (const slide of slides) {
-      const visibleAt = slide.getBoundingClientRect().top + scrollY - innerHeight + 8;
-      const earliest = starts.length ? starts.at(-1) + 32 : openingStart + 72;
+    for (const track of tracks) {
+      const visibleAt = track.getBoundingClientRect().top + scrollY - innerHeight + 8;
+      const earliest = starts.length ? starts.at(-1) + 32 : openingStart + (compact.matches ? 112 : 72);
       starts.push(Math.max(visibleAt, earliest));
     }
-    const duration = compact.matches ? 115 : 220;
-    entries = starts.map((start, index) => ({
-      start,
-      end: Math.min(start + duration, starts[index + 1] ?? Infinity)
-    }));
+    const extra = compact.matches ? 50 : 110;
+    const baseline = compact.matches ? 115 : 220;
+    entries = starts.map((start, index) => {
+      const pitch = index + 1 < tracks.length
+        ? tracks[index + 1].offsetTop - tracks[index].offsetTop - extra
+        : baseline;
+      const original = Math.min(baseline, Math.max(32, pitch));
+      const duration = compact.matches ? original + 50 : original * 1.5;
+      return {start, end: Math.min(start + duration, starts[index + 1] ?? Infinity)};
+    });
     previousStep = [];
     for (const [index, fill] of fills.entries()) {
       const box = fill.element.getBoundingClientRect();
@@ -66,10 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       fill.lines = lines;
       fill.height = box.height;
-      const top = box.top + scrollY;
+      const top = fill.track.getBoundingClientRect().top + scrollY;
       fill.start = index === 0 ? Math.max(24, top - innerHeight * .76)
         : Math.max(entries.at(-1).end, top - innerHeight * .96);
       fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * (index > 0 && compact.matches ? .81 : .76));
+      if (compact.matches) fill.end += 40;
       if (index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
       fill.lastMask = "";
     }
@@ -119,6 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateMotion() {
     disciplines.classList.toggle("is-sliding", !motion.matches);
+    story.classList.toggle("has-sticky-fills", !motion.matches);
     resize();
   }
 
