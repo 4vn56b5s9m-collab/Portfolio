@@ -366,3 +366,5 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .branch-pagination button.branch-rotation-toggle{flex:0 0 44px;width:44px;height:36px;margin-left:.35rem;border:1px solid #d0ecec45;border-radius:999px;background:#d5f0f018;color:#f4f2ed}
 @media(max-width:700px){.branch-pagination{gap:.3rem}.branch-pagination button[data-branch-page]{padding-top:7px}}
 @media(prefers-reduced-motion:reduce){.branch-pagination button[aria-current] .branch-progress>span{transform:scaleX(1)}.branch-pagination button.branch-rotation-toggle{display:none}}
+
+@media(max-width:700px){.branch-pagination{position:relative;z-index:1;transform:translateY(calc(-1 * var(--branch-control-shift,0px)))}}

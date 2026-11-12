@@ -193,6 +193,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       if (i === index) dot.setAttribute("aria-current", "true");
       else dot.removeAttribute("aria-current");
     });
+    sizeGallery();
     scheduleRotation();
   }
 
@@ -255,10 +256,14 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   }
 
   toggle.addEventListener("click", () => setPaused(!paused));
-  gallery.addEventListener("pointerenter", event => {
-    if (event.pointerType === "touch") return;
-    hovered = true;
-    scheduleRotation();
+  gallery.addEventListener("pointermove", event => {
+    if (event.pointerType === "touch" || mobile.matches) return;
+    if (!hovered) {
+      hovered = true;
+      scheduleRotation();
+    }
+    const card=event.target.closest("[data-accordion-branch]");
+    if (card) preview(cards.indexOf(card));
   });
   gallery.addEventListener("pointerleave", () => {
     hovered = false;
@@ -274,9 +279,6 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   }, {passive:true});
 
   cards.forEach((card, index) => {
-    card.addEventListener("pointerenter", event => {
-      if (!mobile.matches && event.pointerType !== "touch") preview(index);
-    });
     card.addEventListener("focus", () => {
       setPaused(true);
       preview(index);
@@ -313,6 +315,8 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     const style = getComputedStyle(gallery);
     const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
     gallery.style.setProperty("--gallery-height", Math.ceil(tallest + padding) + "px");
+    const unused = gallery.getBoundingClientRect().bottom - cards[active].getBoundingClientRect().bottom;
+    accordion.style.setProperty("--branch-control-shift", Math.max(0,unused) + "px");
   }
   const galleryObserver = new ResizeObserver(sizeGallery);
   cards.forEach(card => {
