@@ -265,12 +265,3 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   sizeGallery();
   previewCenteredCard();
 }
-
-for (const tape of document.querySelectorAll(".scene-marquee")) {
-  const toggle = tape.querySelector(".scene-marquee-toggle");
-  toggle.addEventListener("click", () => {
-    const paused = tape.classList.toggle("is-paused");
-    toggle.setAttribute("aria-label", paused ? "Reanudar cinta de texto" : "Pausar cinta de texto");
-    toggle.firstElementChild.textContent = paused ? "▶" : "Ⅱ";
-  });
-}

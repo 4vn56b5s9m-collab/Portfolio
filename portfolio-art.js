@@ -501,7 +501,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     const widthSpan=compact.matches
       ? training?5.9:behavioral?7.5:focus?4.9:8.55
       : training?6.9:behavioral?8.5:focus?7.3:9.8;
-    const scale=Math.min(width/widthSpan,height/(compact.matches?4.25:5.25));
+    const scale=Math.min(width/widthSpan,height/5.25);
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
@@ -526,18 +526,18 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    floor.style.setProperty("--scene-type",Math.max(26,Math.min(110,width*.135))+"px");
-    const fontSize=Math.max(26,Math.min(110,width*.135));
-    if (!compact.matches) labels.forEach((label,index)=>{
+    const fontSize=compact.matches?Math.max(23,Math.min(40,width*.093)):Math.max(26,Math.min(110,width*.135));
+    floor.style.setProperty("--scene-type",fontSize+"px");
+    labels.forEach((label,index)=>{
       let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
-      if (!focus) {
+      if (!focus&&!compact.matches) {
         label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
         return;
       }
       if (width!==captionWidth||!captionBounds[index]?.width) {
         const length=width*(index===0?.64:.75);
-        const [base,ink]=label.querySelectorAll("text");
-        for (const text of [base,ink]) {
+        const base=focus?label.querySelector("text"):label;
+        for (const text of focus?label.querySelectorAll("text"):[]) {
           text.setAttribute("textLength",length);
           text.setAttribute("lengthAdjust","spacingAndGlyphs");
         }
@@ -557,6 +557,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));
       label.setAttribute("transform",`matrix(${.808*fit} ${-.323*fit} ${.589*fit} ${.443*fit} ${x} ${y})`);
 
+      if (!focus) return;
       const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
       const ratio=reduced.matches?1:Math.max(0,Math.min(1,time));
       const progress=ratio*ratio*(3-2*ratio);
@@ -573,7 +574,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
       }
     });
-    captionWidth=compact.matches?0:width;
+    captionWidth=width;
     const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]:footprints?.map(item=>item.center);
     shadows.forEach((shadow,index)=>{
       const [x,y]=project(...ground[index]);
@@ -618,6 +619,6 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     queue();
   }).observe(parent);
   new ResizeObserver(queue).observe(parent);
-  if (focus) document.fonts?.ready.then(()=>{captionWidth=0;queue();});
+  document.fonts?.ready.then(()=>{captionWidth=0;queue();});
   reduced.addEventListener("change",queue);
 }
