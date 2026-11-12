@@ -218,11 +218,11 @@
 }
 .cv-section-switch[hidden],.cv-switch-panel[hidden]{display:none}
 .cv-section-switch button{min-height:44px;border:0;border-radius:999px;background:transparent;color:inherit;padding:.4rem .55rem;font:600 .88rem/1.2 "Instrument Sans",system-ui,sans-serif;cursor:pointer}
-.cv-section-switch button[aria-selected=true]{color:var(--cv-page)}
+.cv-section-switch button[aria-selected=true]{color:#171719}
 .cv-section-switch button:focus-visible{outline:2px solid currentColor;outline-offset:-3px}
 .cv-section-indicator{
   position:absolute;inset-block:.25rem;inset-inline-start:.25rem;width:calc(50% - .35rem);
-  border-radius:999px;background:var(--cv-accent);z-index:-1;
+  border-radius:999px;background:#d8c39b;z-index:-1;
   transition:transform .38s cubic-bezier(.42,0,.22,1),background-color .38s ease
 }
 .cv-section-switch[data-active="1"] .cv-section-indicator{transform:translateX(calc(100% + .2rem))}
@@ -236,8 +236,5 @@
 #cv-experience{padding-bottom:clamp(3rem,7vw,6rem)}
 
 .cv-section-switch button{transition:color .38s ease}
-.cv-section-switch[data-active="1"] .cv-section-indicator{background:#144e5b}
-[data-theme=dark] .cv-section-switch[data-active="1"] .cv-section-indicator{background:#8bcbd4}
-.cv .cv-education h3{color:var(--cv-accent)}
 .cv-footer .contact-blocks{margin-top:clamp(1.6rem,4vw,2.75rem)}
 @media(prefers-reduced-motion:reduce){.cv-section-switch button{transition:none}}
