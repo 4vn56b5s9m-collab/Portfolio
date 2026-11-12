@@ -344,3 +344,5 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
   .branch-pagination button:focus-visible{outline:2px solid #b1e6df;outline-offset:-5px;border-radius:8px}
 }
 @media(prefers-reduced-motion:reduce){.branch-pagination button::before{transition:none}}
+
+@media(max-width:700px){.intro-fold .hero .hero-visual{margin-block-start:16px}}
