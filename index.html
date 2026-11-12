@@ -53,7 +53,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=escenas-amplias">
+<link rel="stylesheet" href="portfolio.css?v=escenas-en-cards">
 <script defer src="portfolio-interactions.js?v=especialidades-original"></script>
 <script src="site-preferences.js?v=contraste-escenas"></script>
 </head>
@@ -98,10 +98,10 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     <h2 id="especialidades" tabindex="-1">Cada proyecto<br class="specialty-mobile-break"> pide algo<br class="specialty-mobile-break"> distinto.</h2>
     <div class="branch-carousel">
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
-      <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">UI y Behavioral Design <b>↗</b></span></a>
-      <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><div class="branch-card-copy"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Motion e inmersión <b>↗</b></span></a>
-      <a href="especialidades/liderazgo-y-formacion/" data-accordion-branch="2"><div class="branch-card-copy"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Formación de equipos de diseño <b>↗</b></span></a>
-      <a href="especialidades/sistemas-de-diseno/" data-accordion-branch="3"><div class="branch-card-copy"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Sistemas de diseño para múltiples marcas <b>↗</b></span></a>
+      <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span><p class="branch-mobile-message">Guía al usuario. Facilita el siguiente paso.</p></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">UI y Behavioral Design <b>↗</b></span></a>
+      <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1"><div class="branch-card-copy"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span><p class="branch-mobile-message">Una microinteracción puede cambiar tu foco de atención.</p></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Motion e inmersión <b>↗</b></span></a>
+      <a href="especialidades/liderazgo-y-formacion/" data-accordion-branch="2"><div class="branch-card-copy"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span><p class="branch-mobile-message">Comparte el criterio. Eleva el nivel del equipo.</p></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Formación de equipos de diseño <b>↗</b></span></a>
+      <a href="especialidades/sistemas-de-diseno/" data-accordion-branch="3"><div class="branch-card-copy"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span><p class="branch-mobile-message">Una base común. Distintas marcas.</p></div><span class="branch-arrow" aria-hidden="true">↗</span><span class="branch-card-cta" aria-hidden="true">Sistemas de diseño para múltiples marcas <b>↗</b></span></a>
     </div>
     <button class="branch-nav branch-prev" type="button" data-branch-step="-1" aria-label="Especialidad anterior" aria-controls="specialty-gallery">‹</button>
     <button class="branch-nav branch-next" type="button" data-branch-step="1" aria-label="Especialidad siguiente" aria-controls="specialty-gallery">›</button>
@@ -193,13 +193,27 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=escenas-amplias";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=escenas-en-cards";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
 const slot=hero.querySelector(".hero-visual");
 const introCue=document.querySelector(".intro-next");
 const specialtiesTitle=document.querySelector("#especialidades");
+const cardLayout=matchMedia("(max-width:700px)");
+const specialtySection=specialtiesTitle.closest("[data-specialty-accordion]");
+const specialtyCards=[...specialtySection.querySelectorAll("[data-accordion-branch]")];
+const specialtyPanels=[...specialtySection.querySelectorAll("[data-accordion-panel]")];
+const specialtyScenes=specialtyPanels.map(panel=>panel.querySelector(".branch-scene"));
+function placeSpecialtyScenes() {
+  specialtySection.classList.toggle("has-card-scenes",cardLayout.matches);
+  specialtyScenes.forEach((scene,index)=>{
+    if (cardLayout.matches) specialtyCards[index].querySelector(".branch-card-copy").after(scene);
+    else specialtyPanels[index].append(scene);
+  });
+}
+cardLayout.addEventListener("change",placeSpecialtyScenes);
+placeSpecialtyScenes();
 const canvas=slot.querySelector("canvas");
 const updateHeader=()=>document.documentElement.style.setProperty("--nav-height",header.offsetHeight+"px");
 new ResizeObserver(updateHeader).observe(header);
@@ -437,6 +451,6 @@ if (!reduced.matches) {
   document.querySelectorAll("[data-count]").forEach(item=>counterObserver.observe(item));
 }
 </script>
-<script type="application/json" id="page-translations">{"Seguir descubriendo":"Keep exploring"}</script>
+<script type="application/json" id="page-translations">{"Seguir descubriendo":"Keep exploring","Guía al usuario. Facilita el siguiente paso.":"Guide the user. Make the next step easier.","Una microinteracción puede cambiar tu foco de atención.":"One microinteraction can redirect your attention.","Comparte el criterio. Eleva el nivel del equipo.":"Share how you make decisions. Help the team improve.","Una base común. Distintas marcas.":"A shared foundation. Different brands."}</script>
 </body>
 </html>

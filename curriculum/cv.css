@@ -238,3 +238,22 @@
 .cv-section-switch button{transition:color .38s ease}
 .cv-footer .contact-blocks{margin-top:clamp(1.6rem,4vw,2.75rem)}
 @media(prefers-reduced-motion:reduce){.cv-section-switch button{transition:none}}
+
+@media(max-width:700px){
+  .cv-profile-disciplines.has-rise-entries [data-profile-slide]{
+    transform:translate3d(0,24px,0);opacity:0;
+    transition:transform .3s ease-in-out,opacity .3s ease-out
+  }
+  .cv-profile-disciplines.has-rise-entries [data-profile-slide].is-in-view{
+    transform:translate3d(0,0,0);opacity:1;transition:transform .3s ease-out,opacity 0s
+  }
+  .cv-switch-panel :is(.cv-row,.cv-skills>div){color:var(--cv-muted);transition:color .25s ease}
+  .cv-switch-panel :is(.cv-row,.cv-skills>div).is-reading{color:inherit}
+  .cv-switch-panel .cv-row:not(.is-reading) strong{color:inherit}
+}
+@media(prefers-reduced-motion:reduce){
+  .cv-switch-panel :is(.cv-row,.cv-skills>div){transition:none}
+}
+@media print{
+  .cv-profile-disciplines.has-rise-entries [data-profile-slide]{opacity:1;transform:none}
+}

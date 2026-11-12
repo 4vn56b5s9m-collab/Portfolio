@@ -81,9 +81,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (needsMeasure) measure();
     if (motion.matches) return;
     const scroll = scrollY;
-    const distance = compact.matches ? 24 : 40;
+    const distance = 40;
     slides.forEach((element, index) => {
       const {start, end} = entries[index];
+      if (compact.matches) {
+        element.classList.toggle("is-in-view", scroll >= start);
+        return;
+      }
       const step = clamp((scroll - start) / (end - start));
       if (step === previousStep[index]) return;
       previousStep[index] = step;
@@ -119,11 +123,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateMotion() {
     disciplines.classList.toggle("is-sliding", !motion.matches);
+    disciplines.classList.toggle("has-rise-entries", !motion.matches && compact.matches);
     resize();
   }
 
   addEventListener("scroll", () => { if (!motion.matches) schedule(); }, {passive:true});
   addEventListener("resize", resize);
+  compact.addEventListener("change", updateMotion);
   document.fonts?.ready.then(resize);
   motion.addEventListener("change", updateMotion);
   updateMotion();
@@ -219,4 +225,43 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   const education = ["#formacion", "#herramientas", "#cv-education"].includes(location.hash);
   select(education ? 1 : 0, false, false);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const compact = matchMedia("(max-width:700px)");
+  const entries = [...document.querySelectorAll(".cv-switch-panel .cv-row,.cv-switch-panel .cv-skills>div")];
+  if (!entries.length) return;
+  let observer;
+  let current = null;
+  const candidates = new Set();
+
+  function update() {
+    const middle = innerHeight / 2;
+    const next = [...candidates].reduce((best, entry) => {
+      const {top,bottom} = entry.getBoundingClientRect();
+      const distance = Math.abs((top + bottom) / 2 - middle);
+      return !best || distance < best.distance ? {entry,distance} : best;
+    }, null)?.entry ?? null;
+    if (next === current) return;
+    current?.classList.remove("is-reading");
+    current = next;
+    current?.classList.add("is-reading");
+  }
+
+  function connect() {
+    observer?.disconnect();
+    candidates.clear();
+    update();
+    if (!compact.matches) return;
+    observer = new IntersectionObserver(changes => {
+      for (const change of changes) {
+        if (change.isIntersecting) candidates.add(change.target);
+        else candidates.delete(change.target);
+      }
+      update();
+    }, {rootMargin:`-${Math.round(innerHeight*.44)}px 0px`});
+    entries.forEach(entry => observer.observe(entry));
+  }
+  addEventListener("resize", connect);
+  connect();
 });

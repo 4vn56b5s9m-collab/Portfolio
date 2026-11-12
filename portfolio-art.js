@@ -510,8 +510,9 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width*(focus?.53:compact.matches?.91:.83)/(2*Math.max(Math.abs(modelLeft),Math.abs(modelRight))),
-      height*(focus?.28:.54)/(modelBottom-modelTop));
+    const embedded=compact.matches&&parent.closest("[data-accordion-branch]");
+    const scale=Math.min(width*(embedded?.98:focus?.59:.91)/(2*Math.max(Math.abs(modelLeft),Math.abs(modelRight))),
+      height*(embedded?.86:focus?.31:.57)/(modelBottom-modelTop));
     const sceneOffset=-(modelTop+modelBottom)*scale/2;
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
@@ -540,7 +541,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     // Use the same type size and baseline anchors in every specialty.
     const fontSize=Math.min(width*.071,height*.115,63);
     floor.style.setProperty("--scene-type",fontSize+"px");
-    labels.forEach((label,index)=>{
+    if (!embedded) labels.forEach((label,index)=>{
       const y=height*(index===0?.165:.84);
       if (width!==captionWidth||!captionBounds[index]?.width) {
         const base=focus?label.querySelector("text"):label;
@@ -573,7 +574,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
       }
     });
-    captionWidth=width;
+    captionWidth=embedded?0:width;
     const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]:footprints?.map(item=>item.center);
     shadows.forEach((shadow,index)=>{
       const [x,y]=project(...ground[index]);
