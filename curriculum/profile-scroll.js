@@ -5,15 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const compact = matchMedia("(max-width:700px)");
   const disciplines = story.querySelector(".cv-profile-disciplines");
   const slides = [...disciplines.querySelectorAll("[data-profile-slide]")];
-  function wrap(element, className) {
-    const track = document.createElement("span");
-    track.className = className;
-    element.before(track);
-    track.append(element);
-    return track;
-  }
-  const camera = wrap(disciplines, "cv-profile-camera");
-  const tracks = slides.map(slide => wrap(slide, "cv-profile-slide-track"));
   const fills = [...story.querySelectorAll("[data-profile-fill]")].map(element => {
     const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
     const text = [];
@@ -23,14 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.setAttribute("aria-hidden", "true");
     overlay.replaceChildren(...[...element.childNodes].map(node => node.cloneNode(true)));
     element.append(overlay);
-    return {element, track:wrap(element,"cv-profile-fill-track"), overlay, text, lines: [], lastMask: ""};
+    return {element, overlay, text, lines: [], lastMask: ""};
   });
   const range = document.createRange();
   const clamp = value => Math.max(0, Math.min(1, value));
   let frame = 0;
   let needsMeasure = true;
   let entries = [];
-  let cameraStart = 0, cameraLength = 0, lastCameraOffset = -1;
   let previousStep = [];
 
   function measure() {
@@ -41,30 +31,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (widest) disciplines.style.setProperty("--cv-disciplines-size",
         size * document.documentElement.clientWidth * .90 / widest + "px");
     }
-    const openingTop = fills[0].track.getBoundingClientRect().top + scrollY;
+    const openingTop = fills[0].element.getBoundingClientRect().top + scrollY;
     const openingStart = Math.max(24, openingTop - innerHeight * .76);
-    const cameraTop = camera.getBoundingClientRect().top + scrollY;
     const starts = [];
-    for (const track of tracks) {
-      const top = compact.matches ? cameraTop + track.offsetTop : track.getBoundingClientRect().top + scrollY;
-      const visibleAt = top - innerHeight + 8;
+    for (const slide of slides) {
+      const visibleAt = slide.getBoundingClientRect().top + scrollY - innerHeight + 8;
       const earliest = starts.length ? starts.at(-1) + 32 : openingStart + 72;
       starts.push(Math.max(visibleAt, earliest));
     }
-    const extra = compact.matches ? 0 : 110;
-    const baseline = compact.matches ? 115 : 220;
-    entries = starts.map((start, index) => {
-      const pitch = index + 1 < tracks.length
-        ? tracks[index + 1].offsetTop - tracks[index].offsetTop - extra
-        : baseline;
-      const original = Math.min(baseline, Math.max(32, pitch));
-      const duration = compact.matches ? original : original * 1.5;
-      return {start, end: Math.min(start + duration, starts[index + 1] ?? Infinity)};
-    });
-    cameraStart = entries[0].start;
-    cameraLength = entries.at(-1).end - cameraStart;
-    camera.style.setProperty("--camera-extra", compact.matches && !motion.matches ? cameraLength * .5 + "px" : "0px");
-    lastCameraOffset = -1;
+    const duration = compact.matches ? 115 : 220;
+    entries = starts.map((start, index) => ({
+      start,
+      end: Math.min(start + duration, starts[index + 1] ?? Infinity)
+    }));
     previousStep = [];
     for (const [index, fill] of fills.entries()) {
       const box = fill.element.getBoundingClientRect();
@@ -87,9 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       fill.lines = lines;
       fill.height = box.height;
-      const top = fill.track.getBoundingClientRect().top + scrollY;
+      const top = box.top + scrollY;
       fill.start = index === 0 ? Math.max(24, top - innerHeight * .76)
-        : Math.max(entries.at(-1).end + (compact.matches ? cameraLength * .5 : 0), top - innerHeight * .96);
+        : Math.max(entries.at(-1).end, top - innerHeight * .96);
       fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * (index > 0 && compact.matches ? .81 : .76));
       if (index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
       fill.lastMask = "";
@@ -103,15 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (motion.matches) return;
     const scroll = scrollY;
     const distance = compact.matches ? 40 : 200;
-    const cameraOffset = compact.matches ? Math.max(0, Math.min(cameraLength * .5, (scroll - cameraStart) / 3)) : 0;
-    if (cameraOffset !== lastCameraOffset) {
-      camera.style.setProperty("--camera-offset", cameraOffset + "px");
-      lastCameraOffset = cameraOffset;
-    }
-    const slideScroll = scroll - cameraOffset;
     slides.forEach((element, index) => {
       const {start, end} = entries[index];
-      const step = clamp((slideScroll - start) / (end - start));
+      const step = clamp((scroll - start) / (end - start));
       if (step === previousStep[index]) return;
       previousStep[index] = step;
       const eased = step * step * (3 - 2 * step);
@@ -146,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateMotion() {
     disciplines.classList.toggle("is-sliding", !motion.matches);
-    camera.classList.toggle("is-moving", !motion.matches);
     resize();
   }
 
@@ -155,10 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.fonts?.ready.then(resize);
   motion.addEventListener("change", updateMotion);
   updateMotion();
-  const hero = document.querySelector(".cv-hero");
-  if (hero) new IntersectionObserver(([entry]) => {
-    hero.classList.toggle("is-outside-viewport", !entry.isIntersecting);
-  }).observe(hero);
 });
 
 document.addEventListener("DOMContentLoaded", () => {
