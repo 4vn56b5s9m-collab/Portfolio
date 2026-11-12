@@ -487,7 +487,6 @@ html[data-theme=dark]{--page:#202022;--home-ink:#f4f2ed;--line:#555357}
 .accordion-specialties .accordion-visual{height:clamp(26rem,55vw,39rem)}
 @media(max-width:700px){.accordion-specialties .accordion-visual{height:clamp(20rem,90vw,27rem)}}
 
-.branch-mobile-message{display:none}
 @media(min-width:701px){
   .accordion-specialties .accordion-panel{width:min(100%,64rem)}
   .accordion-specialties .accordion-visual{height:clamp(28rem,55vw,42rem)}
@@ -497,7 +496,6 @@ html[data-theme=dark]{--page:#202022;--home-ink:#f4f2ed;--line:#555357}
   .has-card-scenes .accordion-branches article[data-accordion-branch],.has-card-scenes .accordion-branches article[data-accordion-branch].is-previewed{
     grid-template-rows:auto 1fr auto;row-gap:.85rem
   }
-  .has-card-scenes .branch-mobile-message{display:block;margin:0;font-size: 1rem;line-height:1.3;color:inherit}
   .has-card-scenes .branch-scene{
     grid-row:2;align-self:center;width:calc(100% + 1.25rem);margin-inline:-.625rem;
     height:clamp(9.5rem,46vw,13rem);pointer-events:none
@@ -525,7 +523,6 @@ body{font-size:1rem}
     gap:clamp(1rem,3vw,2.5rem);padding:clamp(1.25rem,3vw,2.75rem)
   }
   .feature-specialties .branch-card-copy strong{font-size:clamp(2.1rem,3.8vw,4rem)}
-  .feature-specialties .branch-mobile-message{display:block;margin:.25rem 0 0}
   .feature-specialties .feature-art{width:100%;height:100%;min-width:0;min-height:0}
   .feature-specialties :is(.scene-back,.scene-front,.focus-dot){display:none}
 }
@@ -534,7 +531,6 @@ body{font-size:1rem}
   .has-card-scenes .accordion-branches article[data-accordion-branch],.has-card-scenes .accordion-branches article[data-accordion-branch].is-previewed{padding-block:1.5rem 1.2rem;row-gap:1.1rem}
   .has-card-scenes .branch-card-copy strong{font-size:clamp(1.85rem,7vw,2.45rem)}
   .has-card-scenes .accordion-branches article[data-accordion-branch] .branch-card-copy span{font-size:1.125rem;line-height:1.3}
-  .has-card-scenes .branch-mobile-message{font-size:1rem}
 }
 :is(.has-card-scenes,.feature-specialties) [data-accordion-branch] .branch-scene{
   opacity:0;transition:opacity .3s ease
@@ -563,3 +559,18 @@ body{font-size:1rem}
   .accordion-branches .branch-card-cta{width:100%;text-align:center}
 }
 @media(prefers-reduced-motion:reduce){.accordion-branches .branch-card-cta{transition:none}}
+
+.accordion-specialties .accordion-branches article[data-accordion-branch] .branch-card-copy>strong{
+  font-size:clamp(1.65rem,2.65vw,2.45rem)
+}
+.accordion-specialties .branch-card-description{margin:0;font-size:1.125rem;font-weight:400;line-height:1.42;color:#d1dedb}
+[data-theme=light] .accordion-specialties .branch-card-description{color:#31474a}
+.feature-specialties .accordion-branches article[data-accordion-branch] .branch-card-copy>strong{
+  font-size:clamp(2.35rem,4.1vw,4.25rem)
+}
+@media(max-width:700px){
+  .intro-fold .hero{padding-block-start:3.25rem;align-content:start}
+  .accordion-specialties .accordion-branches article[data-accordion-branch] .branch-card-copy>strong{
+    font-size:clamp(2.05rem,8vw,2.7rem)
+  }
+}
