@@ -527,7 +527,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    const fontSize=compact.matches?Math.max(23,Math.min(36,width*.078)):Math.max(28,Math.min(86,width*.105));
+    const fontSize=compact.matches?Math.max(29,Math.min(47,width*.103)):spaced?Math.max(32,Math.min(108,width*.128)):Math.max(28,Math.min(86,width*.105));
     floor.style.setProperty("--scene-type",fontSize+"px");
     labels.forEach((label,index)=>{
       let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
@@ -549,8 +549,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const left=Math.min(...projectedX), farRight=Math.max(...projectedX);
       const top=Math.min(...projectedY), low=Math.max(...projectedY);
       const margin=Math.min(20,width*.05);
-      const bandTop=spaced?(index===0?0:height*.73):0;
-      const bandBottom=spaced?(index===0?height*.27:height):height;
+      const bandTop=spaced?(index===0?0:height*.69):0;
+      const bandBottom=spaced?(index===0?height*.31:height):height;
       const verticalPad=spaced?4:margin;
       const fit=Math.min(1,(width-2*margin)/(farRight-left),(bandBottom-bandTop-2*verticalPad)/(low-top));
       if (spaced) y=(bandTop+bandBottom-(top+low)*fit)/2;
@@ -603,11 +603,12 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         fills[index].style.strokeDashoffset=1-progress;
         if (!reduced.matches&&end>start&&local>=0&&local<450) {
           const crossing=Math.max(0,(local-300)/150);
-          const nextStart=footprints[index+1].right+.17;
+          const final=index===tracks.length-1;
+          const nextStart=final?end+.18:footprints[index+1].right+.17;
           const x=crossing>0?end+(nextStart-end)*crossing:start+(end-start)*progress;
           const [px,py]=project(x,-.44,0);
           pulse.setAttribute("transform",`translate(${px} ${py})`);
-          pulse.style.opacity=crossing>0?".92":".76";
+          pulse.style.opacity=final?String(.76*(1-crossing)):crossing>0?".92":".76";
           pulse.style.visibility="visible";
         }
       });

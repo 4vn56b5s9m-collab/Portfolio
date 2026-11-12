@@ -218,7 +218,7 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .system-connectors{pointer-events:none}
 .system-connectors path{vector-effect:non-scaling-stroke}
 .is-3d-unavailable{visibility:hidden}
-.branch-pagination,.accordion-branches .branch-card-cta{display:none}
+.accordion-branches .branch-card-cta{display:none}
 .system-track,.system-fill{fill:none;stroke-width:3.2;stroke-linecap:round}
 .system-track{stroke:#fff;stroke-opacity:.20}
 .system-fill{stroke:#a9d9df;stroke-dasharray:1;stroke-dashoffset:1;animation:trace-fill .34s calc(.16s + var(--step) * .38s) ease-out forwards}
@@ -228,7 +228,7 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
   .hero-floor{background:
     radial-gradient(ellipse 30% 5% at 50% 59%,#050709cf,transparent 100%),
     radial-gradient(ellipse 49% 7% at 62% 62%,#080c108c,transparent 100%)}
-  .accordion-branches{overflow-x:auto;align-items:flex-start;min-height:var(--gallery-height,13rem);scroll-snap-type:x mandatory;scroll-padding-inline:12%;padding:4px 12% 12px;overscroll-behavior-x:contain;scrollbar-width:none;gap:.75rem}
+  .accordion-branches{overflow-x:auto;align-items:flex-start;min-height:var(--gallery-height,13rem);scroll-snap-type:x mandatory;scroll-padding-inline:12%;padding:4px 12% 4px;overscroll-behavior-x:contain;scrollbar-width:none;gap:.75rem}
   .accordion-branches::-webkit-scrollbar{display:none}
   .accordion-branches a,.accordion-branches a.is-previewed{flex:0 0 100%;min-height:7.25rem;scroll-snap-align:center;padding:1rem}
   .accordion-branches a .branch-card-copy span{font-size:.84rem}
@@ -335,13 +335,12 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
   .site-header.has-mobile-menu .site-menu-toggle{margin-inline-start:auto}
 }
 @media(prefers-reduced-motion:reduce){.hero-pagination button[aria-current] .hero-segment>span{transform:scaleX(1)}}
-@media (max-width:700px), (any-pointer:coarse){
-  .branch-pagination{display:flex;justify-content:center;align-items:center;gap:.32rem}
-  .branch-pagination button{position:relative;flex:0 0 44px;width:44px;height:44px;border:0;padding:0;background:transparent;cursor:pointer}
-  .branch-pagination button::before{content:"";position:absolute;inset:50% auto auto 50%;width:100%;height:4px;border-radius:999px;background:#c4cece66;transform:translate(-50%,-50%);transition:background-color .25s,box-shadow .25s}
-  .branch-pagination button[aria-current]::before{background:#7bcddf;box-shadow:0 0 8px #7bcddf66}
-  .branch-pagination button:focus-visible{outline:2px solid #b1e6df;outline-offset:-5px;border-radius:8px}
-}
+.branch-pagination{display:flex;justify-content:center;align-items:center;gap:.32rem}
+.branch-pagination button{position:relative;flex:0 1 64px;width:64px;min-width:44px;height:44px;border:0;padding:0;background:transparent;cursor:pointer}
+.branch-pagination button::before{content:"";position:absolute;inset:50% auto auto 50%;width:100%;height:4px;border-radius:999px;background:#c4cece66;transform:translate(-50%,-50%);transition:background-color .25s,box-shadow .25s}
+.branch-pagination button[aria-current]::before{background:#7bcddf;box-shadow:0 0 8px #7bcddf66}
+.branch-pagination button:focus-visible{outline:2px solid #b1e6df;outline-offset:-5px;border-radius:8px}
+
 @media(prefers-reduced-motion:reduce){.branch-pagination button::before{transition:none}}
 
 @media(max-width:700px){
@@ -358,3 +357,5 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 @keyframes intro-arrow{0%,100%{transform:translateY(0)}55%{transform:translateY(4px)}}
 @media(max-width:700px){.specialty-mobile-break{display:initial}}
 @media(prefers-reduced-motion:reduce){.intro-next-link span{animation:none}}
+
+@media(min-width:701px){.specialty-inner h2{margin-bottom:2.45rem}.hero-rotation .hero-rotation-toggle{margin-inline-start:.7rem}}
