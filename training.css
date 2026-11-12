@@ -29,3 +29,9 @@
   .training-proof dd{font-size:.84rem}
 }
 @media(prefers-reduced-motion:reduce){.training-page .training-cta{transition:none}}
+
+[data-theme=dark] .training-area{background:#262e30;border-color:#647477;color:#f4f2ed}
+[data-theme=dark] .training-area summary small{color:#c4d2d1}
+[data-theme=dark] .training-area summary::after,[data-theme=dark] .training-area .training-area-link{color:#a5e0e6}
+[data-theme=dark] .training-area summary:focus-visible{outline-color:#a5e0e6}
+[data-theme=light] .training-area{color:#171719}

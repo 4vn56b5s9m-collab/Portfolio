@@ -507,13 +507,9 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const widthSpan=compact.matches
-      ? training?5.9:behavioral?7.5:focus?4.9:8.55
-      : training?6.9:behavioral?8.5:focus?7.3:9.8;
-    const spaced=behavioral||focus||compact.matches;
-    const scale=Math.min(width/widthSpan,height/(compact.matches?8.65:spaced?8.1:5.25),
-      compact.matches ? height*.35/(modelBottom-modelTop) : Infinity);
-    const sceneOffset=compact.matches?-(modelTop+modelBottom)*scale/2:0;
+    const widthSpan=training?5.9:behavioral?7.5:focus?3.1:8.55;
+    const scale=Math.min(width*.83/widthSpan,height*.35/(modelBottom-modelTop));
+    const sceneOffset=-(modelTop+modelBottom)*scale/2;
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+sceneOffset+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
@@ -538,45 +534,20 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    const fontSize=compact.matches?Math.max(31,Math.min(51,width*.111)):Math.max(28,Math.min(86,width*.105));
+    // Use the same type size and baseline anchors in every specialty.
+    const fontSize=Math.min(width*.055,height*.12,48);
     floor.style.setProperty("--scene-type",fontSize+"px");
     labels.forEach((label,index)=>{
-      const captionScale=Math.min(width/9.8,height/5.25);
-      const anchorX=index===0?-.72:.72;
-      const anchorZ=index===0?-2.55:2.44;
-      let [x,y]=!spaced?project(anchorX,-1.12,anchorZ):[
-        width/2+(anchorX*.808027+anchorZ*.589145)*captionScale,
-        height/2+((-anchorX*.589145+anchorZ*.808027)*.548024+1.12*.836463)*captionScale
-      ];
-      if (!spaced&&!compact.matches) {
-        label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
-        return;
-      }
+      const x=width*(index===0?.37:.61);
+      const y=height*(index===0?.25:.765);
+      label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
       if (width!==captionWidth||!captionBounds[index]?.width) {
-        const length=width*(index===0?.64:.75);
         const base=focus?label.querySelector("text"):label;
         const bounds=base.getBBox();
-        captionBounds[index]=bounds.width?bounds:{x:-length/2,y:-fontSize,width:length,height:fontSize*1.2};
+        captionBounds[index]=bounds.width?bounds:{x:-width*.33,y:-fontSize,width:width*.66,height:fontSize*1.2};
       }
       const bounds=captionBounds[index];
-      const right=bounds.x+bounds.width, bottom=bounds.y+bounds.height;
-      const corners=[[bounds.x,bounds.y],[right,bounds.y],[bounds.x,bottom],[right,bottom]];
-      const projectedX=corners.map(([u,v])=>.808*u+.589*v);
-      const projectedY=corners.map(([u,v])=>-.323*u+.443*v);
-      const left=Math.min(...projectedX), farRight=Math.max(...projectedX);
-      const top=Math.min(...projectedY), low=Math.max(...projectedY);
-      const margin=Math.min(20,width*.05);
-      const bandHeight=height*(compact.matches?.28:.35);
-      const fit=Math.min(1,(width-2*margin)/(farRight-left),(bandHeight-margin)/(low-top));
-      if (spaced) {
-        const bias=index===0?-.19:.19;
-        if (compact.matches) x=width*(.5+bias);
-        const center=(top+low)*fit/2;
-        y=height*(index===0?.135:.865)-center;
-      }
-      x=Math.max(margin-left*fit,Math.min(width-margin-farRight*fit,x));
-      y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));
-      label.setAttribute("transform",`matrix(${.808*fit} ${-.323*fit} ${.589*fit} ${.443*fit} ${x} ${y})`);
+      const fit=1;
 
       if (!focus) return;
       const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
