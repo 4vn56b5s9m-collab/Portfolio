@@ -477,3 +477,8 @@ html[data-theme=dark]{--page:#202022;--home-ink:#f4f2ed;--line:#555357}
 .theme-thumb{position:absolute;inset-block-start:4px;inset-inline-start:4px}
 
 @media(max-width:700px){.specialty-inner h2{text-align:center}}
+
+.intro-fold{min-height:calc(100svh - var(--nav-height,4.5rem) - clamp(2rem,6svh,4rem))}
+.intro-next{margin-top:1.5rem}
+.intro-next-link{flex-direction:column;gap:.35rem;padding-block:.45rem}
+@media(min-width:701px){.intro-fold .hero{padding-inline:clamp(2.25rem,7vw,7rem)}}

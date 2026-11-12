@@ -193,3 +193,6 @@
 [data-theme=light] .cv-profile-disciplines [data-profile-slide]:nth-child(4){color:#785e3f}
 
 .cv-clients{align-items:center}
+
+.cv-profile-disciplines{justify-items:center}
+.cv-profile-disciplines [data-profile-slide]{margin-inline:0}

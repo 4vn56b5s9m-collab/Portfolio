@@ -20,8 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const clamp = value => Math.max(0, Math.min(1, value));
   let frame = 0;
   let needsMeasure = true;
-  let sequenceStart = 0, sequenceLength = 1;
-  let shifts = [];
+  let entries = [];
   let previousStep = [];
 
   function measure() {
@@ -32,11 +31,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (widest) disciplines.style.setProperty("--cv-disciplines-size",
         size * document.documentElement.clientWidth * .95 / widest + "px");
     }
-    const group = disciplines.getBoundingClientRect();
-    sequenceStart = group.top + scrollY - innerHeight * .91;
-    sequenceLength = Math.min(group.height * .9, innerHeight * .78);
-    shifts = slides.map(slide => Math.max(0,
-      group.width - slide.offsetWidth - 2 * parseFloat(getComputedStyle(slide).marginInlineStart)) * .46);
+    const openingTop = fills[0].element.getBoundingClientRect().top + scrollY;
+    const openingStart = Math.max(24, openingTop - innerHeight * .76);
+    const starts = [];
+    for (const slide of slides) {
+      const visibleAt = slide.getBoundingClientRect().top + scrollY - innerHeight + 8;
+      const earliest = starts.length ? starts.at(-1) + 32 : openingStart + 72;
+      starts.push(Math.max(visibleAt, earliest));
+    }
+    const duration = compact.matches ? 115 : 220;
+    entries = starts.map((start, index) => ({
+      start,
+      end: Math.min(start + duration, starts[index + 1] ?? Infinity)
+    }));
     previousStep = [];
     for (const [index, fill] of fills.entries()) {
       const box = fill.element.getBoundingClientRect();
@@ -61,8 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
       fill.height = box.height;
       const top = box.top + scrollY;
       fill.start = index === 0 ? Math.max(24, top - innerHeight * .76)
-        : Math.max(sequenceStart + sequenceLength, top - innerHeight * .96);
+        : Math.max(entries.at(-1).end, top - innerHeight * .96);
       fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * (index > 0 && compact.matches ? .81 : .76));
+      if (index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
       fill.lastMask = "";
     }
     needsMeasure = false;
@@ -73,13 +81,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (needsMeasure) measure();
     if (motion.matches) return;
     const scroll = scrollY;
-    const phase = clamp((scroll - sequenceStart) / sequenceLength) * slides.length;
+    const distance = compact.matches ? 40 : 200;
     slides.forEach((element, index) => {
-      const step = clamp(phase - index);
+      const {start, end} = entries[index];
+      const step = clamp((scroll - start) / (end - start));
       if (step === previousStep[index]) return;
       previousStep[index] = step;
       const eased = step * step * (3 - 2 * step);
-      element.style.setProperty("--profile-shift", shifts[index] * (index % 2 === 0 ? eased : 1 - eased) + "px");
+      element.style.setProperty("--profile-shift", distance * (1 - eased) * (index % 2 === 0 ? -1 : 1) + "px");
     });
     for (const fill of fills) {
       const {element, overlay, lines} = fill;
