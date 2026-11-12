@@ -53,8 +53,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=barras-movil">
-<script defer src="portfolio-interactions.js?v=menu-y-escenas"></script>
+<link rel="stylesheet" href="portfolio.css?v=cinta-movil">
+<script defer src="portfolio-interactions.js?v=cinta-movil"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="./#inicio">Alejandro Sánchez Bretones</a><nav aria-label="Navegación principal"><a href="./" aria-current="page">Inicio</a><a href="./portfolio/">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">Currículum</a></nav></header>
@@ -117,6 +117,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </svg>
           <canvas data-branch-canvas="behavioral" role="img" aria-label="Guía al usuario y facilita el siguiente paso. Un camino de piezas conecta dos puertas y conduce a la salida de la derecha."></canvas>
         </div>
+        <div class="scene-marquee">
+          <span class="scene-marquee-readable">Guía al usuario. Facilita el siguiente paso.</span>
+          <div class="scene-marquee-track" aria-hidden="true"><div><span>Guía al usuario. Facilita el siguiente paso.</span><span>Guía al usuario. Facilita el siguiente paso.</span><span>Guía al usuario. Facilita el siguiente paso.</span></div><div><span>Guía al usuario. Facilita el siguiente paso.</span><span>Guía al usuario. Facilita el siguiente paso.</span><span>Guía al usuario. Facilita el siguiente paso.</span></div></div>
+          <button class="scene-marquee-toggle" type="button" aria-label="Pausar cinta de texto"><span aria-hidden="true">Ⅱ</span></button>
+        </div>
       </div>
       <div class="accordion-panel light-panel" data-accordion-panel="1" hidden>
         <div class="branch-scene focus-scene">
@@ -131,6 +136,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 </svg>
           <canvas data-branch-canvas="focus" role="img" aria-label="Una microinteracción puede cambiar tu foco de atención."></canvas>
         </div>
+        <div class="scene-marquee">
+          <span class="scene-marquee-readable">Una microinteracción puede cambiar tu foco de atención.</span>
+          <div class="scene-marquee-track" aria-hidden="true"><div><span>Una microinteracción puede cambiar tu foco de atención.</span><span>Una microinteracción puede cambiar tu foco de atención.</span><span>Una microinteracción puede cambiar tu foco de atención.</span></div><div><span>Una microinteracción puede cambiar tu foco de atención.</span><span>Una microinteracción puede cambiar tu foco de atención.</span><span>Una microinteracción puede cambiar tu foco de atención.</span></div></div>
+          <button class="scene-marquee-toggle" type="button" aria-label="Pausar cinta de texto"><span aria-hidden="true">Ⅱ</span></button>
+        </div>
       </div>
       <div class="accordion-panel growth-panel" data-accordion-panel="2" hidden>
         <div class="branch-scene training-scene">
@@ -141,6 +151,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   <text class="scene-front" text-anchor="middle">Eleva el nivel del equipo</text>
 </svg>
           <canvas data-branch-canvas="training" role="img" aria-label="Tres torres de altura creciente, con tres piezas concéntricas cada una"></canvas>
+        </div>
+        <div class="scene-marquee">
+          <span class="scene-marquee-readable">Comparte el criterio. Eleva el nivel del equipo.</span>
+          <div class="scene-marquee-track" aria-hidden="true"><div><span>Comparte el criterio. Eleva el nivel del equipo.</span><span>Comparte el criterio. Eleva el nivel del equipo.</span><span>Comparte el criterio. Eleva el nivel del equipo.</span></div><div><span>Comparte el criterio. Eleva el nivel del equipo.</span><span>Comparte el criterio. Eleva el nivel del equipo.</span><span>Comparte el criterio. Eleva el nivel del equipo.</span></div></div>
+          <button class="scene-marquee-toggle" type="button" aria-label="Pausar cinta de texto"><span aria-hidden="true">Ⅱ</span></button>
         </div>
       </div>
       <div class="accordion-panel system-panel" data-accordion-panel="3" hidden>
@@ -158,6 +173,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
             <g><path class="system-track"/><path class="system-fill" pathLength="1"/></g>
             <g class="system-pulse"><circle class="system-halo" r="8"/><circle class="system-core" r="2.6"/></g>
           </svg>
+        </div>
+        <div class="scene-marquee">
+          <span class="scene-marquee-readable">Una base común. Distintas marcas.</span>
+          <div class="scene-marquee-track" aria-hidden="true"><div><span>Una base común. Distintas marcas.</span><span>Una base común. Distintas marcas.</span><span>Una base común. Distintas marcas.</span></div><div><span>Una base común. Distintas marcas.</span><span>Una base común. Distintas marcas.</span><span>Una base común. Distintas marcas.</span></div></div>
+          <button class="scene-marquee-toggle" type="button" aria-label="Pausar cinta de texto"><span aria-hidden="true">Ⅱ</span></button>
         </div>
       </div>
     </div>
@@ -189,7 +209,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   </div>
 </footer>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=menu-y-escenas";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=cinta-movil";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");

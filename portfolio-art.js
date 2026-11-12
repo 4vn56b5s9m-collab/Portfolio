@@ -473,6 +473,7 @@ function focusModels() {
 
 for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const kind=canvas.dataset.branchCanvas;
+  const compact=matchMedia("(max-width:700px)");
   const training=kind==="training",behavioral=kind==="behavioral",focus=kind==="focus",systems=kind==="systems";
   const models=training?trainingModels():behavioral?behavioralModels():focus?focusModels():systemModels();
   const footprints=systems?systemFootprints(models):null;
@@ -497,7 +498,10 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const scale=Math.min(width/(training?6.9:behavioral?8.5:focus?7.3:9.8),height/5.25);
+    const widthSpan=compact.matches
+      ? training?5.9:behavioral?7.5:focus?4.9:8.55
+      : training?6.9:behavioral?8.5:focus?7.3:9.8;
+    const scale=Math.min(width/widthSpan,height/(compact.matches?4.25:5.25));
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
       height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
@@ -511,22 +515,20 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const remaining=1-progress;
       const settled=1-remaining**3;
       const eased=progress*progress*progress*(progress*(progress*6-15)+10);
-      const drift=1-eased;
       const [x,y,z]=model.position;
-      const growth=training?Math.max(.015,1-remaining**1.55*Math.exp(-2.35*progress)*Math.cos(progress*Math.PI*5))
-        :systems?Math.max(.06,eased):1;
+      const growth=training?Math.max(.015,1-.30*remaining**1.6*Math.exp(-2.7*progress)*Math.cos(progress*Math.PI*4))
+        :1;
       return {
         origin:model.origin,
-        position:systems?[x,y,z+drift*.48]
-          :[x,y-(training?0:remaining*.16),z],
-        opacity:training||systems?Number(progress>0):settled,
+        position:[x,y-(training||systems?0:remaining*.16),z],
+        opacity:training?Math.min(1,progress*8):systems?eased:settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
     floor.style.setProperty("--scene-type",Math.max(26,Math.min(110,width*.135))+"px");
     const fontSize=Math.max(26,Math.min(110,width*.135));
-    labels.forEach((label,index)=>{
+    if (!compact.matches) labels.forEach((label,index)=>{
       let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
       if (!focus) {
         label.setAttribute("transform",`matrix(.808 -.323 .589 .443 ${x} ${y})`);
@@ -571,7 +573,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
       }
     });
-    captionWidth=width;
+    captionWidth=compact.matches?0:width;
     const ground=training?[[-1.95,-1.12,0],[0,-1.12,0],[1.95,-1.12,0]]:footprints?.map(item=>item.center);
     shadows.forEach((shadow,index)=>{
       const [x,y]=project(...ground[index]);
