@@ -345,4 +345,7 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 }
 @media(prefers-reduced-motion:reduce){.branch-pagination button::before{transition:none}}
 
-@media(max-width:700px){.intro-fold .hero .tagline{padding-block-end:24px}}
+@media(max-width:700px){
+  .intro-fold .hero .tagline{padding-block-end:24px}
+  .intro-fold .hero #portfolio-art{top:calc(55% + 22px)}
+}
