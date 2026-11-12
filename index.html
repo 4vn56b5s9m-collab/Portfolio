@@ -85,7 +85,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   <section class="experience-belt" aria-label="Experiencia en cifras">
     <dl class="stats">
       <div><dd aria-label="Más de 81"><span aria-hidden="true">+<span data-count="81">81</span></span></dd><dt>proyectos</dt></div>
-      <div><dd aria-label="Más de 25"><span aria-hidden="true">+<span data-count="25">25</span></span></dd><dt>clientes</dt></div>
+      <div><dd aria-label="Más de 38"><span aria-hidden="true">+<span data-count="38">38</span></span></dd><dt>clientes</dt></div>
       <div><dd data-count="6">6</dd><dt>países</dt></div>
     </dl>
     <div class="intro-next">
@@ -401,6 +401,8 @@ if (renderer) {
   reduced.addEventListener("change",()=>{last=0;queue();});
   document.addEventListener("visibilitychange",queue);
 }
+
+if (window.siteLanguage==="en") document.querySelector('[data-count="38"]').closest("dd").setAttribute("aria-label","More than 38");
 
 function animateCount(item) {
   const goal=item.dataset.count;
