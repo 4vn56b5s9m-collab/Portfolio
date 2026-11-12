@@ -490,6 +490,15 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const reduced=matchMedia("(prefers-reduced-motion: reduce)");
   let renderer, frame=0, started=0, visible=false, captionWidth=0;
   const captionBounds=[];
+  let modelTop=Infinity, modelBottom=-Infinity;
+  for (const {mesh,position:[x,y,z]} of models) {
+    for (let i=0;i<mesh.length;i+=8) {
+      const v=(-(x+mesh[i])*.589145+(z+mesh[i+2])*.808027)*.548024
+        -(y+mesh[i+1])*.836463;
+      modelTop=Math.min(modelTop,v);
+      modelBottom=Math.max(modelBottom,v);
+    }
+  }
   const duration=focus?3400:behavioral?2130:training?1810:2350;
   function draw(now) {
     frame=0;
@@ -502,10 +511,12 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       ? training?5.9:behavioral?7.5:focus?4.9:8.55
       : training?6.9:behavioral?8.5:focus?7.3:9.8;
     const spaced=behavioral||focus||compact.matches;
-    const scale=Math.min(width/widthSpan,height/(compact.matches?8.65:spaced?8.1:5.25));
+    const scale=Math.min(width/widthSpan,height/(compact.matches?8.65:spaced?8.1:5.25),
+      compact.matches ? height*.35/(modelBottom-modelTop) : Infinity);
+    const sceneOffset=compact.matches?-(modelTop+modelBottom)*scale/2:0;
     const project=(x,y,z)=>[
       width/2+(x*.808027+z*.589145)*scale,
-      height/2+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
+      height/2+sceneOffset+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
     ];
     renderer.clear({width,height});
     renderer.render(scale,models.map(model=>{
@@ -521,7 +532,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         :1;
       return {
         origin:model.origin,
-        position:[x,y-(training||systems?0:remaining*.16)+(compact.matches&&training?.24:0),z],
+        position:[x,y-(training||systems?0:remaining*.16)-sceneOffset/(scale*.836463),z],
         opacity:training?Math.min(1,progress*8):systems?eased:settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
@@ -555,12 +566,13 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const left=Math.min(...projectedX), farRight=Math.max(...projectedX);
       const top=Math.min(...projectedY), low=Math.max(...projectedY);
       const margin=Math.min(20,width*.05);
-      const fit=Math.min(1,(width-2*margin)/(farRight-left),(height-2*margin)/(low-top));
-      if (compact.matches) {
+      const bandHeight=height*(compact.matches?.28:.35);
+      const fit=Math.min(1,(width-2*margin)/(farRight-left),(bandHeight-margin)/(low-top));
+      if (spaced) {
         const bias=index===0?-.19:.19;
-        x=width*(.5+bias);
+        if (compact.matches) x=width*(.5+bias);
         const center=(top+low)*fit/2;
-        y=height*(index===0?.14:.88)-center;
+        y=height*(index===0?.135:.865)-center;
       }
       x=Math.max(margin-left*fit,Math.min(width-margin-farRight*fit,x));
       y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));

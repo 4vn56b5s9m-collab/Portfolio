@@ -452,3 +452,26 @@ html[data-theme=dark]{--page:#202022;--home-ink:#f4f2ed;--line:#555357}
   .site-language select{min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){.theme-thumb,.theme-disc,.theme-cutout,.theme-rays,.accordion-branches a.is-cta-ready .branch-card-cta{transition:none}}
+
+.theme-switch{--thumb-size:30px;--switch-travel:32px;width:72px;height:40px;padding:4px}
+.theme-thumb{width:var(--thumb-size);height:var(--thumb-size);transform:translateX(var(--switch-travel))}
+.site-language{position:relative}
+.site-language::after{content:"";position:absolute;right:.86rem;top:50%;width:.38rem;height:.38rem;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.site-language select{appearance:none;padding-inline:.85rem 2rem}
+[data-theme=light] .site-menu-toggle,[data-theme=light] .hero-rotation button.hero-rotation-toggle{color:#17434b;background:#f4f2ed;border:1px solid #63787a}
+[data-theme=light] .site-menu-toggle:focus-visible,[data-theme=light] .hero-rotation button:focus-visible,[data-theme=light] .branch-pagination button:focus-visible{outline-color:#124d56}
+[data-theme=light] .branch-progress{background:#687d80}
+[data-theme=light] .branch-pagination button[aria-current] .branch-progress{background:#426c77}
+[data-theme=light] .branch-progress>span{background:#12323d}
+.focus-floor .focus-type{opacity:1}
+.focus-floor .focus-type text:not(.focus-ink){fill:#f0dfbb}
+.focus-floor .focus-ink{fill:#92e3f6}
+.focus-floor .focus-dot .system-core{fill:#ddfbff}
+.focus-floor .focus-dot .system-halo{stroke:#a8ecfc;stroke-opacity:1}
+[data-theme=light] .focus-floor .focus-type text:not(.focus-ink){fill:#282c2d}
+[data-theme=light] .focus-floor .focus-ink{fill:#085c78}
+[data-theme=light] .focus-floor .focus-dot{filter:drop-shadow(0 0 5px #147b9c)}
+[data-theme=light] .focus-floor .focus-dot .system-core{fill:#08475f}
+[data-theme=light] .focus-floor .focus-dot .system-halo{fill:#1f8bae38;stroke:#176984}
+@media(max-width:700px){.accordion-specialties .accordion-visual{height:clamp(16rem,67vw,20rem)}}
+.theme-thumb{position:absolute;inset-block-start:4px;inset-inline-start:4px}
