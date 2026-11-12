@@ -34,9 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const group = disciplines.getBoundingClientRect();
     sequenceStart = group.top + scrollY - innerHeight * .91;
-    sequenceLength = Math.min(group.height * .78, innerHeight * .68);
+    sequenceLength = Math.min(group.height * .9, innerHeight * .78);
     shifts = slides.map(slide => Math.max(0,
-      group.width - slide.offsetWidth - 2 * parseFloat(getComputedStyle(slide).marginInlineStart)));
+      group.width - slide.offsetWidth - 2 * parseFloat(getComputedStyle(slide).marginInlineStart)) * .46);
     previousStep = [];
     for (const [index, fill] of fills.entries()) {
       const box = fill.element.getBoundingClientRect();
@@ -60,9 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
       fill.lines = lines;
       fill.height = box.height;
       const top = box.top + scrollY;
-      fill.start = index === 0 ? top - innerHeight * .92
+      fill.start = index === 0 ? Math.max(24, top - innerHeight * .76)
         : Math.max(sequenceStart + sequenceLength, top - innerHeight * .96);
-      fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * .76);
+      fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * (index > 0 && compact.matches ? .81 : .76));
       fill.lastMask = "";
     }
     needsMeasure = false;

@@ -176,6 +176,10 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   const dots = [...accordion.querySelectorAll("[data-branch-page]")];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width: 700px)");
+  const featureSegments = accordion.querySelector(".feature-segments");
+  const segmentButtons = [...accordion.querySelectorAll("[data-feature-segment]")];
+  const isFeature = Boolean(featureSegments);
+  const canScroll = () => isFeature || mobile.matches;
   const duration = 4600;
   let active = 0, target = -1;
   let visible = false, hovered = false, paused = false;
@@ -187,6 +191,13 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     ctaTimer = setTimeout(() => {
       if (target < 0) cards[active].classList.add("is-cta-ready");
     }, reduced.matches ? 0 : 160);
+  }
+
+  function alignSegment() {
+    if (!isFeature || mobile.matches) return;
+    const button = segmentButtons[active];
+    featureSegments.style.setProperty("--segment-x", button.offsetLeft + "px");
+    featureSegments.style.setProperty("--segment-width", button.offsetWidth + "px");
   }
 
   function preview(index) {
@@ -203,6 +214,11 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       if (i === index) dot.setAttribute("aria-current", "true");
       else dot.removeAttribute("aria-current");
     });
+    segmentButtons.forEach((button,i) => {
+      if (i === index) button.setAttribute("aria-current", "true");
+      else button.removeAttribute("aria-current");
+    });
+    alignSegment();
     revealCTA();
     panels.forEach((panel, i) => { panel.hidden = i !== index; });
     scheduleRotation();
@@ -210,7 +226,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
 
   function previewCenteredCard() {
     frame = 0;
-    if (!mobile.matches) return;
+    if (!canScroll()) return;
     const bounds = gallery.getBoundingClientRect();
     const center = bounds.left + bounds.width / 2;
     let closest = 0;
@@ -231,7 +247,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
 
 
   function goTo(index) {
-    if (mobile.matches) {
+    if (canScroll()) {
       const bounds = gallery.getBoundingClientRect();
       const card = cards[index].getBoundingClientRect();
       target = index;
@@ -271,7 +287,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       scheduleRotation();
     }
     const card=event.target.closest("[data-accordion-branch]");
-    if (card && cards.includes(card)) preview(cards.indexOf(card));
+    if (!isFeature && card && cards.includes(card)) preview(cards.indexOf(card));
   });
   gallery.addEventListener("pointerleave", () => {
     hovered = false;
@@ -283,7 +299,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   }
   gallery.addEventListener("touchstart", stopForGesture, {passive:true});
   gallery.addEventListener("wheel", event => {
-    if (mobile.matches && Math.abs(event.deltaX) > Math.abs(event.deltaY)) stopForGesture();
+    if (canScroll() && Math.abs(event.deltaX) > Math.abs(event.deltaY)) stopForGesture();
   }, {passive:true});
 
   cards.forEach((card, index) => {
@@ -302,11 +318,19 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     pauseRotation();
     goTo(index);
   }));
+  segmentButtons.forEach((button,index) => button.addEventListener("click", () => {
+    pauseRotation();
+    goTo(index);
+  }));
+  if (isFeature) {
+    new ResizeObserver(alignSegment).observe(featureSegments);
+    document.fonts?.ready.then(alignSegment);
+  }
   revealCTA();
   gallery.addEventListener("scroll", () => {
-    if (mobile.matches && !frame) frame = requestAnimationFrame(previewCenteredCard);
+    if (canScroll() && !frame) frame = requestAnimationFrame(previewCenteredCard);
   }, { passive: true });
-  mobile.addEventListener("change", previewCenteredCard);
+  mobile.addEventListener("change", () => { previewCenteredCard(); alignSegment(); });
   previewCenteredCard();
   new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting && entry.intersectionRatio >= .55;

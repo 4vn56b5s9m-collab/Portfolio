@@ -182,3 +182,14 @@
 }
 
 .cv .cv-section:not(.cv-profile) h2{padding-top:1.2rem}
+
+[data-theme=dark] .cv-profile-disciplines [data-profile-slide]:nth-child(1){color:#fffdf6}
+[data-theme=dark] .cv-profile-disciplines [data-profile-slide]:nth-child(2){color:#f2e9d5}
+[data-theme=dark] .cv-profile-disciplines [data-profile-slide]:nth-child(3){color:#e8d9b9}
+[data-theme=dark] .cv-profile-disciplines [data-profile-slide]:nth-child(4){color:#e0cfa8}
+[data-theme=light] .cv-profile-disciplines [data-profile-slide]:nth-child(1){color:#51483c}
+[data-theme=light] .cv-profile-disciplines [data-profile-slide]:nth-child(2){color:#5e503e}
+[data-theme=light] .cv-profile-disciplines [data-profile-slide]:nth-child(3){color:#6c573e}
+[data-theme=light] .cv-profile-disciplines [data-profile-slide]:nth-child(4){color:#785e3f}
+
+.cv-clients{align-items:center}
