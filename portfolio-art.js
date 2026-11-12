@@ -521,7 +521,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         :1;
       return {
         origin:model.origin,
-        position:[x,y-(training||systems?0:remaining*.16)+(focus?height*.055/(scale*.836463):0),z],
+        position:[x,y-(training||systems?0:remaining*.16)+(focus?height*(compact.matches?.055:.145)/(scale*.836463):0),z],
         opacity:training?Math.min(1,progress*8):systems?eased:settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
