@@ -174,11 +174,17 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   const dots = [...accordion.querySelectorAll("[data-branch-page]")];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width: 700px)");
-  let active = 0;
+  const toggle = accordion.querySelector('.branch-rotation-toggle');
+  const duration = 4600;
+  let active = 0, target = -1;
+  let visible = false, hovered = false, paused = false;
+  let rotation = 0, progress;
   let frame = 0;
 
   function preview(index) {
     if (index === active) return;
+    progress?.cancel();
+    progress = null;
     active = index;
     accordion.dataset.litPiece = String([0, 2, 3, 1][index]);
     cards.forEach((card, i) => card.classList.toggle("is-previewed", i === index));
@@ -187,6 +193,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       if (i === index) dot.setAttribute("aria-current", "true");
       else dot.removeAttribute("aria-current");
     });
+    scheduleRotation();
   }
 
   function previewCenteredCard() {
@@ -204,27 +211,81 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
         distance = offset;
       }
     });
+    if (target >= 0 && closest !== target) return;
+    target = -1;
     preview(closest);
   }
+
+
+  function goTo(index) {
+    if (mobile.matches) {
+      const bounds = gallery.getBoundingClientRect();
+      const card = cards[index].getBoundingClientRect();
+      target = index;
+      gallery.scrollTo({
+        left: gallery.scrollLeft + card.left + card.width / 2 - bounds.left - bounds.width / 2,
+        behavior: reduced.matches ? "instant" : "smooth"
+      });
+    }
+    preview(index);
+  }
+
+  function scheduleRotation() {
+    clearTimeout(rotation);
+    if (!visible || hovered || paused || document.hidden || reduced.matches) {
+      progress?.pause();
+      return;
+    }
+    if (!progress) {
+      const fill = dots[active].querySelector(".branch-progress > span");
+      progress = fill.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}],
+        {duration,fill:"forwards"});
+    } else {
+      progress.play();
+    }
+    rotation = setTimeout(() => goTo((active + 1) % cards.length),
+      Math.max(0,duration - (Number(progress.currentTime) || 0)));
+  }
+
+  function setPaused(value) {
+    paused = value;
+    toggle.setAttribute("aria-label", value ? "Reanudar rotación de especialidades" : "Pausar rotación de especialidades");
+    toggle.firstElementChild.textContent = value ? "▶" : "Ⅱ";
+    scheduleRotation();
+  }
+
+  toggle.addEventListener("click", () => setPaused(!paused));
+  gallery.addEventListener("pointerenter", event => {
+    if (event.pointerType === "touch") return;
+    hovered = true;
+    scheduleRotation();
+  });
+  gallery.addEventListener("pointerleave", () => {
+    hovered = false;
+    scheduleRotation();
+  });
+  function stopForGesture() {
+    target = -1;
+    setPaused(true);
+  }
+  gallery.addEventListener("touchstart", stopForGesture, {passive:true});
+  gallery.addEventListener("wheel", event => {
+    if (mobile.matches && Math.abs(event.deltaX) > Math.abs(event.deltaY)) stopForGesture();
+  }, {passive:true});
 
   cards.forEach((card, index) => {
     card.addEventListener("pointerenter", event => {
       if (!mobile.matches && event.pointerType !== "touch") preview(index);
     });
-    card.addEventListener("focus", () => preview(index));
+    card.addEventListener("focus", () => {
+      setPaused(true);
+      preview(index);
+    });
   });
   dots.forEach((dot, index) => {
     dot.addEventListener("click", () => {
-      if (!mobile.matches) {
-        preview(index);
-        return;
-      }
-      const bounds = gallery.getBoundingClientRect();
-      const card = cards[index].getBoundingClientRect();
-      gallery.scrollTo({
-        left: gallery.scrollLeft + card.left + card.width / 2 - bounds.left - bounds.width / 2,
-        behavior: reduced.matches ? "instant" : "smooth"
-      });
+      setPaused(true);
+      goTo(index);
     });
     dot.addEventListener("keydown", event => {
       const offset = event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : 0;
@@ -264,4 +325,14 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   });
   sizeGallery();
   previewCenteredCard();
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting && entry.intersectionRatio >= .55;
+    scheduleRotation();
+  }, {threshold:[0,.55]}).observe(gallery);
+  document.addEventListener('visibilitychange',scheduleRotation);
+  reduced.addEventListener('change',() => {
+    progress?.cancel();
+    progress = null;
+    scheduleRotation();
+  });
 }

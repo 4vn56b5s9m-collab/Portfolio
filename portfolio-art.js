@@ -527,7 +527,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       };
     }),0,true);
     floor.setAttribute("viewBox",`0 0 ${width} ${height}`);
-    const fontSize=compact.matches?Math.max(29,Math.min(47,width*.103)):spaced?Math.max(32,Math.min(108,width*.128)):Math.max(28,Math.min(86,width*.105));
+    const fontSize=compact.matches?Math.max(29,Math.min(47,width*.103)):Math.max(28,Math.min(86,width*.105));
     floor.style.setProperty("--scene-type",fontSize+"px");
     labels.forEach((label,index)=>{
       let [x,y]=focus&&index===1?project(-.23,-1.13,1.78):project(index===0?-.72:.72,-1.12,index===0?-2.55:2.44);
@@ -549,13 +549,15 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const left=Math.min(...projectedX), farRight=Math.max(...projectedX);
       const top=Math.min(...projectedY), low=Math.max(...projectedY);
       const margin=Math.min(20,width*.05);
-      const bandTop=spaced?(index===0?0:height*.69):0;
-      const bandBottom=spaced?(index===0?height*.31:height):height;
-      const verticalPad=spaced?4:margin;
-      const fit=Math.min(1,(width-2*margin)/(farRight-left),(bandBottom-bandTop-2*verticalPad)/(low-top));
-      if (spaced) y=(bandTop+bandBottom-(top+low)*fit)/2;
+      const fit=Math.min(1,(width-2*margin)/(farRight-left),(height-2*margin)/(low-top));
+      if (spaced) {
+        const bias=index===0?-.19:.19;
+        x=width*(.5+bias);
+        const center=(top+low)*fit/2;
+        y=height*(index===0?.20:.81)-center;
+      }
       x=Math.max(margin-left*fit,Math.min(width-margin-farRight*fit,x));
-      y=Math.max(bandTop+verticalPad-top*fit,Math.min(bandBottom-verticalPad-low*fit,y));
+      y=Math.max(margin-top*fit,Math.min(height-margin-low*fit,y));
       label.setAttribute("transform",`matrix(${.808*fit} ${-.323*fit} ${.589*fit} ${.443*fit} ${x} ${y})`);
 
       if (!focus) return;
