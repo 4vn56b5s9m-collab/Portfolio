@@ -3,10 +3,10 @@
 .training-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.4rem;margin-top:1.5rem}
 .training-page .training-cta{display:inline-flex;align-items:center;justify-content:center;gap:.75rem;min-height:48px;padding:.55rem 1.05rem;border:1px solid #c0e1df80;border-radius:999px;background:#164e57;color:#fff;font-weight:600;text-decoration:none;transition:background .2s,border-color .2s}
 .training-page .training-cta:is(:hover,:focus-visible){background:#216875;border-color:#c0e1df}
-.training-hint{margin:.75rem 0 0;color:#d0d9d7;font-size:.87rem}
+.training-hint{margin:.75rem 0 0;color:#d0d9d7;font-size: 1rem}
 .training-proof{display:flex;flex-wrap:wrap;gap:1rem 2.7rem;margin:clamp(1.7rem,4vw,3.2rem) 0 0;padding-top:1.15rem;border-top:1px solid #e2e4df42}
 .training-proof dt{font:400 clamp(2.35rem,5vw,4.1rem)/1 var(--display);color:#e8e4d8}
-.training-proof dd{margin:.35rem 0 0;color:#d0d9d7;font-size:.9rem}
+.training-proof dd{margin:.35rem 0 0;color:#d0d9d7;font-size: 1rem}
 .training-context p,.training-catalog .wrap>p{max-width:65ch;margin:.8rem 0 0;line-height:1.55}
 .training-catalog{scroll-margin-top:var(--nav-height,4.5rem)}
 .training-areas{display:grid;gap:.65rem;margin-top:1.6rem}
@@ -17,7 +17,7 @@
 .training-area[open] summary::after{content:"−"}
 .training-area summary:focus-visible{outline:2px solid #124d56;outline-offset:2px;border-radius:.7rem}
 .training-area summary strong{display:block;font:400 clamp(1.45rem,2.75vw,2.25rem)/1.1 var(--display)}
-.training-area summary small{display:block;margin-top:.3rem;color:#4c5655;font-size:.88rem;line-height:1.45}
+.training-area summary small{display:block;margin-top:.3rem;color:#4c5655;font-size: 1rem;line-height:1.45}
 .training-area-content{padding:0 1rem .85rem}
 .training-area-content ul{margin:.35rem 0 .45rem;padding-left:1.25rem;line-height:1.55}
 .training-area-content li+li{margin-top:.3rem}
@@ -26,7 +26,7 @@
 @media(max-width:700px){
   .training-page .training-cta{width:100%}
   .training-proof{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-  .training-proof dd{font-size:.84rem}
+  .training-proof dd{font-size: 1rem}
 }
 @media(prefers-reduced-motion:reduce){.training-page .training-cta{transition:none}}
 

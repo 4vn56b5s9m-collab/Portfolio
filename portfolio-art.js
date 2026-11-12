@@ -510,7 +510,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const embedded=compact.matches&&parent.closest("[data-accordion-branch]");
+    const embedded=parent.closest("[data-accordion-branch]");
     const scale=Math.min(width*(embedded?.98:focus?.59:.91)/(2*Math.max(Math.abs(modelLeft),Math.abs(modelRight))),
       height*(embedded?.86:focus?.31:.57)/(modelBottom-modelTop));
     const sceneOffset=-(modelTop+modelBottom)*scale/2;
@@ -616,15 +616,27 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   function queue() {
     if (visible&&renderer&&!frame) frame=requestAnimationFrame(draw);
   }
-  new IntersectionObserver(([entry])=>{
-    visible=entry.isIntersecting;
+  let inViewport=false;
+  function updateVisibility() {
+    const card=parent.closest("[data-accordion-branch]");
+    const next=inViewport&&(!card||card.classList.contains("is-previewed"));
+    if (next===visible) return;
+    visible=next;
+    parent.toggleAttribute("data-scene-playing",visible);
+    if (visible) parent.dispatchEvent(new Event("branch:scene-enter",{bubbles:true}));
     if (visible&&!renderer) {
       try { renderer=createArt(canvas,models); } catch(error) { console.warn("Portfolio 3D:",error); }
       if (!renderer) { parent.classList.add("is-3d-unavailable");return; }
     }
     started=0;
     queue();
+  }
+  new IntersectionObserver(([entry])=>{
+    inViewport=entry.isIntersecting;
+    updateVisibility();
   }).observe(parent);
+  const section=parent.closest("[data-specialty-accordion]");
+  if (section) new MutationObserver(updateVisibility).observe(section,{subtree:true,attributes:true,attributeFilter:["class"],childList:true});
   new ResizeObserver(queue).observe(parent);
   document.fonts?.ready.then(()=>{captionWidth=0;queue();});
   reduced.addEventListener("change",queue);

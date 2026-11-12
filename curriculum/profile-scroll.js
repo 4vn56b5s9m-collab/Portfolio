@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const openingStart = Math.max(24, openingTop - innerHeight * .76);
     const starts = [];
     for (const slide of slides) {
-      const visibleAt = slide.getBoundingClientRect().top + scrollY - innerHeight + 8;
-      const earliest = starts.length ? starts.at(-1) + 32 : openingStart + 72;
+      const visibleAt = slide.getBoundingClientRect().top + scrollY - innerHeight - (compact.matches ? 36 : 20);
+      const earliest = starts.length ? starts.at(-1) + (compact.matches ? 105 : 85) : openingStart + 72;
       starts.push(Math.max(visibleAt, earliest));
     }
     const duration = compact.matches ? 115 : 220;
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fill.height = box.height;
       const top = box.top + scrollY;
       fill.start = index === 0 ? Math.max(24, top - innerHeight * .76)
-        : Math.max(entries.at(-1).end, top - innerHeight * .96);
+        : Math.max(entries.at(-1).end + (compact.matches ? 60 : 35), top - innerHeight * .96);
       fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * (index > 0 && compact.matches ? .81 : .76));
       if (index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
       fill.lastMask = "";
@@ -81,18 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (needsMeasure) measure();
     if (motion.matches) return;
     const scroll = scrollY;
-    const distance = 40;
     slides.forEach((element, index) => {
-      const {start, end} = entries[index];
-      if (compact.matches) {
-        element.classList.toggle("is-in-view", scroll >= start);
-        return;
-      }
-      const step = clamp((scroll - start) / (end - start));
-      if (step === previousStep[index]) return;
-      previousStep[index] = step;
-      const eased = step * step * (3 - 2 * step);
-      element.style.setProperty("--profile-shift", distance * (1 - eased) * (index % 2 === 0 ? -1 : 1) + "px");
+      const visible = scroll >= entries[index].start;
+      if (visible === previousStep[index]) return;
+      previousStep[index] = visible;
+      element.classList.toggle("is-in-view", visible);
     });
     for (const fill of fills) {
       const {element, overlay, lines} = fill;
@@ -123,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateMotion() {
     disciplines.classList.toggle("is-sliding", !motion.matches);
-    disciplines.classList.toggle("has-rise-entries", !motion.matches && compact.matches);
+    disciplines.classList.toggle("has-rise-entries", !motion.matches);
     resize();
   }
 

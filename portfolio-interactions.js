@@ -176,6 +176,8 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   const dots = [...accordion.querySelectorAll("[data-branch-page]")];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = matchMedia("(max-width: 700px)");
+  const feature = accordion.classList.contains("feature-specialties");
+  const canScroll = () => feature || mobile.matches;
   const duration = 4600;
   let active = 0, target = -1;
   let visible = false, hovered = false, paused = false;
@@ -184,9 +186,11 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
 
   function revealCTA() {
     clearTimeout(ctaTimer);
+    const scene = (feature || mobile.matches ? cards[active] : panels[active])?.querySelector("[data-scene-playing]");
+    if (!scene) return;
     ctaTimer = setTimeout(() => {
       if (target < 0) cards[active].classList.add("is-cta-ready");
-    }, reduced.matches ? 0 : 160);
+    }, reduced.matches ? 0 : 520);
   }
 
   function preview(index) {
@@ -210,7 +214,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
 
   function previewCenteredCard() {
     frame = 0;
-    if (!mobile.matches) return;
+    if (!canScroll()) return;
     const bounds = gallery.getBoundingClientRect();
     const center = bounds.left + bounds.width / 2;
     let closest = 0;
@@ -231,7 +235,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
 
 
   function goTo(index) {
-    if (mobile.matches) {
+    if (canScroll()) {
       const bounds = gallery.getBoundingClientRect();
       const card = cards[index].getBoundingClientRect();
       target = index;
@@ -271,7 +275,7 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
       scheduleRotation();
     }
     const card=event.target.closest("[data-accordion-branch]");
-    if (card && cards.includes(card)) preview(cards.indexOf(card));
+    if (!feature && card && cards.includes(card)) preview(cards.indexOf(card));
   });
   gallery.addEventListener("pointerleave", () => {
     hovered = false;
@@ -283,11 +287,11 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
   }
   gallery.addEventListener("touchstart", stopForGesture, {passive:true});
   gallery.addEventListener("wheel", event => {
-    if (mobile.matches && Math.abs(event.deltaX) > Math.abs(event.deltaY)) stopForGesture();
+    if (canScroll() && Math.abs(event.deltaX) > Math.abs(event.deltaY)) stopForGesture();
   }, {passive:true});
 
   cards.forEach((card, index) => {
-    card.addEventListener("focus", () => {
+    card.addEventListener("focusin", () => {
       pauseRotation();
       preview(index);
     });
@@ -302,9 +306,10 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     pauseRotation();
     goTo(index);
   }));
+  accordion.addEventListener("branch:scene-enter",revealCTA);
   revealCTA();
   gallery.addEventListener("scroll", () => {
-    if (mobile.matches && !frame) frame = requestAnimationFrame(previewCenteredCard);
+    if (canScroll() && !frame) frame = requestAnimationFrame(previewCenteredCard);
   }, { passive: true });
   mobile.addEventListener("change", previewCenteredCard);
   previewCenteredCard();
