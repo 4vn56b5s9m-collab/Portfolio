@@ -53,8 +53,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=especialidades-cards">
-<script defer src="portfolio-interactions.js?v=especialidades-cards"></script>
+<link rel="stylesheet" href="portfolio.css?v=especialidades-original">
+<script defer src="portfolio-interactions.js?v=especialidades-original"></script>
 <script src="site-preferences.js?v=contraste-escenas"></script>
 </head>
 <body>
@@ -164,89 +164,6 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
           </svg>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-  <section class="specialty-selector accordion-specialties feature-specialties" id="especialidades-en-detalle" aria-labelledby="feature-title" data-specialty-accordion data-lit-piece="0">
-  <div class="specialty-inner">
-    <h2 id="feature-title">Cada proyecto<br class="specialty-mobile-break"> pide algo<br class="specialty-mobile-break"> distinto.</h2>
-    <div class="feature-segments" role="group" aria-label="Elegir especialidad">
-      <span class="feature-segment-indicator" aria-hidden="true"></span>
-      <button type="button" data-feature-segment="0" aria-controls="feature-gallery" aria-current="true">UI y Behavioral Design</button>
-      <button type="button" data-feature-segment="1" aria-controls="feature-gallery">Motion e inmersión</button>
-      <button type="button" data-feature-segment="2" aria-controls="feature-gallery">Formación de equipos</button>
-      <button type="button" data-feature-segment="3" aria-controls="feature-gallery">Sistemas de diseño</button>
-    </div>
-    <div class="branch-carousel">
-      <div class="accordion-branches" id="feature-gallery" role="group" aria-label="Vistas de especialidades">
-        <a href="especialidades/ui-behavioral-design/" data-accordion-branch="0" class="is-previewed">
-          <div class="branch-card-copy"><strong>UI y Behavioral Design</strong><span>Interfaces claras en el momento de decidir.</span></div>
-          <span class="branch-arrow" aria-hidden="true">↗</span>
-          <div class="feature-art"><div class="branch-scene behavioral-scene">
-          <svg class="scene-floor" aria-hidden="true">
-    <text class="scene-back" text-anchor="middle">Guía al usuario</text>
-    <text class="scene-front" text-anchor="middle">Facilita el siguiente paso</text>
-  </svg>
-          <canvas data-branch-canvas="behavioral" role="img" aria-label="Guía al usuario y facilita el siguiente paso. Un camino de piezas conecta dos puertas y conduce a la salida de la derecha."></canvas>
-        </div></div>
-        </a>
-        <a href="especialidades/motion-e-inmersion/" data-accordion-branch="1">
-          <div class="branch-card-copy"><strong>Motion e inmersión</strong><span>Microinteracciones que guían la atención.</span></div>
-          <span class="branch-arrow" aria-hidden="true">↗</span>
-          <div class="feature-art"><div class="branch-scene focus-scene">
-          <svg class="scene-floor focus-floor" aria-hidden="true">
-  <defs>
-    <clipPath id="feature-focus-mask-back"><rect/></clipPath>
-    <clipPath id="feature-focus-mask-front"><rect/></clipPath>
-  </defs>
-  <g class="focus-type scene-back"><text text-anchor="middle">Una microinteracción</text><text class="focus-ink" text-anchor="middle" clip-path="url(#feature-focus-mask-back)">Una microinteracción</text></g>
-  <g class="focus-type scene-front"><text text-anchor="middle">puede cambiar tu foco de atención</text><text class="focus-ink" text-anchor="middle" clip-path="url(#feature-focus-mask-front)">puede cambiar tu foco de atención</text></g>
-  <g class="focus-dot"><circle class="system-halo" r="8"/><circle class="system-core" r="3.2"/></g>
-</svg>
-          <canvas data-branch-canvas="focus" role="img" aria-label="Una microinteracción puede cambiar tu foco de atención."></canvas>
-        </div></div>
-        </a>
-        <a href="especialidades/liderazgo-y-formacion/" data-accordion-branch="2">
-          <div class="branch-card-copy"><strong>Formación de equipos de diseño</strong><span>Práctica compartida para elevar el nivel del equipo.</span></div>
-          <span class="branch-arrow" aria-hidden="true">↗</span>
-          <div class="feature-art"><div class="branch-scene training-scene">
-          <svg class="scene-floor" aria-hidden="true">
-  <defs><radialGradient id="feature-training-shadow"><stop stop-color="#06090b" stop-opacity=".87"/><stop offset="1" stop-color="#06090b" stop-opacity="0"/></radialGradient></defs>
-  <ellipse class="scene-shadow" fill="url(#feature-training-shadow)"/><ellipse class="scene-shadow" fill="url(#feature-training-shadow)"/><ellipse class="scene-shadow" fill="url(#feature-training-shadow)"/>
-  <text class="scene-back" text-anchor="middle">Comparte el criterio</text>
-  <text class="scene-front" text-anchor="middle">Eleva el nivel del equipo</text>
-</svg>
-          <canvas data-branch-canvas="training" role="img" aria-label="Tres torres de altura creciente, con tres piezas concéntricas cada una"></canvas>
-        </div></div>
-        </a>
-        <a href="especialidades/sistemas-de-diseno/" data-accordion-branch="3">
-          <div class="branch-card-copy"><strong>Sistemas de diseño para múltiples marcas</strong><span>Una base común que cada marca puede adaptar.</span></div>
-          <span class="branch-arrow" aria-hidden="true">↗</span>
-          <div class="feature-art"><div class="branch-scene systems-scene">
-          <svg class="scene-floor" aria-hidden="true">
-  <defs><radialGradient id="feature-systems-shadow"><stop stop-color="#06090b" stop-opacity=".87"/><stop offset="1" stop-color="#06090b" stop-opacity="0"/></radialGradient></defs>
-  <ellipse class="scene-shadow" fill="url(#feature-systems-shadow)"/><ellipse class="scene-shadow" fill="url(#feature-systems-shadow)"/><ellipse class="scene-shadow" fill="url(#feature-systems-shadow)"/><ellipse class="scene-shadow" fill="url(#feature-systems-shadow)"/>
-  <text class="scene-back" text-anchor="middle">Una base común</text>
-  <text class="scene-front" text-anchor="middle">Distintas marcas</text>
-</svg>
-          <canvas data-branch-canvas="systems" role="img" aria-label="Un cubo se integra en un marco, el marco en una tarjeta y la tarjeta en una interfaz"></canvas>
-          <svg class="system-connectors" aria-hidden="true">
-            <g><path class="system-track"/><path class="system-fill" pathLength="1"/></g>
-            <g><path class="system-track"/><path class="system-fill" pathLength="1"/></g>
-            <g><path class="system-track"/><path class="system-fill" pathLength="1"/></g>
-            <g class="system-pulse"><circle class="system-halo" r="8"/><circle class="system-core" r="2.6"/></g>
-          </svg>
-        </div></div>
-        </a>
-      </div>
-    <button class="branch-nav branch-prev" type="button" data-branch-step="-1" aria-label="Especialidad anterior" aria-controls="feature-gallery">‹</button>
-    <button class="branch-nav branch-next" type="button" data-branch-step="1" aria-label="Especialidad siguiente" aria-controls="feature-gallery">›</button>
-    </div>
-    <div class="branch-pagination" role="group" aria-label="Elegir especialidad">
-      <button type="button" aria-label="UI y Behavioral Design" data-branch-page="0" aria-controls="feature-gallery" aria-current="true"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
-      <button type="button" aria-label="Motion e inmersión" data-branch-page="1" aria-controls="feature-gallery"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
-      <button type="button" aria-label="Formación de equipos de diseño" data-branch-page="2" aria-controls="feature-gallery"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
-      <button type="button" aria-label="Sistemas de diseño para múltiples marcas" data-branch-page="3" aria-controls="feature-gallery"><span class="branch-progress" aria-hidden="true"><span></span></span></button>
     </div>
   </div>
 </section>
