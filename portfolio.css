@@ -311,3 +311,19 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 
 .focus-floor .focus-ink{fill:#82cedc}
 .focus-dot{filter:drop-shadow(0 0 6px #7dd9ec)}
+
+.site-menu-toggle{display:none}
+@media(max-width:700px){
+  .intro-fold .hero-title{display:contents}
+  .intro-fold .hero #saludo,.intro-fold .hero .tagline{order:0}
+  .intro-fold .hero .hero-visual{order:1}
+  .intro-fold .hero .hero-rotation{order:2;width:min(100%,23rem);margin-top:.15rem}
+  .site-header.has-mobile-menu{flex-wrap:nowrap;gap:.65rem}
+  .site-header.has-mobile-menu .site-name{font-size:clamp(1.18rem,4.5vw,1.5rem)}
+  .site-menu-toggle{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:0;color:#f4f2ed;background:transparent;border:1px solid #ffffff45;border-radius:.65rem;cursor:pointer}
+  .site-menu-toggle svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round}
+  .site-menu-toggle:focus-visible{outline:2px solid #b1e6df;outline-offset:2px}
+  .site-header.has-mobile-menu nav{display:none;position:absolute;top:100%;inset-inline:0;flex-direction:column;align-items:stretch;gap:0;padding:.35rem var(--gutter) .7rem;background:#171719;border-bottom:1px solid #ffffff30;box-shadow:0 .65rem 1.8rem #0005}
+  .site-header.has-mobile-menu.is-menu-open nav{display:flex}
+  .site-header.has-mobile-menu nav a{display:flex;align-items:center;min-height:44px}
+}

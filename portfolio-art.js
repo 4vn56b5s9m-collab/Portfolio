@@ -489,7 +489,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const reduced=matchMedia("(prefers-reduced-motion: reduce)");
   let renderer, frame=0, started=0, visible=false, captionWidth=0;
   const captionBounds=[];
-  const duration=focus?3400:behavioral?2130:training?2170:3000;
+  const duration=focus?3400:behavioral?2130:training?1810:2350;
   function draw(now) {
     frame=0;
     if (!visible) return;
@@ -504,20 +504,20 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     ];
     renderer.clear({width,height});
     renderer.render(scale,models.map(model=>{
-      const delay=model.delay??(training?model.stage*470+model.layer*155
-        :systems?model.stage*580+model.layer*101
+      const delay=model.delay??(training?model.stage*330+model.layer*125
+        :systems?model.stage*450+model.layer*68
         :model.stage*(focus?190:370));
-      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/(training?870:systems?490:420)));
+      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/(training?875:systems?395:420)));
       const remaining=1-progress;
       const settled=1-remaining**3;
       const eased=progress*progress*progress*(progress*(progress*6-15)+10);
       const drift=1-eased;
       const [x,y,z]=model.position;
-      const growth=training?Math.max(.015,1-3.5*remaining**3+2.5*remaining**2)
+      const growth=training?Math.max(.015,1-remaining**1.55*Math.exp(-2.35*progress)*Math.cos(progress*Math.PI*5))
         :systems?Math.max(.06,eased):1;
       return {
         origin:model.origin,
-        position:systems?[x+drift*.18,y+drift*.24,z+drift*.29]
+        position:systems?[x,y,z+drift*.48]
           :[x,y-(training?0:remaining*.16),z],
         opacity:training||systems?Number(progress>0):settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
@@ -590,7 +590,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         const end=footprints[index+1].left-.17;
         const [x1,y1]=project(start,-.44,0), [x2,y2]=project(end,-.44,0);
         const path=end>start?`M${x1},${y1} L${x2},${y2}`:"";
-        const elapsedRatio=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-270-index*580)/310));
+        const elapsedRatio=reduced.matches?1:Math.max(0,Math.min(1,(elapsed-190-index*450)/260));
         const progress=elapsedRatio*elapsedRatio*(3-2*elapsedRatio);
         track.setAttribute("d",path);
         fills[index].setAttribute("d",path);
