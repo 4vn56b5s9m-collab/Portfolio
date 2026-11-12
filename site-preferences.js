@@ -357,6 +357,8 @@
 
   function translateDocument() {
     if (language !== "en") return;
+    const pageCopy = document.getElementById("page-translations");
+    if (pageCopy) Object.assign(copy, JSON.parse(pageCopy.textContent));
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       if (node.parentElement.closest("script,style,noscript")) continue;
