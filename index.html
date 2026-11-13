@@ -53,7 +53,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=cards-parrafo">
+<link rel="stylesheet" href="portfolio.css?v=desktop-specialties">
 <script defer src="portfolio-interactions.js?v=cards-lectura"></script>
 <script src="site-preferences.js?v=contraste-escenas"></script>
 </head>
@@ -93,9 +93,10 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     </div>
   </section>
   </div>
-  <section class="specialty-selector accordion-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
+  <div id="especialidades">
+  <section class="specialty-selector accordion-specialties mobile-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
-    <h2 id="especialidades" tabindex="-1">Cada proyecto<br class="specialty-mobile-break"> pide algo<br class="specialty-mobile-break"> distinto.</h2>
+    <h2 id="mobile-specialties-title" tabindex="-1">Cada proyecto<br class="specialty-mobile-break"> pide algo<br class="specialty-mobile-break"> distinto.</h2>
     <div class="branch-carousel">
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
       <article data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>UI y Behavioral Design</strong><p class="branch-card-description">Diseño interfaces claras en el momento de decidir, para guiar al usuario y facilitar el siguiente paso.</p></div><a class="branch-card-cta" href="especialidades/ui-behavioral-design/">UI y Behavioral Design <b aria-hidden="true">↗</b></a></article>
@@ -169,7 +170,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 </section>
   <section class="specialty-selector accordion-specialties feature-specialties" id="especialidades-en-detalle" aria-labelledby="feature-title" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
-    <h2 id="feature-title">Cada proyecto<br class="specialty-mobile-break"> pide algo<br class="specialty-mobile-break"> distinto.</h2>
+    <h2 id="feature-title" tabindex="-1">Cada proyecto<br class="specialty-mobile-break"> pide algo<br class="specialty-mobile-break"> distinto.</h2>
     <div class="branch-carousel">
       <div class="accordion-branches" id="feature-gallery" role="group" aria-label="Vistas de especialidades">
         <article data-accordion-branch="0" class="is-previewed">
@@ -243,6 +244,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
     </div>
   </div>
 </section>
+  </div>
   <section class="notes" id="trayectoria">
     <h2>Distintos proyectos, el mismo criterio.</h2>
     <p>He diseñado productos para e-commerce, seguros, aprendizaje y servicio técnico. Combino diseño de interfaz, prototipado y trabajo con equipos para que lo que se decide pueda llegar a producción.</p>
@@ -275,9 +277,10 @@ const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
 const slot=hero.querySelector(".hero-visual");
 const introCue=document.querySelector(".intro-next");
-const specialtiesTitle=document.querySelector("#especialidades");
+const mobileSpecialtiesTitle=document.querySelector("#mobile-specialties-title");
+const desktopSpecialtiesTitle=document.querySelector("#feature-title");
 const cardLayout=matchMedia("(max-width:700px)");
-const specialtySection=specialtiesTitle.closest("[data-specialty-accordion]");
+const specialtySection=mobileSpecialtiesTitle.closest("[data-specialty-accordion]");
 const specialtyCards=[...specialtySection.querySelectorAll("[data-accordion-branch]")];
 const specialtyPanels=[...specialtySection.querySelectorAll("[data-accordion-panel]")];
 const specialtyScenes=specialtyPanels.map(panel=>panel.querySelector(".branch-scene"));
@@ -422,6 +425,7 @@ introCue.querySelector("a").addEventListener("click",event=>{
   if (event.metaKey||event.ctrlKey||event.shiftKey||event.altKey) return;
   event.preventDefault();
   introCue.classList.add("is-away");
+  const specialtiesTitle=cardLayout.matches?mobileSpecialtiesTitle:desktopSpecialtiesTitle;
   specialtiesTitle.focus({preventScroll:true});
   specialtiesTitle.scrollIntoView({behavior:reduced.matches?"instant":"smooth",block:"start"});
 });
