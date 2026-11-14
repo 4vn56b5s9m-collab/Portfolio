@@ -134,7 +134,7 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .contact-status:empty{display:none}
 @media(max-width:700px){.contact-item a{font-size:1rem}}
 
-.site-header nav a[aria-current=page]{text-decoration:underline;text-underline-offset:.35em}
+.site-header nav a[aria-current=page]{text-decoration:underline;text-decoration-color:var(--nav-accent,#165a56);text-underline-offset:.35em}
 .specialty-selector{background:#171719;color:#f4f2ed;padding:clamp(3.5rem,8vw,7rem) var(--reading-padding)}
 .specialty-inner{width:min(100%,calc(var(--reading-width) - 2 * var(--reading-padding)));margin-inline:auto}
 .specialty-inner h2{font:400 clamp(2.8rem,6vw,5.8rem)/.95 var(--display);margin:0 0 1.65rem}
@@ -668,17 +668,19 @@ html[lang=en] .interior-hero span[lang=es],html:not([lang=en]) .interior-hero sp
 
 .career-cta{display:inline-flex;align-items:center;gap:.65rem;min-height:44px;margin-top:calc(1.5rem + 24px);padding:.55rem 1rem;border:1px solid #25737d;border-radius:.7rem;background:#194653;color:#fff;text-decoration:none;font-weight:600}
 .career-cta:is(:hover,:focus-visible){background:#246070}
+.site-header{--nav-accent:#165a56;--nav-hover:#165a561a}
+[data-theme=dark] .site-header{--nav-accent:#3bc4bc;--nav-hover:#3bc4bc24}
 .site-header:has(.site-contact-icons){column-gap:clamp(.35rem,1vw,1rem)}
-.site-header:has(.site-contact-icons) nav{margin-inline-start:auto;column-gap:clamp(.55rem,1.15vw,1.1rem)}
+.site-header:has(.site-contact-icons) nav{margin-inline-start:auto;column-gap:calc(clamp(.55rem,1.15vw,1.1rem) + 16px)}
 .site-header:has(.site-contact-icons) .site-language{margin-inline-start:0}
 .site-contact-icons{display:flex;align-items:center;margin-inline-start:auto}
 .site-contact-icons a{display:grid;place-items:center;width:44px;height:44px;border-radius:.7rem;color:inherit}
-.site-contact-icons a:is(:hover,:focus-visible){background:var(--selection-surface);color:var(--selection-ink)}
+.site-contact-icons a:is(:hover,:focus-visible){background:var(--nav-hover);color:var(--nav-accent)}
 .site-contact-icons svg{width:20px;height:20px}
 @media(701px <= width <= 960px){.site-header:has(.site-contact-icons){padding-inline:1.25rem}}
 @media(max-width:700px){
   .site-header.has-mobile-menu:has(.site-contact-icons){text-align:start;gap:.35rem}
-  .site-header.has-mobile-menu:has(.site-contact-icons) .site-menu-toggle{margin-inline-start:0}
+  .site-header.has-mobile-menu:has(.site-contact-icons) .site-menu-toggle{margin-inline-start:16px}
 }
 
 .site-floating-preferences{position:fixed;z-index:9;top:calc(var(--nav-height,70px) + .45rem);right:var(--gutter);display:flex;align-items:center;gap:.5rem;transition:transform .24s ease,opacity .24s ease}
