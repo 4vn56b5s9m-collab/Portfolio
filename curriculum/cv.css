@@ -250,12 +250,6 @@
   .cv-profile-disciplines.has-rise-entries [data-profile-slide].is-in-view{
     transform:translate3d(0,0,0);opacity:1;transition:transform .3s ease-out,opacity 0s
   }
-  .cv-switch-panel :is(.cv-row,.cv-skills>div){color:var(--cv-muted);transition:color .25s ease}
-  .cv-switch-panel :is(.cv-row,.cv-skills>div).is-reading{color:inherit}
-  .cv-switch-panel .cv-row:not(.is-reading) strong{color:inherit}
-}
-@media(prefers-reduced-motion:reduce){
-  .cv-switch-panel :is(.cv-row,.cv-skills>div){transition:none}
 }
 @media print{
   .cv-profile-disciplines.has-rise-entries [data-profile-slide]{opacity:1;transform:none}
@@ -286,7 +280,6 @@
 .cv-switch-panel{--cv-row-primary:#42464a;--cv-row-secondary:#4b5054;--cv-row-accent:#165a56}
 [data-theme=dark] .cv-switch-panel{--cv-row-primary:#cdd1d5;--cv-row-secondary:#b4bcc2;--cv-row-accent:#3bc4bc}
 .cv .cv-switch-panel :is(.cv-row,.cv-skills>div){color:var(--cv-row-secondary)}
-.cv .cv-switch-panel :is(.cv-row,.cv-skills>div).is-reading,
 .cv .cv-switch-panel :is(.cv-row,.cv-skills>div) h3{color:var(--cv-row-primary)}
 @media(hover:hover){
   .cv .cv-switch-panel .cv-row:is(:hover,:focus-within) :is(h3,.cv-copy strong),
@@ -313,3 +306,8 @@
 .home-profile .cv-profile-disciplines{margin-block:clamp(1.5rem,4vw,3.5rem)}
 @media(min-width:701px){.home-profile .cv-profile-disciplines{margin-block:clamp(1.125rem,3vw,2.625rem)}}
 html[lang=en] .home-profile .scroll-heading span[lang=es],html:not([lang=en]) .home-profile .scroll-heading span[lang=en]{display:none}
+
+@media(max-width:700px){
+  .cv .cv-switch-panel :is(.cv-row,.cv-skills>div),
+  .cv .cv-switch-panel :is(.cv-row,.cv-skills>div) h3{color:var(--cv-row-primary)}
+}
