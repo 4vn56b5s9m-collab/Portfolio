@@ -71,7 +71,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   background:radial-gradient(ellipse at 78% 10%,#173b3d,transparent 70%),#171719
 }
 .training-band .notes.home-training{background:transparent}
-.training-band .home-training details{background:var(--training-surface)}
+
 .home-portfolio{padding-block-end:clamp(3rem,6vw,5rem)}
 .home-case{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(1rem,4vw,3rem);margin-top:2rem}
 .home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:1rem;background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
@@ -91,6 +91,9 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}
 .notes #home-training-title{max-width:none;white-space:nowrap;font-size:clamp(1.45rem,6vw,5.6rem)}
+.training-band .home-training-preview{display:block;padding:var(--training-card-padding);border:1px solid var(--training-rule);border-radius:calc(var(--action-radius) + var(--training-card-padding));background:var(--training-surface)}
+.home-training-preview h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0}
+.home-training-preview a{display:inline-block;margin-top:1rem;color:var(--training-accent);text-underline-offset:.2em}
 </style>
 <link rel="stylesheet" href="portfolio.css?v=training-radii">
 <script defer src="portfolio-interactions.js?v=specialty-controls"></script>
@@ -291,43 +294,11 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
   <section class="notes home-training" aria-labelledby="home-training-title">
     <h2 id="home-training-title"><span lang="es">Formación para empresas</span><span lang="en">Training for companies</span></h2>
     <div class="home-training-areas">
-      <details name="home-training">
-        <summary><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Figma and design systems</span></summary>
-        <div class="home-training-content">
-          <p><span lang="es">Organiza tus archivos y crea una <strong>base común de diseño</strong> para el equipo.</span><span lang="en">Organize your files and build a <strong>shared design foundation</strong> for the team.</span></p>
-          <ul>
-            <li><span lang="es">Frames, auto layout y organización de archivos.</span><span lang="en">Frames, auto layout and file organization.</span></li>
-            <li><span lang="es"><strong>Componentes y variables</strong> para reutilizar patrones de interfaz.</span><span lang="en"><strong>Components and variables</strong> for reusable interface patterns.</span></li>
-            <li><span lang="es">Criterios para documentar y mantener un sistema de diseño.</span><span lang="en">Guidelines for documenting and maintaining a design system.</span></li>
-          </ul>
-          <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Uso%20de%20Figma%20y%20sistemas%20de%20dise%C3%B1o"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
-        </div>
-      </details>
-      <details name="home-training">
-        <summary><span lang="es">Microinteracciones y foco de atención con Behavioral design</span><span lang="en">Microinteractions and attention with behavioral design</span></summary>
-        <div class="home-training-content">
-          <p><span lang="es">Diseña interacciones que ayuden a entender <strong>qué ha cambiado y dónde seguir</strong>.</span><span lang="en">Design interactions that clarify <strong>what changed and where to go next</strong>.</span></p>
-          <ul>
-            <li><span lang="es">Jerarquía visual y señales para orientar la atención.</span><span lang="en">Visual hierarchy and cues to guide attention.</span></li>
-            <li><span lang="es"><strong>Transiciones y estados</strong> que dan continuidad a cada acción.</span><span lang="en"><strong>Transitions and states</strong> that maintain continuity across actions.</span></li>
-            <li><span lang="es">Prototipos interactivos para probar el ritmo y el foco.</span><span lang="en">Interactive prototypes to test timing and focus.</span></li>
-          </ul>
-          <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Microinteracciones%20y%20foco%20de%20atenci%C3%B3n%20con%20Behavioral%20design"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
-        </div>
-      </details>
-      <details name="home-training">
-        <summary><span lang="es">IA y agentes automatizados</span><span lang="en">AI and automated agents</span></summary>
-        <div class="home-training-content">
-          <p><span lang="es">Integra la IA en el flujo de diseño y decide <strong>qué automatizar y qué revisar</strong>.</span><span lang="en">Bring AI into your design workflow and decide <strong>what to automate and what to review</strong>.</span></p>
-          <ul>
-            <li><span lang="es">IA aplicada a exploración, contenidos y documentación.</span><span lang="en">AI for exploration, content and documentation.</span></li>
-            <li><span lang="es"><strong>Agentes conectados</strong> para encadenar tareas de diseño.</span><span lang="en"><strong>Connected agents</strong> for multi-step design tasks.</span></li>
-            <li><span lang="es">Puntos de revisión y validación antes de entregar.</span><span lang="en">Review and validation checkpoints before handoff.</span></li>
-          </ul>
-          <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20IA%20y%20agentes%20automatizados"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
-        </div>
-      </details>
+      <article class="home-training-preview"><h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Figma and design systems</span></h3><a href="./formaciones-a-empresas/#figma-sistemas"><span lang="es">Ver contenidos de esta formación</span><span lang="en">See what this training covers</span> <span aria-hidden="true">↗</span></a></article>
+      <article class="home-training-preview"><h3><span lang="es">Microinteracciones y foco de atención con Behavioral design</span><span lang="en">Microinteractions and attention with behavioral design</span></h3><a href="./formaciones-a-empresas/#microinteracciones"><span lang="es">Ver contenidos de esta formación</span><span lang="en">See what this training covers</span> <span aria-hidden="true">↗</span></a></article>
+      <article class="home-training-preview"><h3><span lang="es">IA y agentes automatizados</span><span lang="en">AI and automated agents</span></h3><a href="./formaciones-a-empresas/#ia-agentes"><span lang="es">Ver contenidos de esta formación</span><span lang="en">See what this training covers</span> <span aria-hidden="true">↗</span></a></article>
     </div>
+    <a class="career-cta" href="./formaciones-a-empresas/#programas"><span lang="es">Ver el programa de las formaciones</span><span lang="en">View the training programme</span> <span aria-hidden="true">↗</span></a>
   </section>
   </div>
   <section class="notes" id="trayectoria">
