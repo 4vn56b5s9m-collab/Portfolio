@@ -13,7 +13,8 @@
   const savedTheme = read("portfolio-theme");
   let chosenTheme = ["light", "dark"].includes(savedTheme) ? savedTheme : null;
   const copy = {
-  "Contactar en LinkedIn": "Contact on LinkedIn",
+  "Llamar": "Call",
+  "Enviar correo": "Send email",
   "Behavioral design": "Behavioral design",
   "Especialidades": "Specialties",
   "Decisiones más claras": "Clearer decisions",
@@ -393,7 +394,6 @@
       location.replace(url);
     });
     label.append(select);
-    nav.append(label);
     [...nav.children].forEach((item, index) => item.style.setProperty("--menu-order", index));
 
     themeButton = document.createElement("button");
@@ -405,7 +405,19 @@
       save("portfolio-theme", chosenTheme);
       applyTheme();
     });
-    document.body.append(themeButton);
+    const preferences = document.createElement("div");
+    preferences.className = "site-floating-preferences";
+    preferences.append(label, themeButton);
+    document.body.append(preferences);
+    let previousY = Math.max(0, window.scrollY);
+    window.addEventListener("scroll", () => {
+      const y = Math.max(0, window.scrollY);
+      if (y && Math.abs(y - previousY) < 5) return;
+      const hidden = y > 48 && y > previousY && !preferences.contains(document.activeElement);
+      preferences.classList.toggle("is-tucked", hidden);
+      preferences.inert = hidden;
+      previousY = y;
+    }, {passive:true});
     applyTheme();
   });
 })();
