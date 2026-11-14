@@ -3,7 +3,10 @@
 .cv-hero{overflow:hidden;background:radial-gradient(ellipse at 78% 45%,#234249 0%,transparent 57%),#171719;color:#f4f2ed}
 [data-theme=light] .cv-hero{background:radial-gradient(ellipse at 78% 45%,#d2e2dd 0%,transparent 63%),#eee9db;color:#171719}
 .cv-hero-inner{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(8rem,.65fr);align-items:center;gap:2rem;padding-block:clamp(3.8rem,8vw,7.25rem)}
-.cv .cv-hero h1{font-size:clamp(3.25rem,7.3vw,7.25rem);max-width:12ch}
+.cv .cv-hero h1,.detail .interior-hero h1{font-size:clamp(3.25rem,7.3vw,7.25rem);max-width:12ch}
+.detail .interior-hero h1{font-family:var(--display);font-weight:400;line-height:1.02}
+.detail .interior-hero p{color:inherit}
+@media(max-width:700px){.detail .interior-hero h1{font-size:clamp(2.5rem,9vw,4.5rem)}}
 .cv-hero p{margin-top:1.25rem;max-width:42ch;font-size:clamp(1rem,1.75vw,1.26rem);color:var(--cv-accent)}
 .cv-section{padding-block:clamp(2.6rem,6vw,5rem) 0}
 .cv-section:last-child{padding-bottom:clamp(3rem,7vw,6rem)}
