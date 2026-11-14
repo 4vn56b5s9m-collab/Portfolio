@@ -113,7 +113,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 [data-theme=dark] .training-band{background:radial-gradient(ellipse at 79% 15%,#24545c,transparent 72%),radial-gradient(ellipse at 12% 88%,#173e48,transparent 65%),#171719}
 .site-footer#contacto{border-top:1px solid var(--line)}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=overlap-scroll-fill">
+<link rel="stylesheet" href="portfolio.css?v=contact-cards">
 <link rel="stylesheet" href="curriculum/cv.css?v=profile-home">
 <script defer src="curriculum/profile-scroll.js?v=fill-80"></script>
 <script defer src="portfolio-interactions.js?v=home-finish"></script>
@@ -373,10 +373,16 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   <div class="footer-inner">
     <h2 class="scroll-heading"><span lang="es">¿Cómo puedo aportar a <em class="story-accent">tu proyecto</em> o a <em class="story-accent">tu equipo de diseño</em>?</span><span lang="en">How can I help <em class="story-accent">your project</em> or <em class="story-accent">your design team</em>?</span></h2>
     <p><span lang="es">Cuéntame qué estáis diseñando o qué queréis mejorar y vemos cómo puedo ayudar.</span><span lang="en">Tell me what you’re designing or what you’d like to improve, and we can see where I can help.</span></p>
-    <nav class="contact-blocks home-contact-blocks" aria-label="Opciones de contacto">
-      <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span lang="es">Hablemos en LinkedIn</span><span lang="en">Let’s talk on LinkedIn</span><span aria-hidden="true">↗</span></a>
-      <div class="contact-item"><a href="mailto:alejandrosanchezbretones@gmail.com"><span lang="es">Escríbeme por correo</span><span lang="en">Email me</span><span aria-hidden="true">↗</span></a></div>
-      <div class="contact-item"><a href="tel:+34648246290"><span class="contact-value">+34 648 246 290</span></a><button type="button" class="contact-copy" data-copy-contact data-copied-es="Teléfono copiado" data-copied-en="Phone number copied" aria-label="Copiar número de teléfono" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button></div>
+    <nav class="contact-blocks contact-cards" aria-label="Opciones de contacto">
+      <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span class="contact-label"><span lang="es">Hablemos en LinkedIn</span><span lang="en">Let’s talk on LinkedIn</span></span><span aria-hidden="true">↗</span></a>
+      <div class="contact-item">
+        <a href="mailto:alejandrosanchezbretones@gmail.com"><span class="contact-label"><span lang="es">Escríbeme por correo</span><span lang="en">Email me</span><small class="contact-value">alejandrosanchezbretones@gmail.com</small></span></a>
+        <button type="button" class="contact-copy" data-copy-contact data-copied-es="Correo copiado" data-copied-en="Email address copied" aria-label="Copiar correo electrónico" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      </div>
+      <div class="contact-item">
+        <a href="tel:+34648246290"><span class="contact-label"><span lang="es">Hablemos en una llamada</span><span lang="en">Let’s talk on the phone</span><small class="contact-value">+34 648 246 290</small></span></a>
+        <button type="button" class="contact-copy" data-copy-contact data-copied-es="Teléfono copiado" data-copied-en="Phone number copied" aria-label="Copiar número de teléfono" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      </div>
     </nav>
     <p class="contact-status home-contact-toast" role="status" aria-live="polite"></p>
     <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a class="footer-return" href="#page-top"><span lang="es">Volver al inicio</span><span lang="en">Back to top</span><span aria-hidden="true">↑</span></a></div>
