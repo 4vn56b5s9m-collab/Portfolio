@@ -93,7 +93,10 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
 .notes #home-training-title{max-width:none;white-space:nowrap;font-size:clamp(1.45rem,6vw,5.6rem)}
 .training-band .home-training-preview{display:block;padding:var(--training-card-padding);border:1px solid var(--training-rule);border-radius:calc(var(--action-radius) + var(--training-card-padding));background:var(--training-surface)}
 .home-training-preview h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0}
-.home-training-preview a{display:inline-block;margin-top:1rem;color:var(--training-accent);text-underline-offset:.2em}
+.training-band .home-training-preview{display:flex;align-items:center;justify-content:space-between;gap:1rem;color:inherit;text-decoration:none}
+.training-preview-arrow{display:grid;place-items:center;flex:none;width:2.6rem;height:2.25rem;border:1px solid transparent;border-radius:999px;color:var(--training-accent);font-size:1.45rem}
+.training-band .home-training-preview:is(:hover,:focus-visible){border-color:#74c3b1}
+.home-training-preview:is(:hover,:focus-visible) .training-preview-arrow{background:#65d9b122;border-color:#65d9b13d}
 </style>
 <link rel="stylesheet" href="portfolio.css?v=training-radii">
 <script defer src="portfolio-interactions.js?v=specialty-controls"></script>
@@ -294,9 +297,9 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
   <section class="notes home-training" aria-labelledby="home-training-title">
     <h2 id="home-training-title"><span lang="es">Formación para empresas</span><span lang="en">Training for companies</span></h2>
     <div class="home-training-areas">
-      <article class="home-training-preview"><h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Figma and design systems</span></h3><a href="./formaciones-a-empresas/#figma-sistemas"><span lang="es">Ver contenidos de esta formación</span><span lang="en">See what this training covers</span> <span aria-hidden="true">↗</span></a></article>
-      <article class="home-training-preview"><h3><span lang="es">Microinteracciones y foco de atención con Behavioral design</span><span lang="en">Microinteractions and attention with behavioral design</span></h3><a href="./formaciones-a-empresas/#microinteracciones"><span lang="es">Ver contenidos de esta formación</span><span lang="en">See what this training covers</span> <span aria-hidden="true">↗</span></a></article>
-      <article class="home-training-preview"><h3><span lang="es">IA y agentes automatizados</span><span lang="en">AI and automated agents</span></h3><a href="./formaciones-a-empresas/#ia-agentes"><span lang="es">Ver contenidos de esta formación</span><span lang="en">See what this training covers</span> <span aria-hidden="true">↗</span></a></article>
+      <a class="home-training-preview" href="./formaciones-a-empresas/#figma-sistemas"><h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></h3><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
+      <a class="home-training-preview" href="./formaciones-a-empresas/#microinteracciones"><h3><span lang="es">Microinteracciones y Behavioral design</span><span lang="en">Microinteractions and behavioral design</span></h3><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
+      <a class="home-training-preview" href="./formaciones-a-empresas/#ia-agentes"><h3><span lang="es">Workflows con IA</span><span lang="en">AI workflows</span></h3><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
     </div>
     <a class="career-cta" href="./formaciones-a-empresas/#programas"><span lang="es">Ver el programa de las formaciones</span><span lang="en">View the training programme</span> <span aria-hidden="true">↗</span></a>
   </section>
