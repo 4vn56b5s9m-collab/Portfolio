@@ -7,7 +7,7 @@
 <title>Alejandro Sánchez Bretones · Portfolio</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
 <style>
-:root{color-scheme:light dark;--tiza:#f4f2ed;--onix:#171719;--petroleo:#124d56;--page:var(--tiza);--home-ink:var(--onix);--line:#bdb9af;--display:"Instrument Serif",Georgia,serif;--space:clamp(1.35rem,5vw,5rem)}
+:root{color-scheme:light dark;--tiza:#f4f2ed;--onix:#171719;--petroleo:#124d56;--page:var(--tiza);--home-ink:var(--onix);--line:#bdb9af;--display:"Instrument Serif",Georgia,serif;--space:var(--header-padding)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--home-ink);font-family:"Instrument Sans",system-ui,sans-serif}
 a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.25em}
@@ -36,7 +36,7 @@ h1{font:400 clamp(3.7rem,8.5vw,9rem)/.88 var(--display);letter-spacing:-.035em}
 
 .hero-copy{opacity:var(--hero-opacity,1);transform:translateY(var(--hero-offset,0px))}
 .hero-visual{height:clamp(15rem,38vw,31rem);min-width:0}
-.notes{padding:clamp(4rem,11vw,9rem) var(--space);max-width:75rem;margin:auto}
+.notes{padding:clamp(4rem,11vw,9rem) var(--reading-padding);max-width:var(--reading-width);margin:auto}
 .notes>p{font-size:clamp(1rem,1.65vw,1.25rem);line-height:1.55;max-width:58ch;margin-top:1.2rem}
 #trayectoria{--career-primary:#42464a;--career-secondary:#4b5054;--career-accent:#165a56;color:var(--career-primary)}
 [data-theme=dark] #trayectoria{--career-primary:#cdd1d5;--career-secondary:#b4bcc2;--career-accent:#3bc4bc}
@@ -58,21 +58,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   #trayectoria .career-list li:hover strong{color:var(--career-accent)}
 }
 .career-cta{display:inline-flex;align-items:center;gap:.65rem;min-height:44px;margin-top:calc(1.5rem + 24px);padding:.55rem 1rem;border:1px solid #25737d;border-radius:.7rem;background:#194653;color:#fff;text-decoration:none;font-weight:600}
-.home-training{padding-block-end:0;--training-accent:#165a56;--training-rule:#165a5666}
-[data-theme=dark] .home-training{--training-accent:#3bc4bc;--training-rule:#3bc4bc66}
-.home-training-areas{display:grid;gap:.75rem;margin-top:2rem}
-.home-training details{border:1px solid var(--training-rule);border-radius:.85rem}
-.home-training details[open]{border-color:var(--training-accent)}
-.home-training summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:clamp(1rem,2vw,1.65rem);cursor:pointer;list-style:none;font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display)}
-.home-training summary::-webkit-details-marker{display:none}
-.home-training summary::after{content:"+" / "";font:400 1.4rem/1 system-ui;color:var(--training-accent)}
-.home-training details[open]>summary::after{content:"−" / ""}
-.home-training-content{padding:0 clamp(1rem,2vw,1.65rem) clamp(1rem,2vw,1.65rem);line-height:1.55}
-.home-training-content p{margin:0}
-.home-training-content ul{margin:1rem 0 0;padding-inline-start:1.25rem}
-.home-training-content strong{font-weight:600}
-html[lang=en] .home-training span[lang=es],html:not([lang=en]) .home-training span[lang=en]{display:none}
-@media(max-width:700px){.home-training .career-cta{display:flex;justify-content:center;width:100%}}
+.home-training{padding-block-end:0}
 .home-portfolio{padding-block-end:0}
 .home-case{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(1rem,4vw,3rem);margin-top:2rem}
 .home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:1rem;background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
@@ -91,7 +77,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
-<link rel="stylesheet" href="portfolio.css?v=specialty-ivory">
+<link rel="stylesheet" href="portfolio.css?v=section-padding">
 <script defer src="portfolio-interactions.js?v=specialty-controls"></script>
 <script src="site-preferences.js?v=specialty-names"></script>
 </head>
@@ -298,7 +284,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
             <li><span lang="es"><strong>Componentes y variables</strong> para reutilizar patrones de interfaz.</span><span lang="en"><strong>Components and variables</strong> for reusable interface patterns.</span></li>
             <li><span lang="es">Criterios para documentar y mantener un sistema de diseño.</span><span lang="en">Guidelines for documenting and maintaining a design system.</span></li>
           </ul>
-          <a class="career-cta" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Uso%20de%20Figma%20y%20sistemas%20de%20dise%C3%B1o"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
+          <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Uso%20de%20Figma%20y%20sistemas%20de%20dise%C3%B1o"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
         </div>
       </details>
       <details name="home-training">
@@ -310,7 +296,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
             <li><span lang="es"><strong>Transiciones y estados</strong> que dan continuidad a cada acción.</span><span lang="en"><strong>Transitions and states</strong> that maintain continuity across actions.</span></li>
             <li><span lang="es">Prototipos interactivos para probar el ritmo y el foco.</span><span lang="en">Interactive prototypes to test timing and focus.</span></li>
           </ul>
-          <a class="career-cta" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Microinteracciones%20y%20foco%20de%20atenci%C3%B3n%20con%20Behavioral%20design"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
+          <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Microinteracciones%20y%20foco%20de%20atenci%C3%B3n%20con%20Behavioral%20design"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
         </div>
       </details>
       <details name="home-training">
@@ -322,7 +308,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
             <li><span lang="es"><strong>Agentes conectados</strong> para encadenar tareas de diseño.</span><span lang="en"><strong>Connected agents</strong> for multi-step design tasks.</span></li>
             <li><span lang="es">Puntos de revisión y validación antes de entregar.</span><span lang="en">Review and validation checkpoints before handoff.</span></li>
           </ul>
-          <a class="career-cta" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20IA%20y%20agentes%20automatizados"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
+          <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20IA%20y%20agentes%20automatizados"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
         </div>
       </details>
     </div>
