@@ -2,12 +2,12 @@
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Formaciones a empresas · Alejandro Sánchez Bretones</title><meta name="description" content="Formación para equipos de diseño que quieren alinear cómo trabajan, revisan y entregan sus proyectos.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
-<link rel="stylesheet" href="../portfolio.css?v=training-radii"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=specialty-names"></script>
+<link rel="stylesheet" href="../portfolio.css?v=selection-theme"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=specialty-names"></script>
 <style>
 .training-selector{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.2rem;padding:.25rem;margin:2rem auto 1.75rem;border:1px solid #bcbdb2;border-radius:999px}
 [data-theme=dark] .training-selector{border-color:#525e60}
 .training-page .training-selector a{display:grid;place-items:center;min-height:44px;padding:.4rem .55rem;text-align:center;text-decoration:none;border-radius:999px;font:600 1rem/1.2 "Instrument Sans",system-ui,sans-serif}
-.training-page .training-selector a[aria-current=true]{background:#bba374;color:#171719}
+.training-page .training-selector a[aria-current=true]{background:var(--selection-surface);color:var(--selection-ink)}
 .training-selector a:focus-visible{outline:2px solid currentColor;outline-offset:-3px}
 @media(max-width:540px){.training-selector{grid-template-columns:1fr;border-radius:24px}}
 .training-program{scroll-margin-top:calc(var(--nav-height,4.5rem) + 1rem);margin-block:0 2rem}
