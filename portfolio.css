@@ -519,17 +519,18 @@ body{font-size:1rem}
     background:#202628;color:#f4f2ed;text-decoration:none
   }
   .specialty-tile:nth-child(-n+2){background:linear-gradient(135deg,#203b3c,#202628 76%)}
-  .specialty-tile-copy{position:relative;z-index:1;padding-right:2.3rem}
+  .specialty-tile-copy{position:relative;z-index:1}
+  .specialty-tile-heading{display:flex;align-items:center;gap:24px}
   .specialty-tile h3{margin:0;font:400 clamp(1.8rem,3.2vw,3.25rem)/1.04 var(--display)}
   .specialty-tile p{margin:.45rem 0 0;font-size:1rem;color:#d1dedb}
   .specialty-tile .feature-art{
-    position:absolute;inset:0 0 0 auto;width:76%;
+    position:absolute;inset:auto 0 0 auto;width:76%;height:75%;
     pointer-events:none;opacity:0;transition:opacity .22s ease
   }
   .specialty-tile .feature-art .branch-scene{min-height:0;padding:0}
   .specialty-tile :is(.scene-back,.scene-front,.focus-dot){display:none}
   .specialty-tile-arrow{
-    position:absolute;z-index:2;right:.8rem;top:.8rem;display:grid;place-items:center;
+    flex:0 0 auto;display:grid;place-items:center;
     width:2.6rem;height:2.25rem;border:1px solid transparent;border-radius:999px;
     color:#65d9b1;font-size:1.45rem;transition:background .22s,border-color .22s
   }
