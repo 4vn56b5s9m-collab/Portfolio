@@ -292,3 +292,9 @@
   .cv .cv-switch-panel .cv-row:is(:hover,:focus-within) :is(h3,.cv-copy strong),
   .cv .cv-switch-panel .cv-skills>div:hover h3{color:var(--cv-row-accent)}
 }
+
+@media screen and (min-width:701px){
+  .cv-profile-disciplines{left:auto;margin-inline:0;width:auto;justify-items:start;text-align:left;font-size:clamp(2.2rem,7vw,7.5rem)}
+  .cv-profile-disciplines span{white-space:normal}
+  .cv-profile-disciplines.has-rise-entries [data-profile-slide].is-in-view{transition:transform .48s ease-out,opacity .4s ease-out}
+}
