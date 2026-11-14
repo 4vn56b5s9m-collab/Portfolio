@@ -76,7 +76,9 @@ html[lang=en] .home-portfolio span[lang=es],html:not([lang=en]) .home-portfolio 
 html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[lang=en]{display:none}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
-.notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
+.notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}
+.notes #home-training-title{max-width:none;white-space:nowrap;font-size:clamp(1.45rem,6vw,5.6rem)}
+</style>
 <link rel="stylesheet" href="portfolio.css?v=section-padding">
 <script defer src="portfolio-interactions.js?v=specialty-controls"></script>
 <script src="site-preferences.js?v=specialty-names"></script>
@@ -275,7 +277,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
   <section class="notes home-training" aria-labelledby="home-training-title">
     <h2 id="home-training-title"><span lang="es">Formación para empresas</span><span lang="en">Training for companies</span></h2>
     <div class="home-training-areas">
-      <details name="home-training" open>
+      <details name="home-training">
         <summary><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Figma and design systems</span></summary>
         <div class="home-training-content">
           <p><span lang="es">Organiza tus archivos y crea una <strong>base común de diseño</strong> para el equipo.</span><span lang="en">Organize your files and build a <strong>shared design foundation</strong> for the team.</span></p>
