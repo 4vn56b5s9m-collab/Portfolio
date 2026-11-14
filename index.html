@@ -114,8 +114,8 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 .site-footer#contacto{border-top:1px solid var(--line)}
 </style>
 <link rel="stylesheet" href="portfolio.css?v=contact-cards">
-<link rel="stylesheet" href="curriculum/cv.css?v=profile-home">
-<script defer src="curriculum/profile-scroll.js?v=fill-80"></script>
+<link rel="stylesheet" href="curriculum/cv.css?v=profile-headlines">
+<script defer src="curriculum/profile-scroll.js?v=profile-headlines"></script>
 <script defer src="portfolio-interactions.js?v=home-finish"></script>
 <script src="site-preferences.js?v=floating-prefs"></script>
 <script defer src="section-headings.js?v=3"></script>
@@ -158,19 +158,18 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   </div>
   <div class="cv home-profile">
   <div class="home-profile-inner">
-    <section class="cv-section cv-profile" aria-labelledby="perfil">
-      <h2 id="perfil" tabindex="-1">Perfil</h2>
-      <div class="cv-copy"><p class="cv-profile-story" data-profile-story>
-        <span class="cv-profile-fill" data-profile-fill><span>Diseño</span> <em>productos digitales</em> <span>combinando:</span></span>
-        <strong class="cv-profile-disciplines"><span data-profile-slide>Behavioral design</span> <span data-profile-slide>Sistemas de diseño</span> <span data-profile-slide>Motion e inmersión</span> <span data-profile-slide>Formación de equipos</span></strong>
-        <span class="cv-profile-fill" data-profile-fill><span>para que las</span> <em>interfaces sean claras y coherentes</em>.<br><br><span>Trabajo con</span> <em>clientes, producto y desarrollo</em><span>. También formo a equipos de diseño e investigo cómo integrar la IA en su trabajo.</span></span></p></div>
+    <section class="cv-profile" aria-labelledby="perfil" data-profile-story>
+      <h2 id="perfil" class="scroll-heading" tabindex="-1"><span lang="es">Diseño <em class="story-accent">productos digitales</em> combinando:</span><span lang="en">I design <em class="story-accent">digital products</em> by combining:</span></h2>
+      <div class="cv-profile-disciplines"><span data-profile-slide>Behavioral design</span> <span data-profile-slide>Sistemas de diseño</span> <span data-profile-slide>Motion e inmersión</span> <span data-profile-slide>Formación de equipos</span></div>
+      <h2 class="scroll-heading"><span lang="es">para que las <em class="story-accent">interfaces sean claras y coherentes, según las necesidades de cada proyecto</em>.</span><span lang="en">so that <em class="story-accent">interfaces are clear and consistent, tailored to each project’s needs</em>.</span></h2>
     </section>
   </div>
   </div>
-  <div id="especialidades">
+  <!-- Specialty cards are temporarily hidden and can be restored. -->
+  <div id="especialidades" hidden>
   <section class="specialty-selector accordion-specialties mobile-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
-    <h2 id="mobile-specialties-title" tabindex="-1" class="scroll-heading"><span lang="es">Combino estas disciplinas según las <em class="story-accent">necesidades de cada proyecto</em>.</span><span lang="en">I combine these disciplines according to <em class="story-accent">what each project needs</em>.</span></h2>
+
     <div class="branch-carousel">
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
       <article data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>Behavioral design</strong><p class="branch-card-description"><span lang="es">Diseño interfaces mediante sesgos cognitivos para guiar al usuario durante las tomas de decisión o navegación.</span><span lang="en">I design interfaces using cognitive biases to guide people as they make decisions or navigate.</span></p></div><a class="branch-card-cta" href="como-trabajo/?tema=ui-behavioral-design">Behavioral design <b aria-hidden="true">↗</b></a></article>
@@ -242,9 +241,9 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     </div>
   </div>
 </section>
-  <section class="specialty-selector feature-specialties" id="especialidades-en-detalle" aria-labelledby="feature-title">
+  <section class="specialty-selector feature-specialties" id="especialidades-en-detalle" aria-label="Especialidades">
     <div class="specialty-inner">
-      <h2 id="feature-title" tabindex="-1" class="scroll-heading"><span lang="es">Combino estas disciplinas según las <em class="story-accent">necesidades de cada proyecto</em>.</span><span lang="en">I combine these disciplines according to <em class="story-accent">what each project needs</em>.</span></h2>
+
       <div class="specialty-grid">
         <a class="specialty-tile" href="como-trabajo/?tema=ui-behavioral-design">
           <div class="specialty-tile-copy"><h3>Behavioral design</h3><p><span lang="es">Diseño interfaces mediante sesgos cognitivos para guiar al usuario durante las tomas de decisión o navegación.</span><span lang="en">I design interfaces using cognitive biases to guide people as they make decisions or navigate.</span></p></div>
@@ -395,10 +394,9 @@ const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
 const slot=hero.querySelector(".hero-visual");
 const introCue=document.querySelector(".intro-next");
-const mobileSpecialtiesTitle=document.querySelector("#mobile-specialties-title");
 const profileTitle=document.querySelector("#perfil");
 const cardLayout=matchMedia("(max-width:700px)");
-const specialtySection=mobileSpecialtiesTitle.closest("[data-specialty-accordion]");
+const specialtySection=document.querySelector(".mobile-specialties");
 const specialtyCards=[...specialtySection.querySelectorAll("[data-accordion-branch]")];
 const specialtyPanels=[...specialtySection.querySelectorAll("[data-accordion-panel]")];
 const specialtyScenes=specialtyPanels.map(panel=>panel.querySelector(".branch-scene"));
