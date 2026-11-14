@@ -2,7 +2,7 @@
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Formaciones a empresas · Alejandro Sánchez Bretones</title><meta name="description" content="Formación para equipos de diseño que quieren alinear cómo trabajan, revisan y entregan sus proyectos.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
-<link rel="stylesheet" href="../portfolio.css?v=compact-programs"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=specialty-names"></script>
+<link rel="stylesheet" href="../portfolio.css?v=program-heroes"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=specialty-names"></script>
 <style>
 .training-program{scroll-margin-top:calc(var(--nav-height,4.5rem) + 1rem);margin-block:0 2rem}
 .training-program h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0 0 .8rem}
@@ -14,14 +14,20 @@
 <main class="compact-program-page">
   <header class="compact-page-hero"><div class="wrap"><div>
     <h1><span lang="es">Formaciones a empresas</span><span lang="en">Training for companies</span></h1>
-    <p><span lang="es">Formación práctica para equipos de diseño, aplicada a sus proyectos.</span><span lang="en">Practical training for design teams, applied to their own projects.</span></p>
-  </div><span class="compact-isometry" aria-hidden="true"><i></i><i></i><i></i></span></div></header>
+    <p><span lang="es">Sesiones prácticas de Figma, comportamiento e IA sobre los proyectos de tu equipo.</span><span lang="en">Hands-on sessions in Figma, behavioral design and AI using your team’s own projects.</span></p>
+  </div><div class="cv-pillars" aria-hidden="true"><span class="cv-pillar cv-pillar-back"><i></i></span><span class="cv-pillar cv-pillar-left"><i></i></span><span class="cv-pillar cv-pillar-right"><i></i></span><span class="cv-pillar cv-pillar-front"><i></i></span></div></div></header>
   <section class="detail-section training-catalog home-training" id="programas"><div class="wrap">
-    <nav class="program-selector" data-program-selector aria-label="Formaciones" style="--segments:3">
+    <div class="program-selector-shell">
+<nav class="program-selector" data-program-selector aria-label="Formaciones" style="--segments:3">
       <a data-program="figma-sistemas" href="?tema=figma-sistemas"><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></a>
       <a data-program="microinteracciones" href="?tema=microinteracciones"><span lang="es">Microinteracciones y Behavioral design</span><span lang="en">Microinteractions and behavioral design</span></a>
       <a data-program="ia-agentes" href="?tema=ia-agentes"><span lang="es">Workflows con IA</span><span lang="en">AI workflows</span></a>
     </nav>
+    <div class="program-scroll-controls">
+      <button type="button" aria-label="Desplazar opciones a la izquierda">‹</button>
+      <button type="button" aria-label="Desplazar opciones a la derecha">›</button>
+    </div>
+  </div>
     <section class="training-program" id="figma-sistemas">
       <h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></h3>
       <div class="home-training-content">
@@ -62,6 +68,36 @@
 (() => {
   const links = [...document.querySelectorAll("[data-program-selector] a")];
   const panels = links.map(link => document.getElementById(link.dataset.program));
+
+  const selector = links[0].closest("nav");
+  const shell = selector.parentElement;
+  const [previous, next] = shell.querySelectorAll("button");
+  const mobile = matchMedia("(max-width:700px)");
+  function updateArrows() {
+    previous.disabled = selector.scrollLeft <= 1;
+    next.disabled = selector.scrollLeft + selector.clientWidth >= selector.scrollWidth - 1;
+  }
+  function revealSelection() {
+    const selected = selector.querySelector('[aria-current="true"]');
+    if (!mobile.matches || !selected) return;
+    const bounds = selector.getBoundingClientRect();
+    const item = selected.getBoundingClientRect();
+    selector.scrollLeft += item.left - bounds.left - (bounds.width - item.width) / 2;
+  }
+  function measureSelector() {
+    const available = shell.clientWidth - parseFloat(getComputedStyle(shell).paddingLeft) - parseFloat(getComputedStyle(shell).paddingRight);
+    const needed = links.reduce((width, link) => width + link.getBoundingClientRect().width, 10);
+    shell.classList.toggle("has-overflow", mobile.matches && needed > available);
+    revealSelection();
+    updateArrows();
+  }
+  const scrollBehavior = matchMedia("(prefers-reduced-motion: reduce)");
+  [previous, next].forEach((button, index) => button.addEventListener("click", () => {
+    selector.scrollBy({left: (index ? 1 : -1) * selector.clientWidth * .75, behavior: scrollBehavior.matches ? "instant" : "smooth"});
+  }));
+  selector.addEventListener("scroll", updateArrows, {passive:true});
+  new ResizeObserver(measureSelector).observe(shell);
+  document.fonts?.ready.then(measureSelector);
   function select() {
     const url = new URL(location.href);
     const id = url.searchParams.get("tema") || url.hash.slice(1);
@@ -71,6 +107,8 @@
       else link.removeAttribute("aria-current");
       panels[i].hidden = i !== index;
     });
+    revealSelection();
+    updateArrows();
   }
   links.forEach(link => link.addEventListener("click", event => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
