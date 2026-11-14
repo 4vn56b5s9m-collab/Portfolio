@@ -518,11 +518,13 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     const elapsed=now-started;
     const embedded=parent.closest("[data-accordion-branch]")||tile;
     const centerFocus=focus&&compact.matches&&embedded;
-    const modelWidth=centerFocus?modelRight-modelLeft:2*Math.max(Math.abs(modelLeft),Math.abs(modelRight));
-    const scale=Math.min(width*(embedded?.98:focus?.59:.91)/modelWidth,
-      height*(embedded?.86:focus?.31:.57)/(modelBottom-modelTop));
+    const modelWidth=tile||centerFocus?modelRight-modelLeft:2*Math.max(Math.abs(modelLeft),Math.abs(modelRight));
+    const scale=tile
+      ? Math.min(width*.92/modelWidth,height*.85/(modelBottom-modelTop+.14))
+      : Math.min(width*(embedded?.98:focus?.59:.91)/modelWidth,
+        height*(embedded?.86:focus?.31:.57)/(modelBottom-modelTop));
     const sceneOffset=-(modelTop+modelBottom)*scale/2;
-    const horizontalOffset=centerFocus?-(modelLeft+modelRight)*scale/2:0;
+    const horizontalOffset=tile?width*.45-modelRight*scale:centerFocus?-(modelLeft+modelRight)*scale/2:0;
     const project=(x,y,z)=>[
       width/2+horizontalOffset+(x*.808027+z*.589145)*scale,
       height/2+sceneOffset+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
