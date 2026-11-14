@@ -35,11 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const openingStart = Math.max(24, openingTop - innerHeight * .76);
     const starts = [];
     for (const slide of slides) {
-      const visibleAt = slide.getBoundingClientRect().top + scrollY - innerHeight - (compact.matches ? 36 : 20);
-      const earliest = starts.length ? starts.at(-1) + (compact.matches ? 105 : 85) : openingStart + 72;
+      const visibleAt = slide.getBoundingClientRect().top + scrollY - innerHeight - (compact.matches ? 36 : Math.min(180, innerHeight * .22));
+      const earliest = starts.length ? starts.at(-1) + (compact.matches ? 105 : 85) : openingStart + (compact.matches ? 72 : 0);
       starts.push(Math.max(visibleAt, earliest));
     }
-    const duration = compact.matches ? 115 : 220;
+    const duration = compact.matches ? 115 : 145;
     entries = starts.map((start, index) => ({
       start,
       end: Math.min(start + duration, starts[index + 1] ?? Infinity)
