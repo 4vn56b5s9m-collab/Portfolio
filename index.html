@@ -58,8 +58,21 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   #trayectoria .career-list li:hover strong{color:var(--career-accent)}
 }
 .career-cta{display:inline-flex;align-items:center;gap:.65rem;min-height:44px;margin-top:calc(1.5rem + 24px);padding:.55rem 1rem;border:1px solid #25737d;border-radius:.7rem;background:#194653;color:#fff;text-decoration:none;font-weight:600}
-.home-training{padding-block-end:0}
-.home-portfolio{padding-block-end:0}
+.training-band{
+  --training-surface:radial-gradient(ellipse at 25% 15%,#fffdf6,transparent 80%),#f7f3e9;
+  background:
+    radial-gradient(ellipse at 12% 20%,#eeeae0 0%,#eeeae000 45%),
+    radial-gradient(ellipse at 80% 25%,#54788b30,transparent 60%),
+    radial-gradient(ellipse at 43% 90%,#54788b24,transparent 64%),
+    #eeeae0
+}
+[data-theme=dark] .training-band{
+  --training-surface:#202628;
+  background:radial-gradient(ellipse at 78% 10%,#173b3d,transparent 70%),#171719
+}
+.training-band .notes.home-training{background:transparent}
+.training-band .home-training details{background:var(--training-surface)}
+.home-portfolio{padding-block-end:clamp(3rem,6vw,5rem)}
 .home-case{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(1rem,4vw,3rem);margin-top:2rem}
 .home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:1rem;background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
 .home-case-art i{width:17%;aspect-ratio:1;border:1px solid #e4d7b6;border-radius:.4rem;background:#eee2c9;transform:rotate(-9deg)}
@@ -274,6 +287,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
     </article>
     <a class="home-portfolio-link" href="./portfolio/"><span lang="es">Ver portfolio</span><span lang="en">View portfolio</span> <span aria-hidden="true">↗</span></a>
   </section>
+  <div class="training-band">
   <section class="notes home-training" aria-labelledby="home-training-title">
     <h2 id="home-training-title"><span lang="es">Formación para empresas</span><span lang="en">Training for companies</span></h2>
     <div class="home-training-areas">
@@ -315,6 +329,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
       </details>
     </div>
   </section>
+  </div>
   <section class="notes" id="trayectoria">
     <h2><span lang="es">Mi camino hasta ser experto en diseño</span><span lang="en">My path to becoming a design expert</span></h2>
     <p><span lang="es">He diseñado para distintos sectores, desde <strong>encargos que exigían resolver rápido</strong> hasta <strong>productos propios</strong> que he acompañado durante varias etapas. Ese recorrido me ha llevado a especializarme en <strong>sistemas de diseño y Behavioral design</strong>, y a compartir lo aprendido formando a equipos internos y de otras empresas.</span><span lang="en">I’ve designed for different industries, from <strong>fast-turnaround assignments</strong> to <strong>in-house products</strong> I supported through several stages. Along the way I’ve specialized in <strong>design systems and behavioral design</strong>, and shared what I’ve learned by training in-house teams and teams at other companies.</span></p>
