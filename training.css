@@ -1,7 +1,7 @@
 .training-page .training-hero{padding-block:clamp(3.4rem,7vw,6.2rem)}
 .training-page .training-hero .lead{max-width:53ch}
 .training-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.4rem;margin-top:1.5rem}
-.training-page .training-cta{display:inline-flex;align-items:center;justify-content:center;gap:.75rem;min-height:48px;padding:.55rem 1.05rem;border:1px solid #c0e1df80;border-radius:999px;background:#164e57;color:#fff;font-weight:600;text-decoration:none;transition:background .2s,border-color .2s}
+.training-page .training-cta{display:inline-flex;align-items:center;justify-content:center;gap:.75rem;min-height:48px;padding:.55rem 1.05rem;border:1px solid #c0e1df80;border-radius:var(--action-radius);background:#164e57;color:#fff;font-weight:600;text-decoration:none;transition:background .2s,border-color .2s}
 .training-page .training-cta:is(:hover,:focus-visible){background:#216875;border-color:#c0e1df}
 .training-hint{margin:.75rem 0 0;color:#d0d9d7;font-size: 1rem}
 .training-proof{display:flex;flex-wrap:wrap;gap:1rem 2.7rem;margin:clamp(1.7rem,4vw,3.2rem) 0 0;padding-top:1.15rem;border-top:1px solid #e2e4df42}
