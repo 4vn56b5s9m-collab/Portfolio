@@ -72,11 +72,26 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .training-band .notes.home-training{background:transparent}
 
 .home-portfolio{padding-block-end:clamp(3rem,6vw,5rem)}
-.home-case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem;margin-top:2rem}
-.home-case{display:grid;grid-template-rows:auto 1fr;gap:1rem;min-width:0}
+.home-case-grid{
+  display:grid;grid-auto-flow:column;grid-auto-columns:88%;gap:1.25rem;
+  margin-top:2rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-block-end:.65rem;
+}
+.home-case-grid:focus-visible{outline-offset:3px}
+.home-case{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(.75rem,3vw,2rem);
+  min-width:0;padding:clamp(1rem,3vw,2.5rem);border:1px solid var(--line);
+  border-radius:1rem;scroll-snap-align:start;
+}
+.home-case>.home-case-art{grid-column:2;grid-row:1;min-width:0}
+.home-case>div:last-child{grid-column:1;grid-row:1}
 .home-case>div:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem}
 .home-case-link{margin-top:auto;padding-top:calc(.5rem + 24px);color:var(--story-accent);font-weight:600;text-underline-offset:.2em}
-@media(max-width:700px){.home-case-grid{grid-template-columns:1fr}}
+@media(max-width:700px){
+  .home-profile .cv-profile-disciplines{left:auto;width:auto;margin-inline:0;justify-items:start;text-align:left}
+  .home-profile .cv-profile-disciplines [data-profile-slide]{white-space:normal}
+  .home-case-grid{grid-auto-columns:92%;gap:.65rem}
+  .home-case{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+}
 .home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:1rem;background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
 .home-case-art i{width:17%;aspect-ratio:1;border:1px solid #e4d7b6;border-radius:.4rem;background:#eee2c9;transform:rotate(-9deg)}
 .home-case-art i:nth-child(2){aspect-ratio:.8;background:#d7b875;transform:translateY(-.15rem)}
@@ -309,7 +324,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   </div>
   <section class="notes home-portfolio" aria-labelledby="home-portfolio-title">
     <h2 id="home-portfolio-title" class="scroll-heading"><span lang="es">Así es como el diseño se traduce en <em class="story-accent">resultados</em>.</span><span lang="en">Here’s how design translates into <em class="story-accent">results</em>.</span></h2>
-    <div class="home-case-grid">
+    <div class="home-case-grid" role="region" aria-label="Casos de estudio" tabindex="0">
     <article class="home-case">
       <div class="home-case-art" aria-hidden="true"><i></i><i></i><i></i></div>
       <div>
