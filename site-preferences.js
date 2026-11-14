@@ -13,6 +13,7 @@
   const savedTheme = read("portfolio-theme");
   let chosenTheme = ["light", "dark"].includes(savedTheme) ? savedTheme : null;
   const copy = {
+  "Contactar en LinkedIn": "Contact on LinkedIn",
   "Behavioral design": "Behavioral design",
   "Especialidades": "Specialties",
   "Decisiones más claras": "Clearer decisions",
@@ -382,8 +383,8 @@
     label.className = "site-language";
     const select = document.createElement("select");
     select.setAttribute("aria-label", siteText("Cambiar idioma"));
-    select.add(new Option("Español", "es"));
-    select.add(new Option("English", "en"));
+    select.add(new Option("ES", "es"));
+    select.add(new Option("EN", "en"));
     select.value = language;
     select.addEventListener("change", () => {
       save("portfolio-language", select.value);
