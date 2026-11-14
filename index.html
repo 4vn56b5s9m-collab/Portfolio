@@ -50,6 +50,9 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .career-list{list-style:none;margin:2rem 0 0;padding:0;max-width:52rem}
 .career-list li{display:grid;grid-template-columns:minmax(6rem,.35fr) 1fr;gap:.8rem 1.3rem;padding:.9rem 0;border-top:1px solid var(--line)}
 .career-list strong{font-weight:600}
+.career-cta{display:inline-flex;align-items:center;gap:.65rem;min-height:44px;margin-top:1.5rem;padding:.55rem 1rem;border:1px solid #25737d;border-radius:.7rem;background:#194653;color:#fff;text-decoration:none;font-weight:600}
+.career-cta:is(:hover,:focus-visible){background:#246070}
+html[lang=en] .career-cta span[lang=es],html:not([lang=en]) .career-cta span[lang=en]{display:none}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}</style>
@@ -245,6 +248,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
       <li><strong>Sepín Editorial</strong><span>Dirección de arte y diseño web para e-commerce editorial.</span></li>
       <li><strong>Ogilvy</strong><span>Diseño digital y de interfaz para e-commerce, reservas y campañas.</span></li>
     </ul>
+    <a class="career-cta" href="./curriculum/"><span lang="es">Ver CV completo</span><span lang="en">View full résumé</span><span aria-hidden="true">↗</span></a>
   </section>
 </main>
 <footer class="site-footer" id="contacto">
