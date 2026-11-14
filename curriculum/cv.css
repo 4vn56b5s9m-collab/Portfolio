@@ -276,3 +276,10 @@
   transform:translate3d(0,0,0);opacity:1;transition:transform .3s ease-out,opacity 0s
 }
 @media print{.cv-profile-disciplines.has-rise-entries [data-profile-slide]{opacity:1;transform:none}}
+
+@media (hover:hover){
+  .cv .cv-switch-panel .cv-row .cv-copy strong{color:inherit}
+  .cv .cv-switch-panel .cv-row:hover :is(h3,.cv-copy strong),
+  .cv .cv-switch-panel .cv-row:focus-within :is(h3,.cv-copy strong),
+  .cv .cv-switch-panel .cv-skills>div:hover h3{color:var(--cv-accent)}
+}
