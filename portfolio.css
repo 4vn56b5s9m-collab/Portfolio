@@ -692,3 +692,22 @@ html[lang=en] .interior-hero span[lang=es],html:not([lang=en]) .interior-hero sp
   .site-header.has-mobile-menu:has(.site-contact-icons) .site-menu-toggle{order:2}
 }
 @media(prefers-reduced-motion:reduce){.site-floating-preferences{transition:none}}
+
+:root{--section-display-size:clamp(2.75rem,5.3vw,5.3rem);--section-intro-size:clamp(1rem,1.5vw,1.25rem)}
+.detail main .scroll-heading,main .scroll-heading,.site-footer .scroll-heading{
+  font:400 var(--section-display-size)/1.04 var(--display);letter-spacing:-.025em;
+  max-width:none;text-align:left;text-wrap:pretty
+}
+.detail main .interior-hero .scroll-heading{max-width:20ch}
+.detail main :is(.interior-hero p,.program-intro .lead){font-size:var(--section-intro-size);line-height:1.5}
+.detail main .interior-hero .hero-label{font-size:1rem;font-weight:600}
+.scroll-heading{position:relative}
+.scroll-heading.has-scroll-ink>.scroll-heading-source{opacity:.65}
+.scroll-heading.has-scroll-ink>.scroll-heading-source .story-accent{color:inherit}
+.scroll-heading-ink{position:absolute;inset:0;pointer-events:none;user-select:none;clip-path:var(--heading-mask)}
+@media(max-width:700px){:root{--section-display-size:clamp(2rem,8vw,2.6rem)}}
+@media(prefers-reduced-motion:reduce), (forced-colors:active), print{
+  .scroll-heading.has-scroll-ink>.scroll-heading-source{opacity:1}
+  .scroll-heading.has-scroll-ink>.scroll-heading-source .story-accent{color:var(--story-accent)}
+  .scroll-heading-ink{display:none}
+}
