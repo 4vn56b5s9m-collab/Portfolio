@@ -664,3 +664,16 @@ html[lang=en] .compact-program-page span[lang=es],html:not([lang=en]) .compact-p
 .interior-hero .cv-hero-tags{margin-top:1.15rem}
 html[lang=en] .interior-hero span[lang=es],html:not([lang=en]) .interior-hero span[lang=en]{display:none}
 @media(max-width:700px){.interior-hero .hero-art{width:min(70%,15rem)}}
+
+.site-header:has(.site-contact-cta){column-gap:clamp(.6rem,1.3vw,1.25rem)}
+.site-header:has(.site-contact-cta) nav{margin-inline-start:auto;column-gap:clamp(.55rem,1.15vw,1.1rem)}
+.site-header:has(.site-contact-cta) .site-language{margin-inline-start:0}
+.site-header .site-contact-cta{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;padding:.45rem .75rem;border-radius:var(--action-radius,12px);background:#165a56;color:#fff;font-size:.95rem;font-weight:600;text-decoration:none;white-space:nowrap}
+.site-header .site-contact-cta:is(:hover,:focus-visible){background:#204b48}
+@media (701px <= width <= 900px){
+  .site-header:has(.site-contact-cta){padding-inline:1.25rem}
+}
+@media(max-width:700px){
+  .site-header.has-mobile-menu .site-contact-cta{margin-inline-start:auto;padding-inline:.55rem;font-size:.85rem}
+  .site-header.has-mobile-menu:has(.site-contact-cta) .site-menu-toggle{margin-inline-start:0}
+}
