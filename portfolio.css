@@ -382,7 +382,7 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
 .site-language select{min-height:44px;padding-inline:.45rem;border:0;border-radius:.35rem;background:transparent;color:inherit;font:inherit;cursor:pointer}
 .site-language option{background:var(--nav-surface,#171719);color:var(--nav-ink,#f4f2ed)}
 .site-header nav{align-items:center}
-.theme-switch{position:fixed;z-index:9;top:calc(var(--nav-height,70px) + .45rem);right:var(--gutter);display:grid;place-items:center;width:44px;height:44px;border:1px solid #91a8aa80;border-radius:50%;background:var(--nav-surface,#171719);color:#dccba6;box-shadow:0 4px 16px #0002;cursor:pointer}
+.theme-switch{position:fixed;z-index:9;top:calc(var(--nav-height,70px) + .45rem);right:var(--gutter);display:grid;place-items:center;width:44px;height:44px;border:1px solid #91a8aa80;border-radius:50%;background:var(--nav-surface,#171719);color:var(--moon-ink);box-shadow:0 4px 16px #0002;cursor:pointer}
 .theme-switch svg{width:25px;height:25px}.theme-switch .sun{display:none}
 [data-theme=light] .theme-switch .moon{display:none}[data-theme=light] .theme-switch .sun{display:block;color:#775119}
 [data-theme=light]{color-scheme:light;--nav-surface:#f4f2ed;--nav-ink:#171719}
@@ -432,7 +432,7 @@ html[data-theme=dark]{--page:#202022;--home-ink:#f4f2ed;--line:#555357}
 .site-language{margin-inline-start:clamp(.75rem,2vw,1.8rem)}
 .site-language select{padding-inline:.7rem;border:1px solid #82969b80;border-radius:999px;min-height:36px;font-size: 1rem}
 .theme-switch{width:76px;height:42px;border-radius:999px;display:block;padding:4px;text-align:start}
-:root{--selection-surface:#cce0e21b;--selection-ink:#dccba6}
+:root{--selection-surface:#cce0e21b;--moon-ink:#dccba6;--selection-ink:var(--moon-ink)}
 [data-theme=light]{--selection-surface:#e5d5b2;--selection-ink:#171719}
 .theme-thumb{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--selection-surface);transform:translateX(34px);transition:transform .28s ease,background .28s ease}
 .theme-thumb svg{width:22px;height:22px;overflow:visible}
