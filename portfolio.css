@@ -737,3 +737,16 @@ html[lang=en] .interior-hero span[lang=es],html:not([lang=en]) .interior-hero sp
 .intro-next-link{flex-direction:row;gap:.55rem;padding:.45rem 1rem;border:1px solid #ffffff48;border-radius:999px;letter-spacing:normal;text-transform:none}
 .intro-next-link:hover{background:#ffffff12;text-decoration:none}
 @media(max-width:700px){#contacto .home-contact-blocks{grid-template-columns:1fr}}
+
+@supports (-webkit-text-stroke: .65px currentColor) {
+  @media screen and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+    .scroll-heading.has-scroll-ink > .scroll-heading-source,
+    .cv-profile-fill.is-filling {
+      color: transparent;
+      -webkit-text-stroke: .65px var(--scroll-outline, #171719b3);
+    }
+    .scroll-heading.has-scroll-ink > .scroll-heading-source {opacity:1}
+    .cv-fill-overlay { -webkit-text-stroke: 0 transparent; }
+    [data-theme=dark]{--scroll-outline:#f4f2edb3}
+  }
+}
