@@ -705,9 +705,35 @@ html[lang=en] .interior-hero span[lang=es],html:not([lang=en]) .interior-hero sp
 .scroll-heading.has-scroll-ink>.scroll-heading-source{opacity:.65}
 .scroll-heading.has-scroll-ink>.scroll-heading-source .story-accent{color:inherit}
 .scroll-heading-ink{position:absolute;inset:0;pointer-events:none;user-select:none;clip-path:var(--heading-mask)}
-@media(max-width:700px){:root{--section-display-size:clamp(2rem,8vw,2.6rem)}}
+@media(max-width:700px){:root{--section-display-size:clamp(2.35rem,9.4vw,3rem)}}
 @media(prefers-reduced-motion:reduce), (forced-colors:active), print{
   .scroll-heading.has-scroll-ink>.scroll-heading-source{opacity:1}
   .scroll-heading.has-scroll-ink>.scroll-heading-source .story-accent{color:var(--story-accent)}
   .scroll-heading-ink{display:none}
 }
+
+#contacto .home-contact-blocks{margin-top:1.75rem;grid-auto-rows:1fr}
+#contacto .home-contact-blocks>a,#contacto .home-contact-blocks .contact-item{
+  min-height:5rem;border-radius:1rem;font-size:1.1rem
+}
+#contacto .home-contact-blocks .contact-item{flex-direction:row;align-items:stretch}
+#contacto .home-contact-blocks .contact-item>a{
+  flex:1;min-width:0;min-height:100%;border-radius:inherit;font-size:inherit
+}
+.home-contact-blocks .contact-copy:not([hidden]){
+  flex:0 0 44px;align-self:center;display:grid;place-items:center;width:44px;height:44px;
+  margin:0 .45rem 0 0;padding:0;border:1px solid #ffffff38;border-radius:.65rem;color:#d2e8e7
+}
+.home-contact-blocks .contact-copy svg{width:20px;height:20px}
+.site-footer .home-contact-toast:not(:empty){
+  position:fixed;z-index:30;bottom:calc(1rem + env(safe-area-inset-bottom));left:50%;translate:-50% 0;
+  width:max-content;max-width:calc(100% - 2rem);padding:.7rem 1rem;border:1px solid #83afb1;
+  border-radius:999px;background:#194653;color:#fff;box-shadow:0 4px 20px #0004;text-align:center
+}
+.site-footer .footer-return{display:inline-flex;align-items:center;gap:.55rem;min-height:44px;padding:.3rem .7rem;border:1px solid currentColor;border-radius:999px;text-decoration:none}
+.site-footer .footer-return:is(:hover,:focus-visible){background:#ffffff18}
+#contacto .footer-bottom{align-items:center}
+.intro-next{margin-top:clamp(1.9rem,4vw,2.75rem)}
+.intro-next-link{flex-direction:row;gap:.55rem;padding:.45rem 1rem;border:1px solid #ffffff48;border-radius:999px;letter-spacing:normal;text-transform:none}
+.intro-next-link:hover{background:#ffffff12;text-decoration:none}
+@media(max-width:700px){#contacto .home-contact-blocks{grid-template-columns:1fr}}
