@@ -1,7 +1,7 @@
 .case-page{background:#f4f2ed;color:#171719}
 .case-page main{min-height:65vh}
-.case-wrap{width:min(100% - 2 * var(--gutter),76rem);margin-inline:auto}
-.case-intro{padding-block:clamp(3rem,8vw,7rem) clamp(2rem,5vw,4rem)}
+.case-wrap{width:min(calc(100% - 2 * var(--reading-padding)),calc(var(--reading-width) - 2 * var(--reading-padding)));margin-inline:auto}
+.case-intro{width:calc(100% - 2 * var(--header-padding));padding-block:clamp(3rem,8vw,7rem) clamp(2rem,5vw,4rem)}
 .case-page h1,.case-page h2{font-family:var(--display);font-weight:400;line-height:1.02}
 .case-page h1{font-size:clamp(3.1rem,7.5vw,7rem);max-width:14ch;margin:.32em 0 .22em}
 .case-page h2{font-size:clamp(2rem,4vw,3.6rem);margin:0 0 .3em}
