@@ -514,11 +514,13 @@ body{font-size:1rem}
   .feature-specialties{display:block;padding-inline:0}
   .feature-specialties .specialty-inner{width:100%}
   .feature-specialties h2{width:min(calc(100% - 2 * var(--gutter)),78rem);margin-inline:auto}
-  .feature-specialties .branch-carousel{padding:0}
-  .feature-specialties .branch-prev{left:max(.5rem,calc(50% - 32rem))}
-  .feature-specialties .branch-next{right:max(.5rem,calc(50% - 32rem))}
+  .feature-specialties .branch-carousel{--card-width:min(70vw,60rem);padding:0}
+  .feature-specialties .branch-nav{width:56px;height:56px;font-size:2rem}
+  .feature-specialties .branch-nav::before{inset:0;opacity:.72}
+  .feature-specialties .branch-nav:is(:hover,:focus-visible)::before{opacity:1}
+  .feature-specialties .branch-prev{right:calc(50% + var(--card-width) / 2 + 12px);left:auto}
+  .feature-specialties .branch-next{left:calc(50% + var(--card-width) / 2 + 12px);right:auto}
   .feature-specialties .accordion-branches{
-    --card-width:min(70vw,60rem);
     overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;
     padding:1rem calc((100% - var(--card-width)) / 2);
     gap:clamp(.75rem,1.8vw,1.5rem);overscroll-behavior-x:contain
@@ -532,6 +534,13 @@ body{font-size:1rem}
     transition:scale .3s ease,opacity .3s ease,border-color .35s,box-shadow .35s
   }
   .feature-specialties .accordion-branches article[data-accordion-branch].is-previewed{scale:1;opacity:1}
+  @media(hover:hover){
+    .feature-specialties .accordion-branches article[data-accordion-branch]:not(.is-previewed):hover{
+      scale:1;opacity:1;cursor:pointer;
+      border-color:#a8e4e4a0;box-shadow:0 0 1rem #69b5c34a,inset 0 0 .65rem #92d2db22
+    }
+    .feature-specialties .accordion-branches article[data-accordion-branch]:hover::after{opacity:1}
+  }
   @media(prefers-reduced-motion:reduce){
     .feature-specialties .accordion-branches article[data-accordion-branch]{transition:none}
   }
@@ -563,10 +572,10 @@ body{font-size:1rem}
   .accordion-branches .branch-card-cta{justify-self:start;width:fit-content}
   .accordion-branches article[data-accordion-branch]{grid-template-rows:auto 1fr auto}
   .accordion-branches .branch-card-cta{grid-row:3}
-  .feature-specialties .accordion-branches article[data-accordion-branch]{grid-template-rows:1fr auto;align-items:center}
-  .feature-specialties .branch-card-copy{grid-column:1;grid-row:1;align-self:end}
+  .feature-specialties .accordion-branches article[data-accordion-branch]{grid-template-rows:auto 1fr;align-items:start;row-gap:.55rem}
+  .feature-specialties .branch-card-copy{grid-column:1;grid-row:1}
   .feature-specialties .feature-art{grid-column:2;grid-row:1/3}
-  .feature-specialties .branch-card-cta{grid-column:1;grid-row:2}
+  .feature-specialties .branch-card-cta{grid-column:1;grid-row:2;margin-top:24px}
 }
 @media(max-width:700px){
   .accordion-branches .branch-card-cta{width:100%;text-align:center}

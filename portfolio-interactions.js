@@ -277,6 +277,15 @@ for (const accordion of document.querySelectorAll("[data-specialty-accordion]"))
     const card=event.target.closest("[data-accordion-branch]");
     if (!feature && card && cards.includes(card)) preview(cards.indexOf(card));
   });
+  if (feature) {
+    gallery.addEventListener("click", event => {
+      if (mobile.matches || event.target.closest("a, button")) return;
+      const index = cards.indexOf(event.target.closest("[data-accordion-branch]"));
+      if (index < 0 || index === active) return;
+      pauseRotation();
+      goTo(index);
+    });
+  }
   gallery.addEventListener("pointerleave", () => {
     hovered = false;
     scheduleRotation();
