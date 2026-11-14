@@ -281,8 +281,8 @@
   .cv .cv-switch-panel .cv-row .cv-copy strong{color:inherit}
 }
 
-.cv-switch-panel{--cv-row-primary:#42464a;--cv-row-secondary:#4b5054;--cv-row-accent:#00548d}
-[data-theme=dark] .cv-switch-panel{--cv-row-primary:#cdd1d5;--cv-row-secondary:#b4bcc2;--cv-row-accent:#58c7ff}
+.cv-switch-panel{--cv-row-primary:#42464a;--cv-row-secondary:#4b5054;--cv-row-accent:#165a56}
+[data-theme=dark] .cv-switch-panel{--cv-row-primary:#cdd1d5;--cv-row-secondary:#b4bcc2;--cv-row-accent:#3bc4bc}
 .cv .cv-switch-panel :is(.cv-row,.cv-skills>div){color:var(--cv-row-secondary)}
 .cv .cv-switch-panel :is(.cv-row,.cv-skills>div).is-reading,
 .cv .cv-switch-panel :is(.cv-row,.cv-skills>div) h3{color:var(--cv-row-primary)}
