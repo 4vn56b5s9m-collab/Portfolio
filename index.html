@@ -58,6 +58,19 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   #trayectoria .career-list li:hover strong{color:var(--career-accent)}
 }
 .career-cta{display:inline-flex;align-items:center;gap:.65rem;min-height:44px;margin-top:calc(1.5rem + 24px);padding:.55rem 1rem;border:1px solid #25737d;border-radius:.7rem;background:#194653;color:#fff;text-decoration:none;font-weight:600}
+.home-portfolio{padding-block-end:0}
+.home-case{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(1rem,4vw,3rem);margin-top:2rem}
+.home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:1rem;background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
+.home-case-art i{width:17%;aspect-ratio:1;border:1px solid #e4d7b6;border-radius:.4rem;background:#eee2c9;transform:rotate(-9deg)}
+.home-case-art i:nth-child(2){aspect-ratio:.8;background:#d7b875;transform:translateY(-.15rem)}
+.home-case-art i:nth-child(3){transform:rotate(9deg)}
+.home-case h3{font:400 clamp(1.8rem,3.2vw,3.15rem)/1.05 var(--display);margin:.45rem 0}
+.home-case p{margin:0;max-width:40ch}
+.home-case-category,.home-portfolio-link{color:#165a56;font-weight:600}
+[data-theme=dark] :is(.home-case-category,.home-portfolio-link){color:#3bc4bc}
+.home-portfolio-link{display:inline-block;margin-top:1.5rem;text-underline-offset:.2em}
+html[lang=en] .home-portfolio span[lang=es],html:not([lang=en]) .home-portfolio span[lang=en]{display:none}
+@media(max-width:700px){.home-case{grid-template-columns:1fr}.home-case-art{min-height:10rem}}
 .career-cta:is(:hover,:focus-visible){background:#246070}
 html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[lang=en]{display:none}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
@@ -245,6 +258,19 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
     </div>
   </section>
   </div>
+  <section class="notes home-portfolio" aria-labelledby="home-portfolio-title">
+    <h2 id="home-portfolio-title">Portfolio</h2>
+    <article class="home-case">
+      <div class="home-case-art" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div>
+        <span class="home-case-category">Behavioral design</span>
+        <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
+        <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p>
+        <a class="career-cta" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <a class="home-portfolio-link" href="./portfolio/"><span lang="es">Ver portfolio</span><span lang="en">View portfolio</span> <span aria-hidden="true">↗</span></a>
+  </section>
   <section class="notes" id="trayectoria">
     <h2><span lang="es">Mi camino hasta ser experto en diseño</span><span lang="en">My path to becoming a design expert</span></h2>
     <p><span lang="es">He diseñado para distintos sectores, desde <strong>encargos que exigían resolver rápido</strong> hasta <strong>productos propios</strong> que he acompañado durante varias etapas. Ese recorrido me ha llevado a especializarme en <strong>sistemas de diseño y Behavioral design</strong>, y a compartir lo aprendido formando a equipos internos y de otras empresas.</span><span lang="en">I’ve designed for different industries, from <strong>fast-turnaround assignments</strong> to <strong>in-house products</strong> I supported through several stages. Along the way I’ve specialized in <strong>design systems and behavioral design</strong>, and shared what I’ve learned by training in-house teams and teams at other companies.</span></p>
