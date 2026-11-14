@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const openingStart = Math.max(24, openingTop - innerHeight * (compact.matches ? .76 : .9));
     const starts = [];
     for (const slide of slides) {
-      const visibleAt = slide.getBoundingClientRect().top + scrollY - (compact.matches ? innerHeight + 36 : innerHeight * .91);
+      const visibleAt = slide.getBoundingClientRect().top + scrollY - (compact.matches ? innerHeight + 36 : innerHeight * .60);
       const earliest = starts.length ? starts.at(-1) + (compact.matches ? 105 : 85) : openingStart + (compact.matches ? 72 : 110);
       starts.push(Math.max(visibleAt, earliest));
     }
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * (index > 0 && compact.matches ? .81 : .76));
       if (compact.matches && index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
       if (!compact.matches) {
-        const middle = top + box.height / 2 - innerHeight * .5;
+        const middle = top + box.height / 2 - innerHeight * .60;
         fill.start = Math.max(0, middle - innerHeight * .15);
         fill.end = middle + innerHeight * .15;
       }
