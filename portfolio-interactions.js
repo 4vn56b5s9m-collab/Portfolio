@@ -28,7 +28,9 @@ if (siteNav) {
   document.addEventListener("click",event=>{if (!siteHeader.contains(event.target)) setMenu(false);});
   mobileMenu.addEventListener("change",()=>setMenu(false));
   setMenu(false);
-  siteNav.before(menuButton);
+  const contactIcons=siteHeader.querySelector('.site-contact-icons');
+  if (contactIcons) contactIcons.after(menuButton);
+  else siteNav.before(menuButton);
   siteHeader.classList.add("has-mobile-menu");
 }
 if (siteHeader) {
