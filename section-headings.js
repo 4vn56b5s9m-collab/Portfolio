@@ -20,7 +20,12 @@
     for (const {heading, source, ink} of headings) {
       const box = heading.getBoundingClientRect();
       if (!box.width || !box.height) continue;
-      const progress = Math.max(0, Math.min(1, (.75 * height - box.top - box.height / 2) / (.30 * height)));
+      const footer = heading.closest("#contacto");
+      const footerBox = footer?.getBoundingClientRect();
+      const reveal = footerBox
+        ? (height - footerBox.top) / Math.min(footerBox.height * .8, height * .8)
+        : (.75 * height - box.top - box.height / 2) / (.30 * height);
+      const progress = Math.max(0, Math.min(1, reveal));
       const bleed = Math.ceil(parseFloat(getComputedStyle(heading).fontSize) * .35);
       range.selectNodeContents(source);
       const lines = [];
