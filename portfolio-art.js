@@ -718,7 +718,15 @@ function interiorHeroModels(scene) {
   return browserModels(2.85,2,[.65,1,-.78],true).concat(people.flatMap(([x,h,z,color])=>[
     {mesh:solid(.54,.47,h,.115),position:[x,h/2,z],color},
     {mesh:solid(.34,.32,.35,.044),position:[x,h+.175,z],color:heroIvory}
-  ]));
+  ])).map(model => {
+    // Rotate the whole classroom by -90° around Y, including its lighting normals.
+    const {mesh, position:[x,y,z]} = model;
+    for (let i=0;i<mesh.length;i+=8) {
+      [mesh[i],mesh[i+2]] = [-mesh[i+2],mesh[i]];
+      [mesh[i+3],mesh[i+5]] = [-mesh[i+5],mesh[i+3]];
+    }
+    return {...model,position:[-z,y,x]};
+  });
 }
 
 for (const canvas of document.querySelectorAll("[data-interior-hero-art]")) {
