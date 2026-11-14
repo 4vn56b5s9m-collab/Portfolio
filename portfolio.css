@@ -658,3 +658,9 @@ html[lang=en] .compact-program-page span[lang=es],html:not([lang=en]) .compact-p
   .compact-program-page .program-selector a{flex:0 0 auto;white-space:nowrap;padding-inline:.85rem}
 }
 .interior-hero + .project-grid{padding-block-start:clamp(1.5rem,4vw,3rem)}
+
+.interior-hero .hero-art{display:block;width:100%;aspect-ratio:1.2;justify-self:center}
+.interior-hero .hero-label{display:block;margin-bottom:.65rem;font-weight:600}
+.interior-hero .cv-hero-tags{margin-top:1.15rem}
+html[lang=en] .interior-hero span[lang=es],html:not([lang=en]) .interior-hero span[lang=en]{display:none}
+@media(max-width:700px){.interior-hero .hero-art{width:min(70%,15rem)}}
