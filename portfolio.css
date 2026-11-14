@@ -515,12 +515,12 @@ body{font-size:1rem}
   .specialty-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(.75rem,1.5vw,1.25rem)}
   .specialty-tile{
     position:relative;isolation:isolate;display:block;overflow:hidden;min-height:clamp(13rem,21vw,18rem);
-    padding:clamp(1.15rem,2.6vw,2.25rem);border:1px solid #a7cbc84d;border-radius:1rem;
+    --tile-padding:clamp(1.15rem,2.6vw,2.25rem);
+    padding:var(--tile-padding);padding-block-end:calc(var(--tile-padding) + 3rem);border:1px solid #a7cbc84d;border-radius:1rem;
     background:#202628;color:#f4f2ed;text-decoration:none
   }
   .specialty-tile:nth-child(-n+2){background:linear-gradient(135deg,#203b3c,#202628 76%)}
   .specialty-tile-copy{position:relative;z-index:1}
-  .specialty-tile-heading{display:flex;align-items:center;gap:24px}
   .specialty-tile h3{margin:0;font:400 clamp(1.8rem,3.2vw,3.25rem)/1.04 var(--display)}
   .specialty-tile p{margin:.45rem 0 0;font-size:1rem;color:#d1dedb}
   .specialty-tile .feature-art{
@@ -530,8 +530,8 @@ body{font-size:1rem}
   .specialty-tile .feature-art .branch-scene{min-height:0;padding:0}
   .specialty-tile :is(.scene-back,.scene-front,.focus-dot){display:none}
   .specialty-tile-arrow{
-    flex:0 0 auto;display:grid;place-items:center;
-    width:2.6rem;height:2.25rem;border:1px solid transparent;border-radius:999px;
+    position:absolute;z-index:2;inset:auto auto var(--tile-padding) var(--tile-padding);
+    display:grid;place-items:center;width:2.6rem;height:2.25rem;border:1px solid transparent;border-radius:999px;
     color:#65d9b1;font-size:1.45rem;transition:background .22s,border-color .22s
   }
   .specialty-tile:is(:hover,:focus-visible){border-color:#74c3b1}
