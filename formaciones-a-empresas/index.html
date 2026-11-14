@@ -3,6 +3,15 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Formaciones a empresas · Alejandro Sánchez Bretones</title><meta name="description" content="Formación para equipos de diseño que quieren alinear cómo trabajan, revisan y entregan sus proyectos.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
 <link rel="stylesheet" href="../portfolio.css?v=training-radii"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=specialty-names"></script>
+<style>
+.training-selector{display:flex;flex-wrap:wrap;gap:.35rem;padding:.35rem;margin-block:2rem 1.75rem;border:1px solid var(--training-rule);border-radius:var(--action-radius)}
+.training-page .training-selector a{flex:1 1 10rem;display:grid;place-items:center;min-height:44px;padding:.5rem .75rem;text-align:center;text-decoration:none;border-radius:calc(var(--action-radius) - .35rem);font-weight:600}
+.training-page .training-selector a[aria-current=true]{background:var(--training-accent);color:#fff}
+[data-theme=dark] .training-page .training-selector a[aria-current=true]{color:#171719}
+.training-program{scroll-margin-top:calc(var(--nav-height,4.5rem) + 1rem);margin-block:0 2rem}
+.training-program h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0 0 .8rem}
+.training-program .home-training-content{padding:0}
+</style>
 </head>
 <body class="detail training-page">
 <header id="inicio" class="site-header"><a class="site-name" href="../#inicio">Alejandro</a><nav aria-label="Navegación principal"><a href="../como-trabajo/">Cómo trabajo</a><a href="../portfolio/">Portfolio</a><a href="../formaciones-a-empresas/" aria-current="page">Formaciones a empresas</a><a href="../curriculum/">Currículum</a></nav></header>
@@ -31,10 +40,14 @@
   <section class="detail-section training-catalog home-training" id="programas"><div class="wrap">
     <h2>Qué podemos trabajar</h2>
     <p>Elige el reto que más se parece al vuestro. Estas son áreas que podemos combinar y adaptar al nivel, las herramientas y los objetivos del equipo.</p>
-    <div class="home-training-areas">
-      <details name="catalog-training">
-        <summary><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Figma and design systems</span></summary>
-        <div class="home-training-content">
+    <nav class="training-selector" aria-label="Formaciones">
+      <a href="#figma-sistemas"><span lang="es">Figma y sistemas</span><span lang="en">Figma and design systems</span></a>
+      <a href="#microinteracciones"><span lang="es">Microinteracciones</span><span lang="en">Microinteractions</span></a>
+      <a href="#ia-agentes"><span lang="es">IA y agentes</span><span lang="en">AI and agents</span></a>
+    </nav>
+    <section class="training-program" id="figma-sistemas">
+      <h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Figma and design systems</span></h3>
+      <div class="home-training-content">
           <p><span lang="es">Organiza tus archivos y crea una <strong>base común de diseño</strong> para el equipo.</span><span lang="en">Organize your files and build a <strong>shared design foundation</strong> for the team.</span></p>
           <ul>
             <li><span lang="es">Frames, auto layout y organización de archivos.</span><span lang="en">Frames, auto layout and file organization.</span></li>
@@ -43,10 +56,10 @@
           </ul>
           <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Uso%20de%20Figma%20y%20sistemas%20de%20dise%C3%B1o"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
         </div>
-      </details>
-      <details name="catalog-training">
-        <summary><span lang="es">Microinteracciones y foco de atención con Behavioral design</span><span lang="en">Microinteractions and attention with behavioral design</span></summary>
-        <div class="home-training-content">
+    </section>
+    <section class="training-program" id="microinteracciones">
+      <h3><span lang="es">Microinteracciones y foco de atención con Behavioral design</span><span lang="en">Microinteractions and attention with behavioral design</span></h3>
+      <div class="home-training-content">
           <p><span lang="es">Diseña interacciones que ayuden a entender <strong>qué ha cambiado y dónde seguir</strong>.</span><span lang="en">Design interactions that clarify <strong>what changed and where to go next</strong>.</span></p>
           <ul>
             <li><span lang="es">Jerarquía visual y señales para orientar la atención.</span><span lang="en">Visual hierarchy and cues to guide attention.</span></li>
@@ -55,10 +68,10 @@
           </ul>
           <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20Microinteracciones%20y%20foco%20de%20atenci%C3%B3n%20con%20Behavioral%20design"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
         </div>
-      </details>
-      <details name="catalog-training">
-        <summary><span lang="es">IA y agentes automatizados</span><span lang="en">AI and automated agents</span></summary>
-        <div class="home-training-content">
+    </section>
+    <section class="training-program" id="ia-agentes">
+      <h3><span lang="es">IA y agentes automatizados</span><span lang="en">AI and automated agents</span></h3>
+      <div class="home-training-content">
           <p><span lang="es">Integra la IA en el flujo de diseño y decide <strong>qué automatizar y qué revisar</strong>.</span><span lang="en">Bring AI into your design workflow and decide <strong>what to automate and what to review</strong>.</span></p>
           <ul>
             <li><span lang="es">IA aplicada a exploración, contenidos y documentación.</span><span lang="en">AI for exploration, content and documentation.</span></li>
@@ -67,8 +80,24 @@
           </ul>
           <a class="training-consult" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%3A%20IA%20y%20agentes%20automatizados"><span lang="es">Consulta esta formación</span><span lang="en">Ask about this training</span></a>
         </div>
-      </details>
-    </div>
+    </section>
+    <script>
+    (() => {
+      const links = [...document.querySelectorAll(".training-selector a")];
+      const panels = links.map(link => document.getElementById(link.hash.slice(1)));
+      function selectProgram() {
+        const requested = links.findIndex(link => link.hash === location.hash);
+        const selected = Math.max(0, requested);
+        links.forEach((link, index) => {
+          if (index === selected) link.setAttribute("aria-current", "true");
+          else link.removeAttribute("aria-current");
+          panels[index].hidden = index !== selected;
+        });
+      }
+      window.addEventListener("hashchange", selectProgram);
+      selectProgram();
+    })();
+    </script>
   </div></section>
 
   <section class="detail-section"><div class="wrap">
