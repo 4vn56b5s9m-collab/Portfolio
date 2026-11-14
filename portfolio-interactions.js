@@ -142,6 +142,7 @@ function copyOnHttp(value) {
 
 for (const button of document.querySelectorAll("[data-copy-contact]")) {
   button.hidden=false;
+  let dismissStatus;
   button.addEventListener("click",async()=>{
     const value=button.closest(".contact-item").querySelector(".contact-value");
     const status=button.closest(".site-footer").querySelector(".contact-status");
@@ -157,8 +158,13 @@ for (const button of document.querySelectorAll("[data-copy-contact]")) {
       copied=false;
     }
     if (copied) {
-      status.textContent=siteText("Copiado al portapapeles.");
+      if (button.dataset.copiedEs) {
+        clearTimeout(dismissStatus);
+        status.textContent=siteText(button.dataset.copiedEs,button.dataset.copiedEn);
+        dismissStatus=setTimeout(()=>{status.textContent="";},2800);
+      } else status.textContent=siteText("Copiado al portapapeles.");
     } else {
+      clearTimeout(dismissStatus);
       const selection=window.getSelection();
       const range=document.createRange();
       range.selectNodeContents(value);
