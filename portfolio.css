@@ -636,11 +636,6 @@ body{font-size:1rem}
 html[lang=en] .home-training span[lang=es],html:not([lang=en]) .home-training span[lang=en]{display:none}
 @media(max-width:700px){.home-training .training-consult{display:flex;justify-content:center;width:100%}}
 
-.compact-page-hero{background:radial-gradient(ellipse at 85% 40%,#dce8e2,transparent 70%),#eeeae0;color:#171719}
-[data-theme=dark] .compact-page-hero{background:radial-gradient(ellipse at 85% 40%,#264146,transparent 70%),#171719;color:#f4f2ed}
-.detail .compact-page-hero .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;width:100%;padding:clamp(1.6rem,4vw,4rem) var(--header-padding)}
-.detail .compact-page-hero h1{font:400 clamp(2rem,5.3vw,5rem)/1 var(--display);margin:0}
-.detail .compact-page-hero p{margin:.7rem 0 0;max-width:48ch;line-height:1.45}
 .compact-program-page .program-selector{display:grid;grid-template-columns:repeat(var(--segments),minmax(0,1fr));gap:.2rem;padding:.25rem;margin:clamp(.75rem,2vw,1.25rem) auto;border:1px solid #bcbdb2;border-radius:999px}
 .compact-program-page .program-selector.wrap{width:min(calc(100% - 2 * var(--reading-padding)),calc(var(--reading-width) - 2 * var(--reading-padding)))}
 [data-theme=dark] .compact-program-page .program-selector{border-color:#525e60}
@@ -658,19 +653,8 @@ html[lang=en] .compact-program-page span[lang=es],html:not([lang=en]) .compact-p
 
 .program-selector-shell{position:relative;min-width:0}
 .detail .program-selector-shell.wrap{padding-inline:var(--reading-padding)}
-.program-scroll-controls{display:none}
 @media(max-width:700px){
-  .compact-program-page .program-selector{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;overscroll-behavior-inline:contain}
+  .compact-program-page .program-selector{display:flex;gap:0;overflow-x:auto;overscroll-behavior-inline:contain}
   .compact-program-page .program-selector a{flex:0 0 auto;white-space:nowrap;padding-inline:.85rem}
-  .program-selector-shell.has-overflow .program-selector{margin-inline:46px}
-  .program-selector-shell.has-overflow .program-scroll-controls{display:contents}
-  .program-scroll-controls button{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:1px solid currentColor;border-radius:50%;background:transparent;color:inherit;font:inherit;font-size:1.25rem;cursor:pointer}
-  .program-scroll-controls button:first-child{left:0}
-  .program-scroll-controls button:last-child{right:0}
-  .program-selector-shell.wrap .program-scroll-controls button:first-child{left:var(--reading-padding)}
-  .program-selector-shell.wrap .program-scroll-controls button:last-child{right:var(--reading-padding)}
-  .program-scroll-controls button:disabled{opacity:.35;cursor:default}
 }
-@media(prefers-reduced-motion:reduce){.compact-page-hero .cv-pillar{transition:none}}
-
-.compact-page-hero + .project-grid{padding-block-start:clamp(1.5rem,4vw,3rem)}
+.interior-hero + .project-grid{padding-block-start:clamp(1.5rem,4vw,3rem)}
