@@ -2,14 +2,8 @@
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Formaciones a empresas · Alejandro Sánchez Bretones</title><meta name="description" content="Formación para equipos de diseño que quieren alinear cómo trabajan, revisan y entregan sus proyectos.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
-<link rel="stylesheet" href="../portfolio.css?v=selection-theme"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=specialty-names"></script>
+<link rel="stylesheet" href="../portfolio.css?v=compact-programs"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contraste-escenas"></script><script src="../site-preferences.js?v=specialty-names"></script>
 <style>
-.training-selector{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.2rem;padding:.25rem;margin:2rem auto 1.75rem;border:1px solid #bcbdb2;border-radius:999px}
-[data-theme=dark] .training-selector{border-color:#525e60}
-.training-page .training-selector a{display:grid;place-items:center;min-height:44px;padding:.4rem .55rem;text-align:center;text-decoration:none;border-radius:999px;font:600 1rem/1.2 "Instrument Sans",system-ui,sans-serif}
-.training-page .training-selector a[aria-current=true]{background:var(--selection-surface);color:var(--selection-ink)}
-.training-selector a:focus-visible{outline:2px solid currentColor;outline-offset:-3px}
-@media(max-width:540px){.training-selector{grid-template-columns:1fr;border-radius:24px}}
 .training-program{scroll-margin-top:calc(var(--nav-height,4.5rem) + 1rem);margin-block:0 2rem}
 .training-program h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0 0 .8rem}
 .training-program .home-training-content{padding:0}
@@ -17,35 +11,16 @@
 </head>
 <body class="detail training-page">
 <header id="inicio" class="site-header"><a class="site-name" href="../#inicio">Alejandro</a><nav aria-label="Navegación principal"><a href="../como-trabajo/">Cómo trabajo</a><a href="../portfolio/">Portfolio</a><a href="../formaciones-a-empresas/" aria-current="page">Formaciones a empresas</a><a href="../curriculum/">Currículum</a></nav></header>
-<main>
-  <section class="detail-hero training-hero"><div class="wrap">
-    <p class="category">Formaciones a empresas</p>
-    <h1>Diseñar con criterios compartidos</h1>
-    <p class="lead">Ayudo a equipos de diseño a acordar cómo trabajan, revisar con los mismos criterios y entregar con más consistencia. La formación se aplica a sus archivos, herramientas y proyectos.</p>
-    <div class="training-actions">
-      <a class="training-cta" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%20para%20mi%20equipo&amp;body=Hola%2C%20%C3%81lex%3A%0A%0AEl%20reto%20que%20queremos%20trabajar%20es%3A%0ASomos%20un%20equipo%20de%3A%0A%0A">Cuéntame el reto de tu equipo <span aria-hidden="true">↗</span></a>
-      <a href="#programas">Ver áreas de formación</a>
-    </div>
-    <p class="training-hint">Para empezar basta con el tamaño del equipo y una situación que queráis mejorar.</p>
-    <dl class="training-proof">
-      <div><dt>5</dt><dd>empresas en las que he impartido formación</dd></div>
-      <div><dt>Hasta 20</dt><dd>personas por equipo de diseño</dd></div>
-    </dl>
-  </div></section>
-
-  <section class="detail-section training-context"><div class="wrap">
-    <h2>Que el equipo pueda seguir por su cuenta</h2>
-    <p>He entrado como formador, lead o director de diseño, según la empresa. He ayudado a definir flujos de trabajo y estándares transversales, y a aplicarlos en revisiones y entregas hasta que el equipo podía mantenerlos con autonomía.</p>
-    <p>He trabajado con consultoras y empresas con producto propio, tanto en organizaciones de servicios como en equipos que diseñan para el cliente final. Mi formación en Ingeniería de Diseño Industrial y Bellas Artes reúne criterio técnico y dirección visual.</p>
-  </div></section>
-
+<main class="compact-program-page">
+  <header class="compact-page-hero"><div class="wrap"><div>
+    <h1><span lang="es">Formaciones a empresas</span><span lang="en">Training for companies</span></h1>
+    <p><span lang="es">Formación práctica para equipos de diseño, aplicada a sus proyectos.</span><span lang="en">Practical training for design teams, applied to their own projects.</span></p>
+  </div><span class="compact-isometry" aria-hidden="true"><i></i><i></i><i></i></span></div></header>
   <section class="detail-section training-catalog home-training" id="programas"><div class="wrap">
-    <h2>Qué podemos trabajar</h2>
-    <p>Elige el reto que más se parece al vuestro. Estas son áreas que podemos combinar y adaptar al nivel, las herramientas y los objetivos del equipo.</p>
-    <nav class="training-selector" aria-label="Formaciones">
-      <a href="#figma-sistemas"><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></a>
-      <a href="#microinteracciones"><span lang="es">Microinteracciones y Behavioral design</span><span lang="en">Microinteractions and behavioral design</span></a>
-      <a href="#ia-agentes"><span lang="es">Workflows con IA</span><span lang="en">AI workflows</span></a>
+    <nav class="program-selector" data-program-selector aria-label="Formaciones" style="--segments:3">
+      <a data-program="figma-sistemas" href="?tema=figma-sistemas"><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></a>
+      <a data-program="microinteracciones" href="?tema=microinteracciones"><span lang="es">Microinteracciones y Behavioral design</span><span lang="en">Microinteractions and behavioral design</span></a>
+      <a data-program="ia-agentes" href="?tema=ia-agentes"><span lang="es">Workflows con IA</span><span lang="en">AI workflows</span></a>
     </nav>
     <section class="training-program" id="figma-sistemas">
       <h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></h3>
@@ -84,24 +59,40 @@
         </div>
     </section>
     <script>
-    (() => {
-      const links = [...document.querySelectorAll(".training-selector a")];
-      const panels = links.map(link => document.getElementById(link.hash.slice(1)));
-      function selectProgram() {
-        const requested = links.findIndex(link => link.hash === location.hash);
-        const selected = Math.max(0, requested);
-        links.forEach((link, index) => {
-          if (index === selected) link.setAttribute("aria-current", "true");
-          else link.removeAttribute("aria-current");
-          panels[index].hidden = index !== selected;
-        });
-      }
-      window.addEventListener("hashchange", selectProgram);
-      selectProgram();
-    })();
-    </script>
+(() => {
+  const links = [...document.querySelectorAll("[data-program-selector] a")];
+  const panels = links.map(link => document.getElementById(link.dataset.program));
+  function select() {
+    const url = new URL(location.href);
+    const id = url.searchParams.get("tema") || url.hash.slice(1);
+    const index = Math.max(0, links.findIndex(link => link.dataset.program === id));
+    links.forEach((link, i) => {
+      if (i === index) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+      panels[i].hidden = i !== index;
+    });
+  }
+  links.forEach(link => link.addEventListener("click", event => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const url = new URL(location.href);
+    url.searchParams.set("tema", link.dataset.program);
+    url.hash = "";
+    if (location.href !== url.href) history.pushState(null, "", url);
+    select();
+  }));
+  window.addEventListener("popstate", select);
+  window.addEventListener("hashchange", select);
+  select();
+})();
+</script>
   </div></section>
 
+  <section class="detail-section training-context"><div class="wrap">
+    <p><span lang="es">Trabajamos sobre vuestros archivos y proyectos para que el equipo pueda seguir aplicando los criterios con autonomía.</span><span lang="en">We work on your files and projects so the team can keep applying the same criteria independently.</span></p>
+    <ul class="compact-training-proof"><li><span lang="es"><strong>5 empresas</strong> en las que he impartido formación</span><span lang="en"><strong>5 companies</strong> where I’ve delivered training</span></li><li><span lang="es">Con equipos de <strong>hasta 20 personas</strong></span><span lang="en">With teams of <strong>up to 20 people</strong></span></li></ul>
+    <a class="training-cta" href="mailto:alejandrosanchezbretones@gmail.com?subject=Formaci%C3%B3n%20para%20mi%20equipo&amp;body=Hola%2C%20%C3%81lex%3A%0A%0AEl%20reto%20que%20queremos%20trabajar%20es%3A%0ASomos%20un%20equipo%20de%3A%0A%0A">Cuéntame el reto de tu equipo <span aria-hidden="true">↗</span></a>
+  </div></section>
   <section class="detail-section"><div class="wrap">
     <h2>Cómo podemos trabajarlo</h2>
     <div class="story-grid training-formats">
