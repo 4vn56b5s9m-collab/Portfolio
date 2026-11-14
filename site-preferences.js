@@ -13,6 +13,11 @@
   const savedTheme = read("portfolio-theme");
   let chosenTheme = ["light", "dark"].includes(savedTheme) ? savedTheme : null;
   const copy = {
+  "Especialidades": "Specialties",
+  "Decisiones más claras": "Clearer decisions",
+  "Coherencia a escala": "Consistency at scale",
+  "Movimiento con intención": "Motion with purpose",
+  "Criterio compartido": "Shared design judgment",
   "Elegir especialidad":"Choose specialty",
   "Cambiar idioma":"Change language",
   "Inicio": "Home",

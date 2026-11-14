@@ -478,6 +478,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const models=training?trainingModels():behavioral?behavioralModels():focus?focusModels():systemModels();
   const footprints=systems?systemFootprints(models):null;
   const parent=canvas.parentElement;
+  const tile=parent.closest(".specialty-tile");
   const floor=parent.querySelector(".scene-floor");
   const shadows=[...floor.querySelectorAll(".scene-shadow")];
   const labels=[floor.querySelector(".scene-back"),floor.querySelector(".scene-front")];
@@ -510,7 +511,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     if (!width||!height) return;
     started ||= now;
     const elapsed=now-started;
-    const embedded=parent.closest("[data-accordion-branch]");
+    const embedded=parent.closest("[data-accordion-branch]")||tile;
     const centerFocus=focus&&compact.matches&&embedded;
     const modelWidth=centerFocus?modelRight-modelLeft:2*Math.max(Math.abs(modelLeft),Math.abs(modelRight));
     const scale=Math.min(width*(embedded?.98:focus?.59:.91)/modelWidth,
@@ -622,7 +623,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   let inViewport=false;
   function updateVisibility() {
     const card=parent.closest("[data-accordion-branch]");
-    const next=inViewport&&(!card||card.classList.contains("is-previewed"));
+    const next=inViewport&&(tile?tile.matches(":hover,:focus-visible"):!card||card.classList.contains("is-previewed"));
     if (next===visible) return;
     visible=next;
     parent.toggleAttribute("data-scene-playing",visible);
@@ -638,6 +639,9 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     inViewport=entry.isIntersecting;
     updateVisibility();
   }).observe(parent);
+  if (tile) {
+    for (const event of ["pointerenter","pointerleave","focus","blur"]) tile.addEventListener(event,updateVisibility);
+  }
   const section=parent.closest("[data-specialty-accordion]");
   if (section) new MutationObserver(updateVisibility).observe(section,{subtree:true,attributes:true,attributeFilter:["class"],childList:true});
   new ResizeObserver(queue).observe(parent);
