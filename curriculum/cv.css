@@ -279,7 +279,14 @@
 
 @media (hover:hover){
   .cv .cv-switch-panel .cv-row .cv-copy strong{color:inherit}
-  .cv .cv-switch-panel .cv-row:hover :is(h3,.cv-copy strong),
-  .cv .cv-switch-panel .cv-row:focus-within :is(h3,.cv-copy strong),
-  .cv .cv-switch-panel .cv-skills>div:hover h3{color:var(--cv-accent)}
+}
+
+.cv-switch-panel{--cv-row-primary:#42464a;--cv-row-secondary:#4b5054;--cv-row-accent:#00548d}
+[data-theme=dark] .cv-switch-panel{--cv-row-primary:#cdd1d5;--cv-row-secondary:#b4bcc2;--cv-row-accent:#58c7ff}
+.cv .cv-switch-panel :is(.cv-row,.cv-skills>div){color:var(--cv-row-secondary)}
+.cv .cv-switch-panel :is(.cv-row,.cv-skills>div).is-reading,
+.cv .cv-switch-panel :is(.cv-row,.cv-skills>div) h3{color:var(--cv-row-primary)}
+@media(hover:hover){
+  .cv .cv-switch-panel .cv-row:is(:hover,:focus-within) :is(h3,.cv-copy strong),
+  .cv .cv-switch-panel .cv-skills>div:hover h3{color:var(--cv-row-accent)}
 }
