@@ -503,7 +503,12 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       modelBottom=Math.max(modelBottom,v);
     }
   }
-  const duration=focus?3400:behavioral?2130:training?1810:2350;
+  const phaseStep=190;
+  const duration=7*phaseStep+420;
+  const entryDuration=training?875:420;
+  const entries=models.map(model=>model.delay??(training?model.stage*330+model.layer*125
+    :systems?model.stage*phaseStep+model.layer*105:model.stage*(focus?phaseStep:370)));
+  const entryEnd=Math.max(...entries)+entryDuration;
   function draw(now) {
     frame=0;
     if (!visible) return;
@@ -523,21 +528,18 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       height/2+sceneOffset+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
     ];
     renderer.clear({width,height});
-    renderer.render(scale,models.map(model=>{
-      const delay=model.delay??(training?model.stage*330+model.layer*125
-        :systems?model.stage*450+model.layer*68
-        :model.stage*(focus?190:370));
-      const progress=reduced.matches?1:Math.min(1,Math.max(0,(elapsed-delay)/(training?875:systems?395:420)));
+    const entryTime=elapsed*entryEnd/duration;
+    renderer.render(scale,models.map((model,index)=>{
+      const progress=reduced.matches?1:Math.min(1,Math.max(0,(entryTime-entries[index])/entryDuration));
       const remaining=1-progress;
       const settled=1-remaining**3;
-      const eased=progress*progress*progress*(progress*(progress*6-15)+10);
       const [x,y,z]=model.position;
       const growth=focus?Math.max(.01,settled):training?Math.max(.015,1-.30*remaining**1.6*Math.exp(-2.7*progress)*Math.cos(progress*Math.PI*4))
         :1;
       return {
         origin:model.origin+horizontalOffset/width,
         position:[x,y-(training||systems?0:remaining*.16)-sceneOffset/(scale*.836463),z],
-        opacity:training?Math.min(1,progress*8):systems?eased:settled,
+        opacity:training?Math.min(1,progress*8):systems?progress:settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
       };
     }),0,true);
@@ -561,7 +563,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       label.setAttribute("transform",`matrix(.808 -.22 .46 .443 ${x} ${y})`);
 
       if (!focus) return;
-      const time=index===0?(elapsed-180)/1160:(elapsed-1680)/1600;
+      const captionTime=elapsed*3280/duration;
+      const time=index===0?(captionTime-180)/1160:(captionTime-1680)/1600;
       const ratio=reduced.matches?1:Math.max(0,Math.min(1,time));
       const progress=ratio*ratio*ratio*(ratio*(6*ratio-15)+10);
       const inkPadding=4;
@@ -569,13 +572,13 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       masks[index].setAttribute("y",bounds.y-inkPadding);
       masks[index].setAttribute("width",(bounds.width+2*inkPadding)*progress);
       masks[index].setAttribute("height",bounds.height+2*inkPadding);
-      if ((index===0&&elapsed<1680)||(index===1&&elapsed>=1680)||reduced.matches&&index===1) {
+      if ((index===0&&captionTime<1680)||(index===1&&captionTime>=1680)||reduced.matches&&index===1) {
         const final=index===1&&ratio===1;
         const along=bounds.x+bounds.width*progress+(final?fontSize*.11:0);
         const wave=Math.sin(ratio*Math.PI)*Math.sin(ratio*Math.PI*3.2);
         const lift=final?-fontSize*.05:-fontSize*.13-wave*fontSize*.32;
         focusDot.setAttribute("transform",`translate(${x+(.808*along+.46*lift)*fit} ${y+(-.22*along+.443*lift)*fit})`);
-        focusDot.style.visibility=!reduced.matches&&elapsed<180?"hidden":"visible";
+        focusDot.style.visibility=!reduced.matches&&captionTime<180?"hidden":"visible";
       }
     });
     captionWidth=embedded?0:width;
@@ -597,14 +600,14 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
         const end=footprints[index+1].left-.17;
         const [x1,y1]=project(start,-.44,0), [x2,y2]=project(end,-.44,0);
         const path=end>start?`M${x1},${y1} L${x2},${y2}`:"";
-        const local=elapsed-110-index*450;
-        const elapsedRatio=reduced.matches?1:Math.max(0,Math.min(1,local/300));
-        const progress=elapsedRatio*elapsedRatio*(3-2*elapsedRatio);
+        const local=entryTime-phaseStep/2-index*phaseStep;
+        const elapsedRatio=reduced.matches?1:Math.max(0,Math.min(1,local/(phaseStep*.8)));
+        const progress=elapsedRatio;
         track.setAttribute("d",path);
         fills[index].setAttribute("d",path);
         fills[index].style.strokeDashoffset=1-progress;
-        if (!reduced.matches&&end>start&&local>=0&&local<450) {
-          const crossing=Math.max(0,(local-300)/150);
+        if (!reduced.matches&&end>start&&local>=0&&local<phaseStep) {
+          const crossing=Math.max(0,(local-phaseStep*.8)/(phaseStep*.2));
           const final=index===tracks.length-1;
           const nextStart=final?end+.18:footprints[index+1].right+.17;
           const x=crossing>0?end+(nextStart-end)*crossing:start+(end-start)*progress;
