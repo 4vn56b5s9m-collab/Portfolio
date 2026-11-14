@@ -653,3 +653,112 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   document.fonts?.ready.then(()=>{captionWidth=0;queue();});
   reduced.addEventListener("change",queue);
 }
+
+function hexPrism(height) {
+  const rim = Array.from({length:6}, (_, i) => {
+    const angle = i * Math.PI / 3;
+    return [Math.cos(angle), 0, Math.sin(angle)];
+  });
+  const mesh = [];
+  const triangle = (points, normal) => {
+    for (const point of points) mesh.push(...point, ...normal, 0, 0);
+  };
+  for (let i = 0; i < rim.length; i++) {
+    const a = rim[i], b = rim[(i + 1) % rim.length];
+    const topA = [a[0], height, a[2]], topB = [b[0], height, b[2]];
+    const angle = (i + .5) * Math.PI / 3;
+    const side = [Math.cos(angle), 0, Math.sin(angle)];
+    triangle([[0,height,0], topB, topA], [0,1,0]);
+    triangle([a, topA, b], side);
+    triangle([b, topA, topB], side);
+  }
+  return mesh;
+}
+
+const heroIvory = [234, 218, 187];
+const heroTeal = [27, 102, 103];
+const heroGold = [180, 142, 75];
+const heroGraphite = [68, 70, 72];
+
+function browserModels(width, height, position, classroom = false) {
+  const [x,y,z] = position;
+  const plate = (w,h,d,color,dx,dy,dz,radius,pulse) => ({
+    mesh:upright(solid(w,h,d,radius)),
+    position:[x+dx,y+dy,z+dz],color,pulse
+  });
+  const frame = [
+    plate(width,height,.32,heroIvory,0,0,0,.16),
+    plate(width*.88,height*.73,.08,heroTeal,0,-height*.055,.17,.095)
+  ];
+  if (!classroom) {
+    for (let i=0;i<3;i++) frame.push(plate(.11,.11,.055,heroGold,-width*.39+i*.19,height*.405,.17,.054));
+  }
+  return frame.concat([
+    plate(width*.35,height*.46,.18,heroIvory,-width*.20,-height*.065,.27,.095,0),
+    plate(width*.25,height*.15,.18,heroGold,width*.20,height*.075,.27,.06,1),
+    plate(width*.25,height*.21,.18,heroIvory,width*.20,-height*.17,.27,.06,2)
+  ]);
+}
+
+function interiorHeroModels(scene) {
+  if (scene==="work") {
+    return [1,1.48,1.98].map((height,i)=>{
+      const angle=(i*2+2)*Math.PI/3;
+      return {mesh:hexPrism(height),position:[Math.cos(angle),0,Math.sin(angle)],
+        color:[heroGraphite,heroIvory,heroTeal][i]};
+    });
+  }
+  if (scene==="portfolio") return browserModels(3.8,2.75,[0,1.375,0]);
+  const people=[
+    [-1.57,.99,-.60,heroTeal],
+    [-1.34,.55,1.02,heroTeal],
+    [-.39,.55,1.17,heroIvory],
+    [.56,.55,1.32,heroGold]
+  ];
+  return browserModels(2.85,2,[.65,1,-.78],true).concat(people.flatMap(([x,h,z,color])=>[
+    {mesh:solid(.54,.47,h,.115),position:[x,h/2,z],color},
+    {mesh:solid(.34,.32,.35,.044),position:[x,h+.175,z],color:heroIvory}
+  ]));
+}
+
+for (const canvas of document.querySelectorAll("[data-interior-hero-art]")) {
+  const scene=canvas.dataset.interiorHeroArt;
+  const models=interiorHeroModels(scene);
+  const renderer=createArt(canvas,models);
+  if (!renderer) continue;
+  const reduced=matchMedia("(prefers-reduced-motion: reduce)");
+  let left=Infinity,right=-Infinity,top=Infinity,bottom=-Infinity;
+  for (const {mesh,position:[x,y,z]} of models) {
+    for (let i=0;i<mesh.length;i+=8) {
+      const px=x+mesh[i],py=y+mesh[i+1],pz=z+mesh[i+2];
+      const u=px*.808027+pz*.589145;
+      const v=(-px*.589145+pz*.808027)*.548024-py*.836463;
+      left=Math.min(left,u);right=Math.max(right,u);
+      top=Math.min(top,v);bottom=Math.max(bottom,v);
+    }
+  }
+  let started=null,frame=0;
+  function draw(now) {
+    cancelAnimationFrame(frame);
+    const width=canvas.clientWidth,height=canvas.clientHeight;
+    if (!width||!height) return;
+    const scale=.91*Math.min(width/(right-left),height/(bottom-top));
+    const elapsed=started===null?Infinity:now-started;
+    renderer.clear({width,height});
+    renderer.render(scale,models.map(({position:[x,y,z],pulse})=>{
+      const progress=pulse===undefined?1:Math.max(0,Math.min(1,(elapsed-pulse*110)/460));
+      return {position:[x,y+(top+bottom)/(2*.836463),z],
+        origin:.5-(left+right)*scale/(2*width),
+        growth:1-.25*Math.sin(Math.PI*progress),pyramid:0,stretch:0,bobPhase:0,ripple:0};
+    }),0,true);
+    if (elapsed<680) frame=requestAnimationFrame(draw);
+    else started=null;
+  }
+  canvas.addEventListener("pointerenter",event=>{
+    if (scene!=="portfolio"||event.pointerType==="touch"||reduced.matches||started!==null) return;
+    started=performance.now();
+    frame=requestAnimationFrame(draw);
+  });
+  new ResizeObserver(()=>draw(performance.now())).observe(canvas);
+  draw(performance.now());
+}
