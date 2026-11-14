@@ -511,11 +511,14 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     started ||= now;
     const elapsed=now-started;
     const embedded=parent.closest("[data-accordion-branch]");
-    const scale=Math.min(width*(embedded?.98:focus?.59:.91)/(2*Math.max(Math.abs(modelLeft),Math.abs(modelRight))),
+    const centerFocus=focus&&compact.matches&&embedded;
+    const modelWidth=centerFocus?modelRight-modelLeft:2*Math.max(Math.abs(modelLeft),Math.abs(modelRight));
+    const scale=Math.min(width*(embedded?.98:focus?.59:.91)/modelWidth,
       height*(embedded?.86:focus?.31:.57)/(modelBottom-modelTop));
     const sceneOffset=-(modelTop+modelBottom)*scale/2;
+    const horizontalOffset=centerFocus?-(modelLeft+modelRight)*scale/2:0;
     const project=(x,y,z)=>[
-      width/2+(x*.808027+z*.589145)*scale,
+      width/2+horizontalOffset+(x*.808027+z*.589145)*scale,
       height/2+sceneOffset+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
     ];
     renderer.clear({width,height});
@@ -531,7 +534,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       const growth=focus?Math.max(.01,settled):training?Math.max(.015,1-.30*remaining**1.6*Math.exp(-2.7*progress)*Math.cos(progress*Math.PI*4))
         :1;
       return {
-        origin:model.origin,
+        origin:model.origin+horizontalOffset/width,
         position:[x,y-(training||systems?0:remaining*.16)-sceneOffset/(scale*.836463),z],
         opacity:training?Math.min(1,progress*8):systems?eased:settled,
         growth,baseY:model.baseY??0,pyramid:0,stretch:0,bobPhase:0,ripple:0
