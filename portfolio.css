@@ -636,7 +636,7 @@ body{font-size:1rem}
 html[lang=en] .home-training span[lang=es],html:not([lang=en]) .home-training span[lang=en]{display:none}
 @media(max-width:700px){.home-training .training-consult{display:flex;justify-content:center;width:100%}}
 
-.compact-program-page .program-selector{display:grid;grid-template-columns:repeat(var(--segments),minmax(0,1fr));gap:.2rem;padding:.25rem;margin:clamp(.75rem,2vw,1.25rem) auto;border:1px solid #bcbdb2;border-radius:999px}
+.compact-program-page .program-selector{display:grid;grid-template-columns:repeat(var(--segments),minmax(0,1fr));gap:.2rem;padding:.25rem;margin:0 auto;border:1px solid #bcbdb2;background:var(--nav-surface,#171719);border-radius:999px}
 .compact-program-page .program-selector.wrap{width:min(calc(100% - 2 * var(--reading-padding)),calc(var(--reading-width) - 2 * var(--reading-padding)))}
 [data-theme=dark] .compact-program-page .program-selector{border-color:#525e60}
 .compact-program-page .program-selector a{display:grid;place-items:center;min-height:44px;padding:.4rem .5rem;border-radius:999px;font-weight:600;text-align:center;text-decoration:none;line-height:1.2}
@@ -651,7 +651,8 @@ html[lang=en] .compact-program-page span[lang=es],html:not([lang=en]) .compact-p
 .compact-program-page .program-selector a:focus-visible{outline:2px solid currentColor;outline-offset:-3px}
 .compact-program-page .training-context{padding-block-start:1.25rem}
 
-.program-selector-shell{position:relative;min-width:0}
+.program-selector-shell{position:relative;min-width:0;margin-block-end:clamp(.5rem,1vw,1rem)}
+.program-selector-shell .program-selector{translate:0 -50%}
 .detail .program-selector-shell.wrap{padding-inline:var(--reading-padding)}
 @media(max-width:700px){
   .compact-program-page .program-selector{display:flex;gap:0;overflow-x:auto;overscroll-behavior-inline:contain}
@@ -741,12 +742,12 @@ html[lang=en] .interior-hero span[lang=es],html:not([lang=en]) .interior-hero sp
 @supports (-webkit-text-stroke: .65px currentColor) {
   @media screen and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
     .scroll-heading.has-scroll-ink > .scroll-heading-source,
-    .cv-profile-fill.is-filling {
-      color: transparent;
+    .cv-profile-story .cv-profile-fill.is-filling {
+      color: var(--scroll-unfilled, #17171933);
       -webkit-text-stroke: .65px var(--scroll-outline, #171719b3);
     }
     .scroll-heading.has-scroll-ink > .scroll-heading-source {opacity:1}
     .cv-fill-overlay { -webkit-text-stroke: 0 transparent; }
-    [data-theme=dark]{--scroll-outline:#f4f2edb3}
+    [data-theme=dark]{--scroll-outline:#f4f2edb3;--scroll-unfilled:#ffffff33}
   }
 }
