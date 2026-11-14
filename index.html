@@ -94,7 +94,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .home-profile .cv-profile-disciplines{left:auto;width:auto;margin-inline:0;justify-items:start;text-align:left}
   .home-profile .cv-profile-disciplines [data-profile-slide]{white-space:normal}
   .home-case-grid{grid-auto-columns:92%;gap:.65rem}
-  .home-case{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+  .home-case{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;min-height:0}
+  .home-case>.home-case-art,.home-case>div:last-child{grid-column:auto;grid-row:auto}
 }
 .home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:1rem;background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
 .home-case-art i{width:17%;aspect-ratio:1;border:1px solid #e4d7b6;border-radius:.4rem;background:#eee2c9;transform:rotate(-9deg)}
