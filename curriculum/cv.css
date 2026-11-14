@@ -309,3 +309,6 @@
   background:var(--nav-surface,#171719);
 }
 @media print{.cv .program-selector-shell{display:none}}
+
+.home-profile .cv-profile-disciplines{margin-block:clamp(1.5rem,4vw,3.5rem)}
+html[lang=en] .home-profile .scroll-heading span[lang=es],html:not([lang=en]) .home-profile .scroll-heading span[lang=en]{display:none}
