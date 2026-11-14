@@ -218,7 +218,7 @@
 }
 .cv-section-switch[hidden],.cv-switch-panel[hidden]{display:none}
 .cv-section-switch button{min-height:44px;border:0;border-radius:999px;background:transparent;color:inherit;padding:.4rem .55rem;font:600 1rem/1.2 "Instrument Sans",system-ui,sans-serif;cursor:pointer}
-.cv-section-switch button[aria-selected=true]{color:#171719}
+.cv-section-switch button[aria-selected=true]{color:var(--selection-ink)}
 .cv-section-switch button:focus-visible{outline:2px solid currentColor;outline-offset:-3px}
 .cv-section-indicator{
   position:absolute;inset-block:.25rem;inset-inline-start:.25rem;width:calc(50% - .35rem);
@@ -258,7 +258,7 @@
   .cv-profile-disciplines.has-rise-entries [data-profile-slide]{opacity:1;transform:none}
 }
 
-.cv-section-indicator{background:#bba374}
+.cv-section-indicator{background:var(--selection-surface)}
 [data-theme=light] .cv-pillar{filter:drop-shadow(-3px -4px 7px #fff9e6b0)}
 [data-theme=light] .cv-pillar::before{
   background:linear-gradient(165deg,color-mix(in srgb,var(--pillar-top) 72%,#fffdf6),var(--pillar-top))
