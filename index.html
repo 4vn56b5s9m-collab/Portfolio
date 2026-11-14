@@ -114,6 +114,8 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 .site-footer#contacto{border-top:1px solid var(--line)}
 </style>
 <link rel="stylesheet" href="portfolio.css?v=overlap-scroll-fill">
+<link rel="stylesheet" href="curriculum/cv.css?v=profile-home">
+<script defer src="curriculum/profile-scroll.js?v=fill-80"></script>
 <script defer src="portfolio-interactions.js?v=home-finish"></script>
 <script src="site-preferences.js?v=floating-prefs"></script>
 <script defer src="section-headings.js?v=3"></script>
@@ -150,9 +152,20 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       <div><dd data-count="6">6</dd><dt>países</dt></div>
     </dl>
     <div class="intro-next">
-      <a class="intro-next-link" href="#especialidades">Seguir descubriendo <span aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5 8 5 5 5-5"/></svg></span></a>
+      <a class="intro-next-link" href="#perfil">Seguir descubriendo <span aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5 8 5 5 5-5"/></svg></span></a>
     </div>
   </section>
+  </div>
+  <div class="cv home-profile">
+  <div class="home-profile-inner">
+    <section class="cv-section cv-profile" aria-labelledby="perfil">
+      <h2 id="perfil" tabindex="-1">Perfil</h2>
+      <div class="cv-copy"><p class="cv-profile-story" data-profile-story>
+        <span class="cv-profile-fill" data-profile-fill><span>Diseño</span> <em>productos digitales</em> <span>combinando:</span></span>
+        <strong class="cv-profile-disciplines"><span data-profile-slide>Behavioral design</span> <span data-profile-slide>Sistemas de diseño</span> <span data-profile-slide>Motion e inmersión</span> <span data-profile-slide>Formación de equipos</span></strong>
+        <span class="cv-profile-fill" data-profile-fill><span>para que las</span> <em>interfaces sean claras y coherentes</em>.<br><br><span>Trabajo con</span> <em>clientes, producto y desarrollo</em><span>. También formo a equipos de diseño e investigo cómo integrar la IA en su trabajo.</span></span></p></div>
+    </section>
+  </div>
   </div>
   <div id="especialidades">
   <section class="specialty-selector accordion-specialties mobile-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
@@ -377,7 +390,7 @@ const hero=document.querySelector(".hero");
 const slot=hero.querySelector(".hero-visual");
 const introCue=document.querySelector(".intro-next");
 const mobileSpecialtiesTitle=document.querySelector("#mobile-specialties-title");
-const desktopSpecialtiesTitle=document.querySelector("#feature-title");
+const profileTitle=document.querySelector("#perfil");
 const cardLayout=matchMedia("(max-width:700px)");
 const specialtySection=mobileSpecialtiesTitle.closest("[data-specialty-accordion]");
 const specialtyCards=[...specialtySection.querySelectorAll("[data-accordion-branch]")];
@@ -531,9 +544,8 @@ introCue.querySelector("a").addEventListener("click",event=>{
   if (event.metaKey||event.ctrlKey||event.shiftKey||event.altKey) return;
   event.preventDefault();
   introCue.classList.add("is-away");
-  const specialtiesTitle=cardLayout.matches?mobileSpecialtiesTitle:desktopSpecialtiesTitle;
-  specialtiesTitle.focus({preventScroll:true});
-  specialtiesTitle.scrollIntoView({behavior:reduced.matches?"instant":"smooth",block:"start"});
+  profileTitle.focus({preventScroll:true});
+  profileTitle.scrollIntoView({behavior:reduced.matches?"instant":"smooth",block:"start"});
 });
 document.addEventListener("visibilitychange",scheduleCycle);
 reduced.addEventListener("change",()=>{
