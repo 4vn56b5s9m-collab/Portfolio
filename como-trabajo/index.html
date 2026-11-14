@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cómo trabajo · Alejandro Sánchez Bretones</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="../portfolio.css?v=compact-programs">
+<link rel="stylesheet" href="../portfolio.css?v=program-heroes">
 <script src="../site-preferences.js?v=specialty-names"></script>
 <script defer src="../portfolio-interactions.js?v=specialty-controls"></script>
 <script type="module" src="../portfolio-art.js?v=specialty-framing"></script>
@@ -17,14 +17,20 @@
 <main class="compact-program-page">
   <header class="compact-page-hero"><div class="wrap"><div>
     <h1><span lang="es">Cómo trabajo</span><span lang="en">How I work</span></h1>
-    <p><span lang="es">Cuatro especialidades para diseñar productos, interfaces y equipos.</span><span lang="en">Four specialties for designing products, interfaces and teams.</span></p>
-  </div><span class="compact-isometry" aria-hidden="true"><i></i><i></i><i></i></span></div></header>
-  <nav class="program-selector wrap" data-program-selector aria-label="Especialidades" style="--segments:4">
+    <p><span lang="es">Diseño interfaces que orientan decisiones, sistemas que escalan y formas de trabajo que dan autonomía al equipo.</span><span lang="en">I design interfaces that guide decisions, systems that scale, and ways of working that help teams work independently.</span></p>
+  </div><div class="cv-pillars" aria-hidden="true"><span class="cv-pillar cv-pillar-back"><i></i></span><span class="cv-pillar cv-pillar-left"><i></i></span><span class="cv-pillar cv-pillar-right"><i></i></span><span class="cv-pillar cv-pillar-front"><i></i></span></div></div></header>
+  <div class="program-selector-shell wrap">
+<nav class="program-selector" data-program-selector aria-label="Especialidades" style="--segments:4">
     <a data-program="ui-behavioral-design" href="?tema=ui-behavioral-design"><span lang="es">Behavioral design</span><span lang="en">Behavioral design</span></a>
     <a data-program="sistemas-de-diseno" href="?tema=sistemas-de-diseno"><span lang="es">Sistemas de diseño</span><span lang="en">Design systems</span></a>
     <a data-program="motion-e-inmersion" href="?tema=motion-e-inmersion"><span lang="es">Motion e inmersión</span><span lang="en">Motion & immersion</span></a>
     <a data-program="liderazgo-y-formacion" href="?tema=liderazgo-y-formacion"><span lang="es">Formación de equipos</span><span lang="en">Team training</span></a>
   </nav>
+    <div class="program-scroll-controls">
+      <button type="button" aria-label="Desplazar opciones a la izquierda">‹</button>
+      <button type="button" aria-label="Desplazar opciones a la derecha">›</button>
+    </div>
+  </div>
   <section id="ui-behavioral-design" aria-label="Behavioral design">
 <section class="program-intro"><div class="wrap"><h2>Que el siguiente paso esté claro</h2><p class="lead">Diseño interfaces para momentos en los que una persona necesita decidir qué hacer. Ordeno opciones, condiciones y estados para que pueda actuar con una idea clara de lo que viene después.</p><ul class="tags"><li>Diseño de interfaz</li><li>Flujos de decisión</li><li>Estados y recuperación</li></ul></div></section>
   <section class="detail-section"><div class="wrap"><h2>Cómo trabajo</h2><div class="story-grid"><article><h3>Empiezo por la decisión</h3><p>Identifico qué necesita saber la persona antes de elegir y qué información puede esperar. En un servicio de reparación, el alcance, el precio y el siguiente paso deben quedar claros en el momento de confirmar.</p></article><article><h3>Diseño también las excepciones</h3><p>Trabajo los estados que suelen quedar fuera del flujo principal: un dispositivo que no cumple las condiciones, una solicitud en espera o un error de pago. Cada estado explica qué ha pasado y qué puede hacer la persona.</p></article><article><h3>Compruebo si se entiende</h3><p>En un prototipo puedo pedir a alguien que elija una opción y explique qué cree que ocurrirá después. Esa respuesta ayuda a decidir qué información necesita más peso o debe aparecer antes.</p></article></div></div></section>
@@ -58,6 +64,36 @@
 (() => {
   const links = [...document.querySelectorAll("[data-program-selector] a")];
   const panels = links.map(link => document.getElementById(link.dataset.program));
+
+  const selector = links[0].closest("nav");
+  const shell = selector.parentElement;
+  const [previous, next] = shell.querySelectorAll("button");
+  const mobile = matchMedia("(max-width:700px)");
+  function updateArrows() {
+    previous.disabled = selector.scrollLeft <= 1;
+    next.disabled = selector.scrollLeft + selector.clientWidth >= selector.scrollWidth - 1;
+  }
+  function revealSelection() {
+    const selected = selector.querySelector('[aria-current="true"]');
+    if (!mobile.matches || !selected) return;
+    const bounds = selector.getBoundingClientRect();
+    const item = selected.getBoundingClientRect();
+    selector.scrollLeft += item.left - bounds.left - (bounds.width - item.width) / 2;
+  }
+  function measureSelector() {
+    const available = shell.clientWidth - parseFloat(getComputedStyle(shell).paddingLeft) - parseFloat(getComputedStyle(shell).paddingRight);
+    const needed = links.reduce((width, link) => width + link.getBoundingClientRect().width, 10);
+    shell.classList.toggle("has-overflow", mobile.matches && needed > available);
+    revealSelection();
+    updateArrows();
+  }
+  const scrollBehavior = matchMedia("(prefers-reduced-motion: reduce)");
+  [previous, next].forEach((button, index) => button.addEventListener("click", () => {
+    selector.scrollBy({left: (index ? 1 : -1) * selector.clientWidth * .75, behavior: scrollBehavior.matches ? "instant" : "smooth"});
+  }));
+  selector.addEventListener("scroll", updateArrows, {passive:true});
+  new ResizeObserver(measureSelector).observe(shell);
+  document.fonts?.ready.then(measureSelector);
   function select() {
     const url = new URL(location.href);
     const id = url.searchParams.get("tema") || url.hash.slice(1);
@@ -67,6 +103,8 @@
       else link.removeAttribute("aria-current");
       panels[i].hidden = i !== index;
     });
+    revealSelection();
+    updateArrows();
   }
   links.forEach(link => link.addEventListener("click", event => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
