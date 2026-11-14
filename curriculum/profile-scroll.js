@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (widest) disciplines.style.setProperty("--cv-disciplines-size",
         size * document.documentElement.clientWidth * .90 / widest + "px");
     }
-    const openingTop = fills[0].element.getBoundingClientRect().top + scrollY;
+    const openingTop = (fills[0]?.element ?? story).getBoundingClientRect().top + scrollY;
     const openingStart = Math.max(24, openingTop - innerHeight * (compact.matches ? .76 : .9));
     const starts = [];
     for (const slide of slides) {
