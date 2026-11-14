@@ -70,7 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
       fill.start = index === 0 ? openingStart
         : Math.max(entries.at(-1).end + (compact.matches ? 60 : 35), top - innerHeight * .96);
       fill.end = Math.max(fill.start + 72, top + box.height - innerHeight * (index > 0 && compact.matches ? .81 : .76));
-      if (index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
+      if (compact.matches && index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
+      if (!compact.matches) {
+        const middle = top + box.height / 2 - innerHeight * .5;
+        fill.start = Math.max(0, middle - innerHeight * .15);
+        fill.end = middle + innerHeight * .15;
+      }
       fill.lastMask = "";
     }
     needsMeasure = false;
