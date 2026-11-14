@@ -298,3 +298,14 @@
   .cv-profile-disciplines span{white-space:normal}
   .cv-profile-disciplines.has-rise-entries [data-profile-slide].is-in-view{transition:transform .48s ease-out,opacity .4s ease-out}
 }
+
+.home-profile{background:var(--cv-page);color:var(--profile-ink,#171719)}
+[data-theme=dark] .home-profile{--profile-ink:#fff}
+.home-profile-inner{width:min(100%,var(--reading-width));margin-inline:auto;padding-inline:var(--reading-padding)}
+.home-profile #perfil{scroll-margin-top:calc(var(--nav-height,4.5rem) + 1rem)}
+.cv .program-selector-shell .cv-section-switch{
+  margin-block:0;
+  translate:0 -50%;
+  background:var(--nav-surface,#171719);
+}
+@media print{.cv .program-selector-shell{display:none}}
