@@ -24,7 +24,7 @@
       const footerBox = footer?.getBoundingClientRect();
       const reveal = footerBox
         ? (height - footerBox.top) / Math.min(footerBox.height * .8, height * .8)
-        : (.75 * height - box.top - box.height / 2) / (.30 * height);
+        : (.80 * height - box.top - box.height / 2) / (.35 * height);
       const progress = Math.max(0, Math.min(1, reveal));
       const bleed = Math.ceil(parseFloat(getComputedStyle(heading).fontSize) * .35);
       range.selectNodeContents(source);
