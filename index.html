@@ -52,6 +52,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .career-list{list-style:none;margin:2rem 0 0;padding:0;max-width:52rem}
 .career-list li{display:grid;grid-template-columns:minmax(6rem,.35fr) 1fr;gap:.8rem 1.3rem;padding:.9rem 0;border-top:1px solid var(--line)}
 .career-list strong{font-weight:600}
+.career-list{--career-accent:#235c65}
+[data-theme=dark] .career-list{--career-accent:#a2d7da}
+@media(hover:hover){
+  #trayectoria .career-list li:hover strong{color:var(--career-accent)}
+}
 .career-cta{display:inline-flex;align-items:center;gap:.65rem;min-height:44px;margin-top:calc(1.5rem + 24px);padding:.55rem 1rem;border:1px solid #25737d;border-radius:.7rem;background:#194653;color:#fff;text-decoration:none;font-weight:600}
 .career-cta:is(:hover,:focus-visible){background:#246070}
 html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[lang=en]{display:none}
