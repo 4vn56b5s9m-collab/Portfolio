@@ -309,7 +309,7 @@ let progressAnimations=[], cycleLeft=cycleDuration, cycleStarted=0;
 let requestHeroFrame=()=>{};
 hero.dataset.litPiece="0";
 
-let pendingBranch=-1, visualActive=0;
+let pendingBranch=-1, visualActive=0, hoverFade;
 const typingInterval=36;
 
 function highlightBranch(index) {
@@ -322,15 +322,17 @@ function highlightBranch(index) {
   requestHeroFrame();
 }
 
-function showBranch(index, immediate=false) {
-  if (immediate) {
+function showBranch(index, fromHover=false) {
+  if (fromHover) {
     resetCycle();
     highlightBranch(index);
   }
-  if (index===pendingBranch||(index===active&&pendingBranch<0)) return;
+  if ((index===pendingBranch&&(!fromHover||hoverFade))||(index===active&&pendingBranch<0)) return;
   pendingBranch=index;
   clearTimeout(typeTimer);
   function enter() {
+    hoverFade?.cancel();
+    hoverFade=undefined;
     resetCycle();
     pendingBranch=-1;
     active=index;
@@ -352,6 +354,11 @@ function showBranch(index, immediate=false) {
   const old=typed.textContent;
   if (reduced.matches||!old.length) {
     enter();
+    return;
+  }
+  if (fromHover||hoverFade) {
+    hoverFade??=typed.animate([{opacity:1},{opacity:0}],{duration:100,easing:"ease-out",fill:"forwards"});
+    hoverFade.onfinish=enter;
     return;
   }
   let length=old.length;
