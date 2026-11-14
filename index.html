@@ -92,16 +92,8 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
 
 .notes h2{font:400 clamp(2.7rem,6vw,5.6rem)/.94 var(--display);letter-spacing:-.025em;max-width:16ch;text-wrap:balance}
 .notes #home-training-title,.notes #home-portfolio-title{max-width:none}
-#trayectoria .home-scroll-copy{font:400 clamp(1.65rem,4vw,3.25rem)/1.15 var(--display);margin:0 0 2rem;max-width:none;color:var(--career-primary)}
-.home-scroll-copy{position:relative}
-:is(.home-scroll-copy,#trayectoria .home-scroll-copy).is-enhanced{color:color-mix(in srgb,var(--home-ink) 62%,transparent)}
-.home-scroll-ink{position:absolute;inset:0;color:var(--home-ink);text-align:inherit;pointer-events:none;clip-path:var(--home-mask,inset(0 100% 0 0))}
 html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lang=en] .site-footer span[lang=es],html:not([lang=en]) .site-footer span[lang=en]{display:none}
-@media(prefers-reduced-motion:reduce), (forced-colors:active){
-  .home-scroll-copy.is-enhanced{color:var(--home-ink)!important}
-  .home-scroll-copy.is-enhanced>span[lang] .story-accent{color:var(--story-accent)}
-  .home-scroll-ink{display:none}
-}
+
 .training-band .home-training-preview{display:block;padding:var(--training-card-padding);border:1px solid var(--training-rule);border-radius:calc(var(--action-radius) + var(--training-card-padding));background:var(--training-surface)}
 .home-training-preview h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0}
 .training-band .home-training-preview{display:flex;align-items:center;justify-content:space-between;gap:1rem;color:inherit;text-decoration:none}
@@ -112,8 +104,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 :root{--story-accent:#165a56}
 [data-theme=dark]{--story-accent:#3bc4bc}
 .story-accent{color:var(--story-accent);font-style:normal}
-.home-scroll-copy.is-enhanced>span[lang] .story-accent{color:inherit}
-#trayectoria h2,#home-training-title,#home-portfolio-title{max-width:none;font-size:clamp(2.4rem,5.3vw,5.3rem)}
+
 [data-theme=dark] #trayectoria h2{color:#fff}
 .career-band{background:radial-gradient(ellipse at 80% 16%,#d4bd8c55,transparent 62%),#f2ede0}
 [data-theme=dark] .career-band{background:radial-gradient(ellipse at 83% 18%,#d9bb802e,transparent 67%),#19191b}
@@ -122,9 +113,10 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 [data-theme=dark] .training-band{background:radial-gradient(ellipse at 79% 15%,#24545c,transparent 72%),radial-gradient(ellipse at 12% 88%,#173e48,transparent 65%),#171719}
 .site-footer#contacto{border-top:1px solid var(--line)}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=nav-accent">
+<link rel="stylesheet" href="portfolio.css?v=section-headings">
 <script defer src="portfolio-interactions.js?v=contact-icons"></script>
 <script src="site-preferences.js?v=floating-prefs"></script>
+<script defer src="section-headings.js?v=1"></script>
 </head>
 <body>
 <header id="inicio" class="site-header"><a class="site-name" href="./#inicio" aria-current="page">Alejandro</a><nav aria-label="Navegación principal"><a href="./como-trabajo/">Cómo trabajo</a><a href="./portfolio/">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">CV</a></nav><div class="site-contact-icons"><a href="tel:+34648246290" aria-label="Llamar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2c0 8.8 7.2 16 16 16a2 2 0 0 0 2-2v-3l-5-2-2 2a13 13 0 0 1-6-6l2-2z"/></svg></a><a href="mailto:alejandrosanchezbretones@gmail.com" aria-label="Enviar correo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.linkedin.com/in/alejandrosanchezbretones/" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v6m0-10v.1m4 9.9v-6m0 2a2 2 0 0 1 4 0v4"/></svg></a></div></header>
@@ -165,7 +157,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   <div id="especialidades">
   <section class="specialty-selector accordion-specialties mobile-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
-    <h2 id="mobile-specialties-title" tabindex="-1" class="home-scroll-copy"><span lang="es">Combino estas disciplinas según las <em class="story-accent">necesidades de cada proyecto</em>.</span><span lang="en">I combine these disciplines according to <em class="story-accent">what each project needs</em>.</span></h2>
+    <h2 id="mobile-specialties-title" tabindex="-1" class="scroll-heading"><span lang="es">Combino estas disciplinas según las <em class="story-accent">necesidades de cada proyecto</em>.</span><span lang="en">I combine these disciplines according to <em class="story-accent">what each project needs</em>.</span></h2>
     <div class="branch-carousel">
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
       <article data-accordion-branch="0" class="is-previewed"><div class="branch-card-copy"><strong>Behavioral design</strong><p class="branch-card-description"><span lang="es">Diseño interfaces mediante sesgos cognitivos para guiar al usuario durante las tomas de decisión o navegación.</span><span lang="en">I design interfaces using cognitive biases to guide people as they make decisions or navigate.</span></p></div><a class="branch-card-cta" href="como-trabajo/?tema=ui-behavioral-design">Behavioral design <b aria-hidden="true">↗</b></a></article>
@@ -239,7 +231,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 </section>
   <section class="specialty-selector feature-specialties" id="especialidades-en-detalle" aria-labelledby="feature-title">
     <div class="specialty-inner">
-      <h2 id="feature-title" tabindex="-1" class="home-scroll-copy"><span lang="es">Combino estas disciplinas según las <em class="story-accent">necesidades de cada proyecto</em>.</span><span lang="en">I combine these disciplines according to <em class="story-accent">what each project needs</em>.</span></h2>
+      <h2 id="feature-title" tabindex="-1" class="scroll-heading"><span lang="es">Combino estas disciplinas según las <em class="story-accent">necesidades de cada proyecto</em>.</span><span lang="en">I combine these disciplines according to <em class="story-accent">what each project needs</em>.</span></h2>
       <div class="specialty-grid">
         <a class="specialty-tile" href="como-trabajo/?tema=ui-behavioral-design">
           <div class="specialty-tile-copy"><h3>Behavioral design</h3><p><span lang="es">Diseño interfaces mediante sesgos cognitivos para guiar al usuario durante las tomas de decisión o navegación.</span><span lang="en">I design interfaces using cognitive biases to guide people as they make decisions or navigate.</span></p></div>
@@ -305,7 +297,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   </section>
   </div>
   <section class="notes home-portfolio" aria-labelledby="home-portfolio-title">
-    <h2 id="home-portfolio-title" class="home-scroll-copy"><span lang="es">Así es como el diseño se traduce en resultados.</span><span lang="en">Here’s how design translates into results.</span></h2>
+    <h2 id="home-portfolio-title" class="scroll-heading"><span lang="es">Así es como el diseño se traduce en resultados.</span><span lang="en">Here’s how design translates into results.</span></h2>
     <div class="home-case-grid">
     <article class="home-case">
       <div class="home-case-art" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -339,8 +331,8 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   </section>
   <div class="career-band">
   <section class="notes" id="trayectoria">
-    <p class="home-scroll-copy"><span lang="es">Y es que llevo más de siete años trabajando en proyectos tanto en empresas con producto propio como en consultoría, adaptando mi forma de diseñar a cada proyecto y compartiendo lo aprendido con otros equipos.</span><span lang="en">I’ve spent more than seven years working on projects both in-house and in consulting, adapting how I design to each project and sharing what I’ve learned with other teams.</span></p>
-    <h2><span lang="es">Este ha sido mi camino hasta llegar a <em class="story-accent">experto de diseño</em></span><span lang="en">My path to becoming a <em class="story-accent">design expert</em></span></h2>
+    <p><span lang="es">Y es que llevo más de siete años trabajando en proyectos tanto en empresas con producto propio como en consultoría, adaptando mi forma de diseñar a cada proyecto y compartiendo lo aprendido con otros equipos.</span><span lang="en">I’ve spent more than seven years working on projects both in-house and in consulting, adapting how I design to each project and sharing what I’ve learned with other teams.</span></p>
+    <h2 class="scroll-heading"><span lang="es">Este ha sido mi camino hasta llegar a <em class="story-accent">experto de diseño</em></span><span lang="en">My path to becoming a <em class="story-accent">design expert</em></span></h2>
     <ul class="career-list">
       <li><strong>Flat 101</strong><div><span lang="es">He combinado <strong>sistemas de diseño y Behavioral design</strong> en proyectos de gran escala. Como experto en diseño, acompaño a otros diseñadores y he <strong>formado tanto al equipo interno como a equipos de otras empresas</strong>.</span><span lang="en">I’ve combined <strong>design systems and behavioral design</strong> on large-scale projects. As a design expert, I support other designers and have <strong>trained both our in-house team and teams at other companies</strong>.</span></div></li>
       <li><strong>Zennio</strong><div><span lang="es">Trabajé desde dentro en una <strong>familia de productos propios de domótica</strong>. Diseñé interfaces, contribuí a construir un sistema común para que los productos evolucionaran con coherencia y <strong>formé tanto al equipo interno como a equipos de otras empresas</strong>.</span><span lang="en">I worked in-house on a <strong>family of smart home products</strong>. I designed interfaces, helped build a shared system so the products could evolve consistently, and <strong>trained both in-house and external teams</strong>.</span></div></li>
@@ -353,7 +345,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   </div>
   <div class="training-band">
   <section class="notes home-training" aria-labelledby="home-training-title">
-    <h2 id="home-training-title"><span lang="es">Hoy también llevo esa experiencia a otros equipos de diseño.</span><span lang="en">Today I bring that experience to other design teams.</span></h2>
+    <h2 id="home-training-title" class="scroll-heading"><span lang="es">Hoy también llevo esa experiencia a otros equipos de diseño.</span><span lang="en">Today I bring that experience to other design teams.</span></h2>
     <p><span lang="es">Trabajo sobre vuestros proyectos para ayudaros a definir criterios y aplicar lo aprendido con autonomía.</span><span lang="en">I work on your projects to help you set shared standards and apply what you learn independently.</span></p>
     <div class="home-training-areas">
       <a class="home-training-preview" href="./formaciones-a-empresas/?tema=figma-sistemas"><h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></h3><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
@@ -366,7 +358,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 </main>
 <footer class="site-footer" id="contacto">
   <div class="footer-inner">
-    <h2><span lang="es">¿Cómo puedo aportar a <em class="story-accent">tu proyecto</em> o a <em class="story-accent">tu equipo de diseño</em>?</span><span lang="en">How can I help <em class="story-accent">your project</em> or <em class="story-accent">your design team</em>?</span></h2>
+    <h2 class="scroll-heading"><span lang="es">¿Cómo puedo aportar a <em class="story-accent">tu proyecto</em> o a <em class="story-accent">tu equipo de diseño</em>?</span><span lang="en">How can I help <em class="story-accent">your project</em> or <em class="story-accent">your design team</em>?</span></h2>
     <p><span lang="es">Cuéntame qué estáis diseñando o qué queréis mejorar y vemos cómo puedo ayudar.</span><span lang="en">Tell me what you’re designing or what you’d like to improve, and we can see where I can help.</span></p>
     <nav class="contact-blocks" aria-label="Opciones de contacto">
       <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span lang="es">Hablemos en LinkedIn</span><span lang="en">Let’s talk on LinkedIn</span><span aria-hidden="true">↗</span></a>
@@ -647,53 +639,6 @@ if (!reduced.matches) {
 }
 </script>
 <script type="application/json" id="page-translations">{"Seguir descubriendo":"Keep exploring","Guía al usuario. Facilita el siguiente paso.":"Guide the user. Make the next step easier.","Una microinteracción puede cambiar tu foco de atención.":"One microinteraction can redirect your attention.","Comparte el criterio. Eleva el nivel del equipo.":"Share how you make decisions. Help the team improve.","Una base común. Distintas marcas.":"A shared foundation. Different brands.","Diseño interfaces claras en el momento de decidir, para guiar al usuario y facilitar el siguiente paso.":"I design interfaces that are clear at the point of decision, guiding people and making the next step easier.","Diseño microinteracciones que guían la atención y ayudan a encontrar el foco en cada momento.":"I design microinteractions that guide attention and make it clear where to focus.","Comparto criterios y prácticas de diseño para que el equipo eleve su nivel y trabaje con más autonomía.":"I share design principles and practices to help teams improve and work more independently.","Creo una base de diseño común que distintas marcas pueden adaptar a sus propios productos.":"I build a shared design foundation that different brands can adapt to their own products."}</script>
-<script>
-(() => {
-  const entries = [...document.querySelectorAll(".home-scroll-copy")].map(element => {
-    const ink = document.createElement("span");
-    ink.className = "home-scroll-ink";
-    ink.setAttribute("aria-hidden", "true");
-    ink.append(...[...element.childNodes].map(node => node.cloneNode(true)));
-    element.append(ink);
-    element.classList.add("is-enhanced");
-    return {element, ink};
-  });
-  const range = document.createRange();
-  let frame = 0;
-  function draw() {
-    frame = 0;
-    for (const {element, ink} of entries) {
-      const box = element.getBoundingClientRect();
-      if (!box.width || !box.height) continue;
-      const language = document.documentElement.lang === "en" ? "en" : "es";
-      range.selectNodeContents(element.querySelector(':scope > [lang="' + language + '"]'));
-      const lines = [];
-      for (const rect of range.getClientRects()) {
-        if (!rect.width) continue;
-        const last = lines.at(-1);
-        if (last && Math.abs(last.top - rect.top) < 2) {
-          last.width = Math.max(last.width, rect.right - last.left);
-          last.bottom = Math.max(last.bottom, rect.bottom);
-        } else lines.push({top:rect.top,bottom:rect.bottom,left:rect.left,width:rect.width});
-      }
-      if (!lines.length) continue;
-      const progress = Math.max(0, Math.min(1, (innerHeight * .65 - (box.top + box.height / 2)) / (innerHeight * .30)));
-      const step = progress * lines.length;
-      const index = Math.min(lines.length - 1, Math.floor(step));
-      const line = lines[index];
-      const top = index ? (lines[index - 1].bottom + line.top) / 2 - box.top : 0;
-      const bottom = index === lines.length - 1 ? box.height : (line.bottom + lines[index + 1].top) / 2 - box.top;
-      const right = line.left - box.left + line.width * (step - index);
-      ink.style.setProperty("--home-mask", progress === 1 ? "inset(0)" :
-        `polygon(0 0, 100% 0, 100% ${top}px, ${right}px ${top}px, ${right}px ${bottom}px, 0 ${bottom}px)`);
-    }
-  }
-  function queue() { if (!frame) frame = requestAnimationFrame(draw); }
-  addEventListener("scroll", queue, {passive:true});
-  addEventListener("resize", queue);
-  document.fonts?.ready.then(queue);
-  queue();
-})();
-</script>
+
 </body>
 </html>
