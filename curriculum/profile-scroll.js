@@ -73,9 +73,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (compact.matches && index === 0) fill.end = Math.min(fill.end, Math.max(fill.start + 1, entries[0].start));
       if (!compact.matches) {
         const middle = top + box.height / 2 - innerHeight * .60;
-        fill.start = Math.max(0, middle - innerHeight * .15);
         fill.end = middle + innerHeight * .15;
       }
+      fill.start = Math.min(fill.end - 1, Math.max(0, top + box.height / 2 - innerHeight * .80));
       fill.lastMask = "";
     }
     needsMeasure = false;
