@@ -74,14 +74,18 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .home-portfolio{padding-block-end:clamp(3rem,6vw,5rem)}
 .home-case-grid{
   display:grid;grid-auto-flow:column;grid-auto-columns:88%;gap:1.25rem;
-  margin-top:2rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-block-end:.65rem;
+  width:100vw;margin:2rem calc(50% - 50vw) 0;
+  padding-inline:max(var(--reading-padding),calc((100vw - var(--reading-width)) / 2 + var(--reading-padding)));
+  overflow-x:auto;scroll-snap-type:x mandatory;padding-block-end:.65rem;
 }
 .home-case-grid:focus-visible{outline-offset:3px}
 .home-case{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(.75rem,3vw,2rem);
   min-width:0;padding:clamp(1rem,3vw,2.5rem);border:1px solid var(--line);
-  border-radius:1rem;scroll-snap-align:start;
+  border-radius:1rem;scroll-snap-align:center;min-height:clamp(19rem,30vw,24rem);
 }
+.home-case-grid[data-ready] .home-case:not([data-current]):not(:focus-within){opacity:.8}
+@media(prefers-reduced-motion:no-preference){.home-case{transition:opacity .2s ease}}
 .home-case>.home-case-art{grid-column:2;grid-row:1;min-width:0}
 .home-case>div:last-child{grid-column:1;grid-row:1}
 .home-case>div:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem}
@@ -401,6 +405,30 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a class="footer-return" href="#page-top"><span lang="es">Volver al inicio</span><span lang="en">Back to top</span><span aria-hidden="true">↑</span></a></div>
   </div>
 </footer>
+<script>
+{
+  const track = document.querySelector(".home-case-grid");
+  const cards = [...track.children];
+  let active;
+  function updateCurrentCase() {
+    const bounds = track.getBoundingClientRect();
+    const center = bounds.left + bounds.width / 2;
+    const nearest = cards.reduce((best, card) => {
+      const box = card.getBoundingClientRect();
+      const distance = Math.abs(box.left + box.width / 2 - center);
+      return distance < best.distance ? {card, distance} : best;
+    }, {distance: Infinity}).card;
+    if (nearest === active) return;
+    active?.removeAttribute("data-current");
+    nearest.setAttribute("data-current", "");
+    active = nearest;
+  }
+  track.addEventListener("scroll", updateCurrentCase, {passive:true});
+  new ResizeObserver(updateCurrentCase).observe(track);
+  updateCurrentCase();
+  track.setAttribute("data-ready", "");
+}
+</script>
 <script type="module">
 import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=specialty-framing";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
