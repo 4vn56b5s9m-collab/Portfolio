@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cómo trabajo · Alejandro Sánchez Bretones</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="../portfolio.css?v=program-heroes">
+<link rel="stylesheet" href="../portfolio.css?v=interior-hero">
 <script src="../site-preferences.js?v=specialty-names"></script>
 <script defer src="../portfolio-interactions.js?v=specialty-controls"></script>
 <script type="module" src="../portfolio-art.js?v=specialty-framing"></script>
 <link rel="stylesheet" href="../case-studies.css?v=section-padding">
 <script defer src="../scroll-demos.js?v=2"></script>
+<link rel="stylesheet" href="../curriculum/cv.css?v=interior-hero">
 </head>
 <body class="detail compact-program-site">
 <header id="inicio" class="site-header"><a class="site-name" href="../#inicio">Alejandro</a><nav aria-label="Navegación principal"><a href="./" aria-current="page">Cómo trabajo</a><a href="../portfolio/">Portfolio</a><a href="../formaciones-a-empresas/">Formaciones a empresas</a><a href="../curriculum/">Currículum</a></nav></header>
 <main class="compact-program-page">
-  <header class="compact-page-hero"><div class="wrap"><div>
+  <header class="cv-hero interior-hero"><div class="wrap cv-hero-inner"><div>
     <h1><span lang="es">Cómo trabajo</span><span lang="en">How I work</span></h1>
     <p><span lang="es">Diseño interfaces que orientan decisiones, sistemas que escalan y formas de trabajo que dan autonomía al equipo.</span><span lang="en">I design interfaces that guide decisions, systems that scale, and ways of working that help teams work independently.</span></p>
   </div><div class="cv-pillars" aria-hidden="true"><span class="cv-pillar cv-pillar-back"><i></i></span><span class="cv-pillar cv-pillar-left"><i></i></span><span class="cv-pillar cv-pillar-right"><i></i></span><span class="cv-pillar cv-pillar-front"><i></i></span></div></div></header>
@@ -26,10 +27,6 @@
     <a data-program="motion-e-inmersion" href="?tema=motion-e-inmersion"><span lang="es">Motion e inmersión</span><span lang="en">Motion & immersion</span></a>
     <a data-program="liderazgo-y-formacion" href="?tema=liderazgo-y-formacion"><span lang="es">Formación de equipos</span><span lang="en">Team training</span></a>
   </nav>
-    <div class="program-scroll-controls">
-      <button type="button" aria-label="Desplazar opciones a la izquierda">‹</button>
-      <button type="button" aria-label="Desplazar opciones a la derecha">›</button>
-    </div>
   </div>
   <section id="ui-behavioral-design" aria-label="Behavioral design">
 <section class="program-intro"><div class="wrap"><h2>Que el siguiente paso esté claro</h2><p class="lead">Diseño interfaces para momentos en los que una persona necesita decidir qué hacer. Ordeno opciones, condiciones y estados para que pueda actuar con una idea clara de lo que viene después.</p><ul class="tags"><li>Diseño de interfaz</li><li>Flujos de decisión</li><li>Estados y recuperación</li></ul></div></section>
@@ -66,13 +63,7 @@
   const panels = links.map(link => document.getElementById(link.dataset.program));
 
   const selector = links[0].closest("nav");
-  const shell = selector.parentElement;
-  const [previous, next] = shell.querySelectorAll("button");
   const mobile = matchMedia("(max-width:700px)");
-  function updateArrows() {
-    previous.disabled = selector.scrollLeft <= 1;
-    next.disabled = selector.scrollLeft + selector.clientWidth >= selector.scrollWidth - 1;
-  }
   function revealSelection() {
     const selected = selector.querySelector('[aria-current="true"]');
     if (!mobile.matches || !selected) return;
@@ -80,20 +71,6 @@
     const item = selected.getBoundingClientRect();
     selector.scrollLeft += item.left - bounds.left - (bounds.width - item.width) / 2;
   }
-  function measureSelector() {
-    const available = shell.clientWidth - parseFloat(getComputedStyle(shell).paddingLeft) - parseFloat(getComputedStyle(shell).paddingRight);
-    const needed = links.reduce((width, link) => width + link.getBoundingClientRect().width, 10);
-    shell.classList.toggle("has-overflow", mobile.matches && needed > available);
-    revealSelection();
-    updateArrows();
-  }
-  const scrollBehavior = matchMedia("(prefers-reduced-motion: reduce)");
-  [previous, next].forEach((button, index) => button.addEventListener("click", () => {
-    selector.scrollBy({left: (index ? 1 : -1) * selector.clientWidth * .75, behavior: scrollBehavior.matches ? "instant" : "smooth"});
-  }));
-  selector.addEventListener("scroll", updateArrows, {passive:true});
-  new ResizeObserver(measureSelector).observe(shell);
-  document.fonts?.ready.then(measureSelector);
   function select() {
     const url = new URL(location.href);
     const id = url.searchParams.get("tema") || url.hash.slice(1);
@@ -104,7 +81,6 @@
       panels[i].hidden = i !== index;
     });
     revealSelection();
-    updateArrows();
   }
   links.forEach(link => link.addEventListener("click", event => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
