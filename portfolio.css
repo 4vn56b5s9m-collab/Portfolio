@@ -613,20 +613,22 @@ body{font-size:1rem}
   [data-theme=light] .work-specialties .specialty-tile-arrow{color:#116652}
 }
 
+:root{--action-radius:16px;--training-card-padding:clamp(16px,2vw,26px)}
+@media(max-width:700px){:root{--action-radius:12px}}
 .home-training{--training-accent:#165a56;--training-rule:#165a5666}
 [data-theme=dark] .home-training{--training-accent:#3bc4bc;--training-rule:#3bc4bc66}
 .home-training-areas{display:grid;gap:.75rem;margin-top:2rem}
-.home-training details{border:1px solid var(--training-rule);border-radius:.85rem}
+.home-training details{border:1px solid var(--training-rule);border-radius:calc(var(--action-radius) + var(--training-card-padding))}
 .home-training details[open]{border-color:var(--training-accent)}
-.home-training summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:clamp(1rem,2vw,1.65rem);cursor:pointer;list-style:none;font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display)}
+.home-training summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:var(--training-card-padding);cursor:pointer;list-style:none;font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display)}
 .home-training summary::-webkit-details-marker{display:none}
 .home-training summary::after{content:"+" / "";font:400 1.4rem/1 system-ui;color:var(--training-accent)}
 .home-training details[open]>summary::after{content:"−" / ""}
-.home-training-content{padding:0 clamp(1rem,2vw,1.65rem) clamp(1rem,2vw,1.65rem);line-height:1.55}
+.home-training-content{padding:0 var(--training-card-padding) var(--training-card-padding);line-height:1.55}
 .home-training-content p{margin:0}
 .home-training-content li+li{margin-top:.3rem}
 .home-training-content ul{margin:1rem 0 0;padding-inline-start:1.25rem}
-.home-training .training-consult{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:calc(1.5rem + 24px);padding:.55rem 1rem;border-radius:.7rem;background:#194653;color:#fff;text-decoration:none;font-weight:600}
+.home-training .training-consult{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:calc(1.5rem + 24px);padding:.55rem 1rem;border-radius:var(--action-radius);background:#194653;color:#fff;text-decoration:none;font-weight:600}
 .home-training .training-consult:is(:hover,:focus-visible){background:#246070}
 .home-training-content strong{font-weight:600}
 html[lang=en] .home-training span[lang=es],html:not([lang=en]) .home-training span[lang=en]{display:none}
