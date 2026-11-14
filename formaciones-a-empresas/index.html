@@ -2,7 +2,7 @@
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Formaciones a empresas · Alejandro Sánchez Bretones</title><meta name="description" content="Formación para equipos de diseño que quieren alinear cómo trabajan, revisan y entregan sus proyectos.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
-<link rel="stylesheet" href="../portfolio.css?v=overlap-scroll-fill"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contact-icons"></script><script src="../site-preferences.js?v=floating-prefs"></script>
+<link rel="stylesheet" href="../portfolio.css?v=contact-cards"><link rel="stylesheet" href="../training.css?v=training-radii"><script defer src="../portfolio-interactions.js?v=contact-icons"></script><script src="../site-preferences.js?v=floating-prefs"></script>
 <style>
 .training-program{scroll-margin-top:calc(var(--nav-height,4.5rem) + 1rem);margin-block:0 2rem}
 .training-program h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0 0 .8rem}
@@ -129,12 +129,18 @@
   <div class="footer-inner">
     <h2 class="scroll-heading">¿Qué necesita tu equipo?</h2>
     <p>Cuéntame qué queréis mejorar y vemos qué formato encaja.</p>
-    <nav class="contact-blocks" aria-label="Opciones de contacto">
-      <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span>LinkedIn</span><span aria-hidden="true">↗</span></a>
-      <div class="contact-item"><a href="mailto:alejandrosanchezbretones@gmail.com"><span class="contact-value">alejandrosanchezbretones@gmail.com</span><span aria-hidden="true">↗</span></a><button type="button" class="contact-copy" data-copy-contact aria-label="Copiar correo electrónico" hidden>Copiar</button></div>
-      <div class="contact-item"><a href="tel:+34648246290"><span class="contact-value">+34 648 246 290</span><span aria-hidden="true">↗</span></a><button type="button" class="contact-copy" data-copy-contact aria-label="Copiar número de teléfono" hidden>Copiar</button></div>
+    <nav class="contact-blocks contact-cards" aria-label="Opciones de contacto">
+      <a href="https://www.linkedin.com/in/alejandrosanchezbretones/"><span class="contact-label"><span lang="es">Hablemos en LinkedIn</span><span lang="en">Let’s talk on LinkedIn</span></span><span aria-hidden="true">↗</span></a>
+      <div class="contact-item">
+        <a href="mailto:alejandrosanchezbretones@gmail.com"><span class="contact-label"><span lang="es">Escríbeme por correo</span><span lang="en">Email me</span><small class="contact-value">alejandrosanchezbretones@gmail.com</small></span></a>
+        <button type="button" class="contact-copy" data-copy-contact data-copied-es="Correo copiado" data-copied-en="Email address copied" aria-label="Copiar correo electrónico" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      </div>
+      <div class="contact-item">
+        <a href="tel:+34648246290"><span class="contact-label"><span lang="es">Hablemos en una llamada</span><span lang="en">Let’s talk on the phone</span><small class="contact-value">+34 648 246 290</small></span></a>
+        <button type="button" class="contact-copy" data-copy-contact data-copied-es="Teléfono copiado" data-copied-en="Phone number copied" aria-label="Copiar número de teléfono" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      </div>
     </nav>
-    <p class="contact-status" role="status" aria-live="polite"></p>
+    <p class="contact-status home-contact-toast" role="status" aria-live="polite"></p>
     <div class="footer-bottom"><span>Alejandro Sánchez Bretones</span><a href="#inicio">Volver al inicio ↑</a></div>
   </div>
 </footer>
