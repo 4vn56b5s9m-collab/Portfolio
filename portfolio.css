@@ -18,7 +18,13 @@ body.detail{margin:0;background:var(--paper);color:var(--ink);font-family:"Instr
 .detail .category{margin-bottom:1.2rem;font-size: 1rem;color:#d3d0c8}
 .detail .lead{margin-top:1.5rem;font-size:clamp(1.13rem,2vw,1.46rem);max-width:52ch}
 .detail .tags{list-style:none;padding:0;margin:1.5rem 0 0;display:flex;gap:.5rem;flex-wrap:wrap}
-.detail .tags li{padding:.35rem .75rem;border:1px solid #ffffff38;border-radius:999px;font-size: 1rem}
+:root{--tag-ink:#0c3c38}
+[data-theme=dark]{--tag-ink:#4bd4cc}
+:is(.tags,.cv-hero-tags,.home-case-tags,.cv-clients)>li:not(.cv-client-control){
+  padding:.2rem .65rem;border:1px solid currentColor;border-radius:999px;
+  color:var(--tag-ink);background:color-mix(in srgb,var(--tag-ink) 10%,transparent);
+  font-size:1rem;line-height:1.3;
+}
 .detail-section{padding-block:clamp(3.4rem,8vw,7rem)}
 .detail-section+.detail-section{border-top:1px solid var(--line)}
 .detail h2{font:400 clamp(2.7rem,5.5vw,4.7rem)/.95 var(--display);letter-spacing:-.02em;text-wrap:balance}
