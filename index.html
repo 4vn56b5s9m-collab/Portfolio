@@ -113,17 +113,18 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .home-case-grid[data-ready] .home-case[data-current]{min-height:0}
   .home-case>.home-case-art,.home-case>div:last-child{grid-column:auto;grid-row:auto}
 }
-.home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;aspect-ratio:4 / 3;border-radius:var(--art-radius);background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
+.home-case-art{position:relative;aspect-ratio:4 / 3;border-radius:var(--art-radius);background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
 .home-case-controls [data-case-step]{font:400 2rem/1 system-ui}
-.home-case-art svg{display:block;width:58.4375%;overflow:visible;pointer-events:none}
+.home-case-art svg{position:absolute;top:50%;left:50%;translate:-50% -50%;width:auto;height:82%;aspect-ratio:112 / 166;overflow:visible;pointer-events:none}
 @media(max-width:700px){
-  .home-case-art{position:relative;aspect-ratio:12 / 5}
-  .home-case-art svg{position:absolute;top:50%;left:50%;translate:-50% -50%;width:auto;height:110%;aspect-ratio:187 / 137}
+  .home-case-art{aspect-ratio:12 / 5}
+  .home-case-art svg{height:110%}
 }
 .case-isometric-scene{transform:translateX(calc(var(--case-offset,0) * 32px));transition:transform .6s ease}
 .case-isometric-piece{transition:transform .24s ease-out}
 @media(min-width:701px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .case-isometric-hitbox{pointer-events:all}
+  .case-isometric-hitbox{pointer-events:fill}
+  .case-isometric-piece path{pointer-events:visiblePainted}
   .case-isometric-object:hover .case-isometric-piece{transform:translateY(-12px)}
 }
 @media(prefers-reduced-motion:reduce){
@@ -365,7 +366,34 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     <h2 id="home-portfolio-title" class="scroll-heading"><span lang="es">Así es como el diseño se traduce en <em class="story-accent">resultados</em>.</span><span lang="en">Here’s how design translates into <em class="story-accent">results</em>.</span></h2>
     <div class="home-case-grid" id="home-case-gallery" role="region" aria-label="Casos de estudio" tabindex="0">
     <article class="home-case">
-      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g class="case-isometric-object" transform="translate(232 54)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(171 72)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(110 90)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
+      <div class="home-case-art" aria-hidden="true"><svg viewBox="0 -3 112 166" aria-hidden="true">
+      <g class="case-isometric-scene">
+        <g class="case-isometric-object" transform="translate(52 0)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#e0d0ad" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#8c7f64" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#c4b593" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+        <g class="case-isometric-object" transform="translate(26 23)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#ebcd8d" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#8e713a" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#d0af6b" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+        <g class="case-isometric-object" transform="translate(0 46)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#fff1d4" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#ab9d7f" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#ede0c4" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+      </g>
+    </svg></div>
       <div>
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
@@ -375,7 +403,34 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       </div>
     </article>
     <article class="home-case">
-      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g class="case-isometric-object" transform="translate(232 54)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(171 72)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(110 90)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
+      <div class="home-case-art" aria-hidden="true"><svg viewBox="0 -3 112 166" aria-hidden="true">
+      <g class="case-isometric-scene">
+        <g class="case-isometric-object" transform="translate(52 0)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#e0d0ad" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#8c7f64" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#c4b593" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+        <g class="case-isometric-object" transform="translate(26 23)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#ebcd8d" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#8e713a" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#d0af6b" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+        <g class="case-isometric-object" transform="translate(0 46)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#fff1d4" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#ab9d7f" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#ede0c4" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+      </g>
+    </svg></div>
       <div>
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
@@ -385,7 +440,34 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       </div>
     </article>
     <article class="home-case">
-      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g class="case-isometric-object" transform="translate(232 54)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(171 72)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(110 90)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
+      <div class="home-case-art" aria-hidden="true"><svg viewBox="0 -3 112 166" aria-hidden="true">
+      <g class="case-isometric-scene">
+        <g class="case-isometric-object" transform="translate(52 0)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#e0d0ad" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#8c7f64" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#c4b593" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+        <g class="case-isometric-object" transform="translate(26 23)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#ebcd8d" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#8e713a" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#d0af6b" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+        <g class="case-isometric-object" transform="translate(0 46)">
+          <path class="case-isometric-hitbox" fill="none" d="M0 0 5 -3 60 29v85l-5 3L0 85Z"/>
+          <g class="case-isometric-piece">
+            <path fill="#fff1d4" d="M0 0 5 -3 60 29 55 32Z"/>
+            <path fill="#ab9d7f" d="M55 32l5 -3v85l-5 3Z"/>
+            <path fill="#ede0c4" d="M0 0l55 32v85L0 85Z"/>
+          </g>
+        </g>
+      </g>
+    </svg></div>
       <div>
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
