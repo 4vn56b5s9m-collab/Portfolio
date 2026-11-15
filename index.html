@@ -102,7 +102,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .home-case-metrics dt{font-weight:700;color:var(--story-accent)}
 .home-case-metrics dd{margin:0;font-size:.8rem}
 @media(prefers-reduced-motion:reduce){.home-case-grid[data-ready] .home-case{transition:none}}
-.home-case>.home-case-art{grid-column:2;grid-row:1;min-width:0}
+.home-case>.home-case-art{grid-column:2;grid-row:1;min-width:0;align-self:center;width:100%}
 .home-case>div:last-child{grid-column:1;grid-row:1}
 .home-case>div:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem}
 .home-case-link{margin-top:auto;padding-top:calc(.5rem + 24px);color:var(--story-accent);font-weight:600;text-underline-offset:.2em}
@@ -113,7 +113,7 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .home-case-grid[data-ready] .home-case[data-current]{min-height:0}
   .home-case>.home-case-art,.home-case>div:last-child{grid-column:auto;grid-row:auto}
 }
-.home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:var(--art-radius);background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
+.home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;aspect-ratio:4 / 3;border-radius:var(--art-radius);background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
 .home-case-controls [data-case-step]{font:400 2rem/1 system-ui}
 .home-case-art svg{display:block;width:100%;overflow:visible;pointer-events:none}
 .case-isometric-scene{transform:translateX(calc(var(--case-offset,0) * 32px));transition:transform .6s ease}
@@ -123,7 +123,16 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 }
 .home-profile .scroll-heading>.scroll-heading-source,
 .home-profile .scroll-heading>.scroll-heading-ink{display:block;text-wrap:wrap}
-@media(max-width:700px){.home-case-art{min-height:10rem}}
+@media(max-width:700px){
+  .home-case-grid[data-ready]{
+    grid-auto-flow:column;grid-auto-columns:100%;gap:.75rem;padding: .45rem 6% .75rem;
+    overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+  }
+  .home-case-grid[data-ready] .home-case{
+    grid-area:auto;translate:none;scroll-snap-align:center;scroll-snap-stop:always;
+  }
+}
 html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[lang=en]{display:none}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
 
@@ -150,7 +159,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 [data-theme=dark] .training-band{background:radial-gradient(ellipse at 79% 15%,#24545c,transparent 72%),radial-gradient(ellipse at 12% 88%,#173e48,transparent 65%),#171719}
 .site-footer#contacto{border-top:1px solid var(--line)}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=contact-cards">
+<link rel="stylesheet" href="portfolio.css?v=gallery-snap">
 <link rel="stylesheet" href="curriculum/cv.css?v=profile-desktop-spacing">
 <script defer src="curriculum/profile-scroll.js?v=profile-headlines"></script>
 <script defer src="portfolio-interactions.js?v=home-finish"></script>
@@ -440,8 +449,10 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   const controls = document.querySelector(".home-case-controls");
   const pages = [...controls.querySelectorAll("[data-case-page]")];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  const mobile = matchMedia("(max-width:700px)");
   const duration = 6500;
   let current = 0, visible = false, timer, progress;
+  let touching = false, settling = false, settleTimer;
 
   function stop() {
     clearTimeout(timer);
@@ -450,15 +461,15 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 
   function schedule() {
     stop();
-    if (!visible || reduced.matches || document.hidden ||
-        track.matches(":hover,:focus-within")) return;
+    if (!visible || reduced.matches || document.hidden || touching || settling ||
+        track.matches(":focus-within") || (!mobile.matches && track.matches(":hover"))) return;
     const fill = pages[current].querySelector(".hero-segment > span");
     progress = fill.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}], duration);
     timer = setTimeout(() => select(current + 1), duration);
   }
 
-  function select(index) {
-    current = (index + cards.length) % cards.length;
+  function setCurrent(index) {
+    current = index;
     cards.forEach((card, i) => {
       const offset = (i - current + cards.length + 1) % cards.length - 1;
       card.toggleAttribute("data-wrap", Math.abs(Number(card.dataset.offset) - offset) > 1);
@@ -468,8 +479,67 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       card.querySelector("a").tabIndex = i === current ? 0 : -1;
       pages[i].setAttribute("aria-current", String(i === current));
     });
+  }
+
+  function centerDistance(card) {
+    const bounds = track.getBoundingClientRect();
+    const box = card.getBoundingClientRect();
+    return box.left + box.width / 2 - bounds.left - bounds.width / 2;
+  }
+
+  function settle() {
+    clearTimeout(settleTimer);
+    if (touching) return;
+    settleTimer = setTimeout(() => {
+      if (mobile.matches) {
+        const closest = cards.reduce((best, card, index) =>
+          Math.abs(centerDistance(card)) < Math.abs(centerDistance(cards[best])) ? index : best, 0);
+        setCurrent(closest);
+      }
+      settling = false;
+      schedule();
+    }, 150);
+  }
+
+  function select(index, instant = false) {
+    setCurrent((index + cards.length) % cards.length);
+    if (mobile.matches) {
+      settling = true;
+      const distance = centerDistance(cards[current]);
+      track.scrollTo({
+        left: track.scrollLeft + distance,
+        behavior: instant || reduced.matches || Math.abs(distance) > track.clientWidth * 1.35 ? "instant" : "smooth"
+      });
+      settle();
+    }
     schedule();
   }
+
+  track.addEventListener("scroll", () => {
+    if (!mobile.matches) return;
+    settling = true;
+    stop();
+    settle();
+  }, {passive:true});
+  track.addEventListener("touchstart", () => {
+    if (!mobile.matches) return;
+    touching = true;
+    clearTimeout(settleTimer);
+    stop();
+  }, {passive:true});
+  for (const event of ["touchend","touchcancel"]) {
+    track.addEventListener(event, e => {
+      if (e.touches.length) return;
+      touching = false;
+      settle();
+    }, {passive:true});
+  }
+  mobile.addEventListener("change", () => {
+    touching = false;
+    settling = false;
+    clearTimeout(settleTimer);
+    select(current, true);
+  });
 
   controls.querySelectorAll("[data-case-step]").forEach(button => {
     button.addEventListener("click", () => select(current + Number(button.dataset.caseStep)));
@@ -510,9 +580,10 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       }
     });
   }
-  select(0);
-  controls.hidden = false;
+  setCurrent(0);
   track.setAttribute("data-ready", "");
+  controls.hidden = false;
+  select(0, true);
 }
 </script>
 <script type="module">
