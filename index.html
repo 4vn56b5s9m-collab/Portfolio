@@ -121,7 +121,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .home-case-art svg{position:absolute;top:50%;left:50%;translate:-50% -50%;width:auto;height:110%;aspect-ratio:187 / 137}
 }
 .case-isometric-scene{transform:translateX(calc(var(--case-offset,0) * 32px));transition:transform .6s ease}
-.case-isometric-piece{transform:translate(var(--iso-x,0px),var(--iso-y,0px));transition:transform .18s ease-out}
+.case-isometric-piece{transition:transform .24s ease-out}
+@media(min-width:701px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .case-isometric-hitbox{pointer-events:all}
+  .case-isometric-object:hover .case-isometric-piece{transform:translateY(-12px)}
+}
 @media(prefers-reduced-motion:reduce){
   .case-isometric-scene,.case-isometric-piece{transition:none;transform:none}
 }
@@ -361,7 +365,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     <h2 id="home-portfolio-title" class="scroll-heading"><span lang="es">Así es como el diseño se traduce en <em class="story-accent">resultados</em>.</span><span lang="en">Here’s how design translates into <em class="story-accent">results</em>.</span></h2>
     <div class="home-case-grid" id="home-case-gallery" role="region" aria-label="Casos de estudio" tabindex="0">
     <article class="home-case">
-      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g transform="translate(232 54)"><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g transform="translate(171 72)"><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g transform="translate(110 90)"><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
+      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g class="case-isometric-object" transform="translate(232 54)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(171 72)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(110 90)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
       <div>
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
@@ -371,7 +375,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       </div>
     </article>
     <article class="home-case">
-      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g transform="translate(232 54)"><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g transform="translate(171 72)"><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g transform="translate(110 90)"><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
+      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g class="case-isometric-object" transform="translate(232 54)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(171 72)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(110 90)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
       <div>
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
@@ -381,7 +385,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       </div>
     </article>
     <article class="home-case">
-      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g transform="translate(232 54)"><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g transform="translate(171 72)"><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g transform="translate(110 90)"><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
+      <div class="home-case-art" aria-hidden="true"><svg viewBox="67 16 187 137" aria-hidden="true"><g class="case-isometric-scene"><g class="case-isometric-object" transform="translate(232 54)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#85795f" d="M0 0l22-13v63l-22 13z"/><path fill="#d5c8a8" d="M0 0l-43-25v63l43 25z"/><path fill="#f5e9cd" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(171 72)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#866931" d="M0 0l22-13v63l-22 13z"/><path fill="#c5a45f" d="M0 0l-43-25v63l43 25z"/><path fill="#e4c682" d="M0 0l-43-25 22-13 43 25z"/></g></g><g class="case-isometric-object" transform="translate(110 90)"><rect class="case-isometric-hitbox" x="-43" y="-38" width="65" height="101" fill="none"/><g class="case-isometric-piece"><path fill="#9c8d6c" d="M0 0l22-13v63l-22 13z"/><path fill="#e3d5b6" d="M0 0l-43-25v63l43 25z"/><path fill="#fff0ce" d="M0 0l-43-25 22-13 43 25z"/></g></g></g></svg></div>
       <div>
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
@@ -564,26 +568,6 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   }, {threshold:.25}).observe(track);
   reduced.addEventListener("change", schedule);
   document.addEventListener("visibilitychange", schedule);
-  for (const card of cards) {
-    const pieces = [...card.querySelectorAll(".case-isometric-piece")];
-    card.addEventListener("pointermove", event => {
-      if (event.pointerType === "touch" || reduced.matches) return;
-      const bounds = card.getBoundingClientRect();
-      const x = (event.clientX - bounds.left) / bounds.width - .5;
-      const y = (event.clientY - bounds.top) / bounds.height - .5;
-      pieces.forEach((piece, index) => {
-        const depth = 16 + index * 10;
-        piece.style.setProperty("--iso-x", x * depth + "px");
-        piece.style.setProperty("--iso-y", (x * .58 - y) * depth + "px");
-      });
-    });
-    card.addEventListener("pointerleave", () => {
-      for (const piece of pieces) {
-        piece.style.removeProperty("--iso-x");
-        piece.style.removeProperty("--iso-y");
-      }
-    });
-  }
   setCurrent(0);
   track.setAttribute("data-ready", "");
   controls.hidden = false;
