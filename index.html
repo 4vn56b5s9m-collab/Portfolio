@@ -101,13 +101,13 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .home-case-controls .hero-segment>span{background:var(--story-accent)}
 .home-case-metrics{display:flex;flex-wrap:wrap;gap:.6rem 1rem;margin:.65rem 0}
 .home-case-metrics div{flex:1 1 5rem}
-.home-case-metrics dt{font-weight:700;color:var(--story-accent)}
-.home-case-metrics dd{margin:0;font-size:.8rem}
+.home-case-metrics dt{font-size:1.25rem;font-weight:700;color:var(--story-accent)}
+.home-case-metrics dd{margin:.2rem 0 0;font-size:1rem}
 @media(prefers-reduced-motion:reduce){.home-case-grid[data-ready] .home-case{transition:none}}
 .home-case>.home-case-art{grid-column:2;grid-row:1;min-width:0;align-self:center;width:100%}
 .home-case>div:last-child{grid-column:1;grid-row:1}
 .home-case>div:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem}
-.home-case-link{margin-top:auto;padding-top:calc(.5rem + 24px);color:var(--story-accent);font-weight:600;text-underline-offset:.2em}
+.home-case-link{display:inline-flex;align-items:center;gap:.5rem;margin-top:auto;padding-top:calc(.5rem + 24px);color:var(--story-accent);font-weight:600;text-underline-offset:.2em}
 @media(max-width:700px){
   .home-profile .cv-profile-disciplines{left:auto;width:auto;margin-inline:0;justify-items:start;text-align:left}
   .home-profile .cv-profile-disciplines [data-profile-slide]{white-space:normal}
@@ -166,7 +166,7 @@ html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[l
 html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lang=en] .site-footer span[lang=es],html:not([lang=en]) .site-footer span[lang=en]{display:none}
 
 .training-band .home-training-preview{display:block;padding:var(--training-card-padding);border:1px solid var(--training-rule);border-radius:calc(var(--action-radius) + var(--training-card-padding));background:var(--training-surface)}
-.home-training-preview h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0}
+.home-training-preview h3,.home-case h3{font:400 clamp(1.6rem,3vw,2.6rem)/1.06 var(--display);margin:0}
 .training-band .home-training-preview{display:flex;align-items:center;justify-content:space-between;gap:1rem;color:inherit;text-decoration:none}
 .training-preview-arrow{display:grid;place-items:center;flex:none;width:2.6rem;height:2.25rem;border:1px solid transparent;border-radius:999px;color:var(--training-accent);font-size:1.45rem}
 .training-band .home-training-preview:is(:hover,:focus-visible){border-color:#74c3b1}
@@ -184,7 +184,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 [data-theme=dark] .training-band{background:radial-gradient(ellipse at 79% 15%,#24545c,transparent 72%),radial-gradient(ellipse at 12% 88%,#173e48,transparent 65%),#171719}
 .site-footer#contacto{border-top:1px solid var(--line)}
 </style>
-<link rel="stylesheet" href="portfolio.css?v=gallery-snap">
+<link rel="stylesheet" href="portfolio.css?v=type-floor">
 <link rel="stylesheet" href="curriculum/cv.css?v=profile-desktop-spacing">
 <script defer src="curriculum/profile-scroll.js?v=profile-headlines"></script>
 <script defer src="portfolio-interactions.js?v=home-finish"></script>
@@ -411,11 +411,11 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       </g>
     </svg></div>
       <div>
-        <span class="home-case-category">Behavioral design</span>
-        <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
-        <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p>
+        <ul class="home-case-tags"><li>Behavioral design</li><li>Motion</li></ul>
+        <div class="home-case-intro"><h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
+        <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p></div>
         <dl class="home-case-metrics"><div><dt>+33 %</dt><dd><span lang="es">Ventas de la opción intermedia frente a la básica</span><span lang="en">Mid-tier sales compared with basic</span></dd></div><div><dt>+7 %</dt><dd><span lang="es">Ventas de la opción Premium</span><span lang="en">Premium sales</span></dd></div><div><dt>20 %</dt><dd><span lang="es">Cuota diaria de ventas recuperada por la opción intermedia</span><span lang="en">Daily sales share recovered by the mid-tier option</span></dd></div></dl>
-        <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><span aria-hidden="true">↗</span></a>
+        <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15 15 5m-7 0h7v7"/></svg></a>
       </div>
     </article>
     <article class="home-case">
@@ -448,11 +448,11 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       </g>
     </svg></div>
       <div>
-        <span class="home-case-category">Behavioral design</span>
-        <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
-        <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p>
+        <ul class="home-case-tags"><li>Behavioral design</li><li>Motion</li></ul>
+        <div class="home-case-intro"><h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
+        <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p></div>
         <dl class="home-case-metrics"><div><dt>+33 %</dt><dd><span lang="es">Ventas de la opción intermedia frente a la básica</span><span lang="en">Mid-tier sales compared with basic</span></dd></div><div><dt>+7 %</dt><dd><span lang="es">Ventas de la opción Premium</span><span lang="en">Premium sales</span></dd></div><div><dt>20 %</dt><dd><span lang="es">Cuota diaria de ventas recuperada por la opción intermedia</span><span lang="en">Daily sales share recovered by the mid-tier option</span></dd></div></dl>
-        <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><span aria-hidden="true">↗</span></a>
+        <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15 15 5m-7 0h7v7"/></svg></a>
       </div>
     </article>
     <article class="home-case">
@@ -485,11 +485,11 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       </g>
     </svg></div>
       <div>
-        <span class="home-case-category">Behavioral design</span>
-        <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
-        <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p>
+        <ul class="home-case-tags"><li>Behavioral design</li><li>Motion</li></ul>
+        <div class="home-case-intro"><h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
+        <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p></div>
         <dl class="home-case-metrics"><div><dt>+33 %</dt><dd><span lang="es">Ventas de la opción intermedia frente a la básica</span><span lang="en">Mid-tier sales compared with basic</span></dd></div><div><dt>+7 %</dt><dd><span lang="es">Ventas de la opción Premium</span><span lang="en">Premium sales</span></dd></div><div><dt>20 %</dt><dd><span lang="es">Cuota diaria de ventas recuperada por la opción intermedia</span><span lang="en">Daily sales share recovered by the mid-tier option</span></dd></div></dl>
-        <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><span aria-hidden="true">↗</span></a>
+        <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15 15 5m-7 0h7v7"/></svg></a>
       </div>
     </article>
     </div>
