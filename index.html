@@ -73,16 +73,23 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 
 .home-portfolio{padding-block-end:clamp(3rem,6vw,5rem)}
 .home-portfolio-band{overflow-x:clip}
-.home-case-grid{display:grid;align-items:center;overflow:visible;margin-top:2rem}
+.home-case-tags{display:flex;flex-wrap:wrap;gap:.45rem;list-style:none;margin:0;padding:0}
+.home-case-tags li{
+  padding:.2rem .65rem;border:1px solid currentColor;border-radius:999px;
+  color:var(--case-tag-ink);background:color-mix(in srgb,var(--case-tag-ink) 10%,transparent);
+  font-size:1rem;line-height:1.3;
+}
+.home-case-grid{--case-tag-ink:#0c3c38;--case-surface:#f4f2ed;display:grid;align-items:center;overflow:visible;margin-top:2rem}
+[data-theme=dark] .home-case-grid{--case-tag-ink:#4bd4cc;--case-surface:#202022}
 .home-case{
   --case-inset:clamp(1rem,2vw,2rem);--art-radius:.85rem;
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(.75rem,3vw,2rem);
   min-width:0;padding:var(--case-inset);border:1px solid var(--line);
   border-radius:calc(var(--art-radius) + var(--case-inset) + 1px);
-  background:var(--page);min-height:clamp(19rem,30vw,24rem);
+  background:var(--case-surface);min-height:clamp(19rem,30vw,24rem);
 }
 .home-case-grid[data-ready] .home-case{
-  grid-area:1/1;width:100%;translate:calc(var(--case-offset,0) * (100% + clamp(1.75rem,3vw,2.75rem))) 0;
+  grid-area:1/1;width:100%;translate:calc(var(--case-offset,0) * (100% + var(--case-gap,clamp(1.75rem,3vw,2.75rem))) + var(--case-drag,0px)) 0;
   opacity:.78;transition:translate .6s ease,opacity .6s ease,padding .6s ease,min-height .6s ease,border-radius .6s ease,border-color .25s,box-shadow .25s;
 }
 .home-case-grid[data-ready] .home-case[data-current]{--case-inset:clamp(1.3rem,2.5vw,2.5rem);opacity:1;z-index:1;min-height:clamp(21.5rem,33vw,27rem)}
@@ -149,14 +156,19 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .home-profile .scroll-heading>.scroll-heading-ink{display:none}
 }
 @media(max-width:700px){
-  .home-case-grid[data-ready]{
-    grid-auto-flow:column;grid-auto-columns:100%;gap:.75rem;padding: .45rem 6% .75rem;
-    overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;
-    scrollbar-width:none;
+  .home-case-grid[data-ready]{--case-gap:.75rem;justify-items:center;touch-action:pan-y pinch-zoom}
+  .home-case-grid[data-ready] .home-case{width:92%}
+  .home-case-grid[data-dragging] .home-case{transition:none}
+  .case-isometric-scene{transform:none;transition:none}
+}
+@media(max-width:700px) and (prefers-reduced-motion:no-preference){
+  .home-case-grid[data-changed] .home-case[data-current] .case-isometric-piece{
+    animation:case-piece-enter .38s ease-out both;
+    animation-delay:calc(.6s + var(--piece-stagger,0ms));
   }
-  .home-case-grid[data-ready] .home-case{
-    grid-area:auto;translate:none;scroll-snap-align:center;scroll-snap-stop:always;
-  }
+  .case-isometric-object:nth-child(2){--piece-stagger:65ms}
+  .case-isometric-object:nth-child(3){--piece-stagger:130ms}
+  @keyframes case-piece-enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 }
 html[lang=en] #trayectoria span[lang=es],html:not([lang=en]) #trayectoria span[lang=en]{display:none}
 @media(max-width:480px){.career-list li{grid-template-columns:1fr;gap:.35rem}}
@@ -558,7 +570,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   const mobile = matchMedia("(max-width:700px)");
   const duration = 6500;
   let current = 0, visible = false, timer, progress;
-  let touching = false, settling = false, settleTimer;
+  let gesture;
 
   function stop() {
     clearTimeout(timer);
@@ -567,7 +579,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 
   function schedule() {
     stop();
-    if (!visible || reduced.matches || document.hidden || touching || settling ||
+    if (!visible || reduced.matches || document.hidden || gesture ||
         track.matches(":focus-within") || (!mobile.matches && track.matches(":hover"))) return;
     const fill = pages[current].querySelector(".hero-segment > span");
     progress = fill.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}], duration);
@@ -579,7 +591,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     cards.forEach((card, i) => {
       const offset = (i - current + cards.length + 1) % cards.length - 1;
       const previous = Number(card.dataset.offset);
-      if (!mobile.matches && !reduced.matches && direction && Math.abs(previous - offset) > 1) {
+      if (!reduced.matches && direction && Math.abs(previous - offset) > 1) {
         const exiting = card.cloneNode(true);
         exiting.setAttribute("data-case-exit", "");
         exiting.setAttribute("aria-hidden", "true");
@@ -600,67 +612,51 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     });
   }
 
-  function centerDistance(card) {
-    const bounds = track.getBoundingClientRect();
-    const box = card.getBoundingClientRect();
-    return box.left + box.width / 2 - bounds.left - bounds.width / 2;
-  }
-
-  function settle() {
-    clearTimeout(settleTimer);
-    if (touching) return;
-    settleTimer = setTimeout(() => {
-      if (mobile.matches) {
-        const closest = cards.reduce((best, card, index) =>
-          Math.abs(centerDistance(card)) < Math.abs(centerDistance(cards[best])) ? index : best, 0);
-        setCurrent(closest);
-      }
-      settling = false;
-      schedule();
-    }, 150);
-  }
-
   function select(index, instant = false) {
     const next = (index + cards.length) % cards.length;
     const delta = (next - current + cards.length) % cards.length;
     const direction = delta === 0 ? 0 : delta === 1 ? 1 : -1;
     track.querySelectorAll("[data-case-exit]").forEach(card => card.remove());
+    if (direction && !instant) track.setAttribute("data-changed", "");
     setCurrent(next, instant ? 0 : direction);
-    if (mobile.matches) {
-      settling = true;
-      const distance = centerDistance(cards[current]);
-      track.scrollTo({
-        left: track.scrollLeft + distance,
-        behavior: instant || reduced.matches || Math.abs(distance) > track.clientWidth * 1.35 ? "instant" : "smooth"
-      });
-      settle();
-    }
     schedule();
   }
 
-  track.addEventListener("scroll", () => {
-    if (!mobile.matches) return;
-    settling = true;
+  track.addEventListener("pointerdown", event => {
+    if (!mobile.matches || event.pointerType !== "touch" || !event.isPrimary) return;
+    gesture = {id:event.pointerId, x:event.clientX, y:event.clientY, distance:0, horizontal:false};
     stop();
-    settle();
-  }, {passive:true});
-  track.addEventListener("touchstart", () => {
-    if (!mobile.matches) return;
-    touching = true;
-    clearTimeout(settleTimer);
-    stop();
-  }, {passive:true});
-  for (const event of ["touchend","touchcancel"]) {
-    track.addEventListener(event, e => {
-      if (e.touches.length) return;
-      touching = false;
-      settle();
-    }, {passive:true});
+  });
+  track.addEventListener("pointermove", event => {
+    if (!gesture || event.pointerId !== gesture.id) return;
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+    if (!gesture.horizontal) {
+      if (Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy)) return;
+      gesture.horizontal = true;
+      track.setPointerCapture(event.pointerId);
+      track.setAttribute("data-dragging", "");
+    }
+    gesture.distance = dx;
+    if (!reduced.matches) track.style.setProperty("--case-drag", dx * .85 + "px");
+  });
+  function finishGesture(event) {
+    if (!gesture || event.pointerId !== gesture.id) return;
+    const threshold = Math.min(72,track.clientWidth * .18);
+    const direction = event.type === "pointerup" && Math.abs(gesture.distance) >= threshold
+      ? -Math.sign(gesture.distance) : 0;
+    gesture = undefined;
+    track.removeAttribute("data-dragging");
+    select(current + direction);
+    track.style.removeProperty("--case-drag");
+  }
+  for (const event of ["pointerup","pointercancel","lostpointercapture"]) {
+    track.addEventListener(event, finishGesture);
   }
   mobile.addEventListener("change", () => {
-    touching = false;
-    settling = false;
-    clearTimeout(settleTimer);
+    gesture = undefined;
+    track.removeAttribute("data-dragging");
+    track.style.removeProperty("--case-drag");
     select(current, true);
   });
 
