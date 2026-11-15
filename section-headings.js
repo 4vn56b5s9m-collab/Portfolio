@@ -7,7 +7,10 @@
     ink.className = "scroll-heading-ink";
     ink.setAttribute("aria-hidden", "true");
     heading.append(source, ink);
-    return {heading, source, ink};
+    const walker = document.createTreeWalker(source, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    return {heading, ink, textNodes};
   });
   const motion = matchMedia("(prefers-reduced-motion: reduce), (forced-colors: active)");
   const range = document.createRange();
@@ -17,7 +20,7 @@
     frame = 0;
     if (motion.matches) return;
     const height = window.innerHeight;
-    for (const {heading, source, ink} of headings) {
+    for (const {heading, ink, textNodes} of headings) {
       const box = heading.getBoundingClientRect();
       if (!box.width || !box.height) continue;
       const footer = heading.closest("#contacto");
@@ -27,17 +30,19 @@
         : (.80 * height - box.top - box.height / 2) / (.35 * height);
       const progress = Math.max(0, Math.min(1, reveal));
       const bleed = Math.ceil(parseFloat(getComputedStyle(heading).fontSize) * .35);
-      range.selectNodeContents(source);
       const lines = [];
-      for (const rect of range.getClientRects()) {
-        if (!rect.width || !rect.height) continue;
-        const last = lines.at(-1);
-        if (last && Math.abs(last.top - rect.top) < 3) {
-          last.left = Math.min(last.left, rect.left);
-          last.right = Math.max(last.right, rect.right);
-          last.bottom = Math.max(last.bottom, rect.bottom);
-        } else {
-          lines.push({top:rect.top,bottom:rect.bottom,left:rect.left,right:rect.right});
+      for (const node of textNodes) {
+        range.selectNodeContents(node);
+        for (const rect of range.getClientRects()) {
+          if (!rect.width || !rect.height) continue;
+          const last = lines.at(-1);
+          if (last && Math.abs(last.top - rect.top) < 3) {
+            last.left = Math.min(last.left, rect.left);
+            last.right = Math.max(last.right, rect.right);
+            last.bottom = Math.max(last.bottom, rect.bottom);
+          } else {
+            lines.push({top:rect.top,bottom:rect.bottom,left:rect.left,right:rect.right});
+          }
         }
       }
       if (!lines.length) continue;
