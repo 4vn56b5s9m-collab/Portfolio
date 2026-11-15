@@ -231,7 +231,7 @@ html{scroll-padding-top:var(--nav-height,4.2rem)}
     radial-gradient(ellipse 49% 7% at 62% 62%,#080c108c,transparent 100%)}
   .accordion-branches{overflow-x:auto;align-items:flex-start;min-height:var(--gallery-height,13rem);scroll-snap-type:x mandatory;scroll-padding-inline:12%;padding:4px 12% 0;overscroll-behavior-x:contain;scrollbar-width:none;gap:.75rem}
   .accordion-branches::-webkit-scrollbar{display:none}
-  .accordion-branches article[data-accordion-branch],.accordion-branches article[data-accordion-branch].is-previewed{flex:0 0 100%;min-height:7.25rem;scroll-snap-align:center;padding:1rem}
+  .accordion-branches article[data-accordion-branch],.accordion-branches article[data-accordion-branch].is-previewed{flex:0 0 100%;min-height:7.25rem;scroll-snap-align:center;scroll-snap-stop:always;padding:1rem}
   .accordion-branches article[data-accordion-branch] .branch-card-copy span{font-size: 1rem}
   .accordion-branches .branch-card-cta{display:flex;justify-content:center;align-items:center;gap:.45rem;text-align:center;min-height:44px;padding:.55rem .65rem;border-radius:.7rem;background:#194653;color:#fff;font-size: 1rem;line-height:1.22;font-weight:600}
   .accordion-branches article[data-accordion-branch]:not(.is-previewed) .branch-card-cta{position:absolute;inset:auto 1rem 1rem;visibility:hidden}
