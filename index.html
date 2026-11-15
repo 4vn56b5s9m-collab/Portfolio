@@ -72,20 +72,36 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .training-band .notes.home-training{background:transparent}
 
 .home-portfolio{padding-block-end:clamp(3rem,6vw,5rem)}
-.home-case-grid{
-  display:grid;grid-auto-flow:column;grid-auto-columns:88%;gap:1.25rem;
-  width:100vw;margin:2rem calc(50% - 50vw) 0;
-  padding-inline:max(var(--reading-padding),calc((100vw - var(--reading-width)) / 2 + var(--reading-padding)));
-  overflow-x:auto;scroll-snap-type:x mandatory;padding-block-end:.65rem;
-}
-.home-case-grid:focus-visible{outline-offset:3px}
+.home-portfolio-band{overflow-x:clip}
+.home-case-grid{display:grid;align-items:center;overflow:visible;margin-top:2rem}
 .home-case{
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(.75rem,3vw,2rem);
-  min-width:0;padding:clamp(1rem,3vw,2.5rem);border:1px solid var(--line);
-  border-radius:1rem;scroll-snap-align:center;min-height:clamp(19rem,30vw,24rem);
+  --case-inset:clamp(1rem,2vw,2rem);--art-radius:.85rem;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(.75rem,3vw,2rem);
+  min-width:0;padding:var(--case-inset);border:1px solid var(--line);
+  border-radius:calc(var(--art-radius) + var(--case-inset) + 1px);
+  background:var(--page);min-height:clamp(19rem,30vw,24rem);
 }
-.home-case-grid[data-ready] .home-case:not([data-current]):not(:focus-within){opacity:.8}
-@media(prefers-reduced-motion:no-preference){.home-case{transition:opacity .2s ease}}
+.home-case-grid[data-ready] .home-case{
+  grid-area:1/1;width:100%;translate:calc(var(--case-offset,0) * (100% + 1.25rem)) 0;
+  opacity:.78;transition:translate .6s ease,opacity .6s ease,border-color .25s,box-shadow .25s;
+}
+.home-case-grid[data-ready] .home-case[data-current]{--case-inset:clamp(1.3rem,2.5vw,2.5rem);opacity:1;z-index:1;min-height:clamp(20rem,31vw,25.5rem)}
+.home-case-grid[data-ready] .home-case[data-wrap]{transition-property:opacity,border-color,box-shadow}
+.home-case-grid[data-ready] .home-case:is(:hover,:focus-within){
+  opacity:1;border-color:var(--story-accent);box-shadow:0 0 1.25rem color-mix(in srgb,var(--story-accent) 30%,transparent);
+}
+.home-case-controls{display:flex;justify-content:center;align-items:center;gap:.35rem;margin-top:.75rem}
+.home-case-controls[hidden]{display:none}
+.home-case-controls button{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:999px;background:var(--page);color:inherit;cursor:pointer}
+.home-case-controls [data-case-page]{width:clamp(44px,7vw,80px);border:0;padding:.2rem}
+.home-case-controls .hero-segment{background:color-mix(in srgb,currentColor 25%,transparent)}
+.home-case-controls [aria-current=true] .hero-segment{background:color-mix(in srgb,var(--story-accent) 45%,transparent)}
+.home-case-controls .hero-segment>span{background:var(--story-accent)}
+.home-case-metrics{display:flex;flex-wrap:wrap;gap:.6rem 1rem;margin:.65rem 0}
+.home-case-metrics div{flex:1 1 5rem}
+.home-case-metrics dt{font-weight:700;color:var(--story-accent)}
+.home-case-metrics dd{margin:0;font-size:.8rem}
+@media(prefers-reduced-motion:reduce){.home-case-grid[data-ready] .home-case{transition:none}}
 .home-case>.home-case-art{grid-column:2;grid-row:1;min-width:0}
 .home-case>div:last-child{grid-column:1;grid-row:1}
 .home-case>div:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem}
@@ -93,11 +109,11 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 @media(max-width:700px){
   .home-profile .cv-profile-disciplines{left:auto;width:auto;margin-inline:0;justify-items:start;text-align:left}
   .home-profile .cv-profile-disciplines [data-profile-slide]{white-space:normal}
-  .home-case-grid{grid-auto-columns:92%;gap:.65rem}
   .home-case{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;min-height:0}
+  .home-case-grid[data-ready] .home-case[data-current]{min-height:0}
   .home-case>.home-case-art,.home-case>div:last-child{grid-column:auto;grid-row:auto}
 }
-.home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:1rem;background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
+.home-case-art{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:14rem;border-radius:var(--art-radius);background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
 .home-case-art i{width:17%;aspect-ratio:1;border:1px solid #e4d7b6;border-radius:.4rem;background:#eee2c9;transform:rotate(-9deg)}
 .home-case-art i:nth-child(2){aspect-ratio:.8;background:#d7b875;transform:translateY(-.15rem)}
 .home-case-art i:nth-child(3){transform:rotate(9deg)}
@@ -138,7 +154,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 <script defer src="curriculum/profile-scroll.js?v=profile-headlines"></script>
 <script defer src="portfolio-interactions.js?v=home-finish"></script>
 <script src="site-preferences.js?v=floating-prefs"></script>
-<script defer src="section-headings.js?v=3"></script>
+<script defer src="section-headings.js?v=text-ranges"></script>
 </head>
 <body id="page-top">
 <header id="inicio" class="site-header"><a class="site-name" href="./#inicio" aria-current="page">Alejandro</a><nav aria-label="Navegación principal"><a href="./como-trabajo/">Cómo trabajo</a><a href="./portfolio/">Portfolio</a><a href="./formaciones-a-empresas/">Formaciones a empresas</a><a href="./curriculum/">CV</a></nav><div class="site-contact-icons"><a href="tel:+34648246290" aria-label="Llamar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2c0 8.8 7.2 16 16 16a2 2 0 0 0 2-2v-3l-5-2-2 2a13 13 0 0 1-6-6l2-2z"/></svg></a><a href="mailto:alejandrosanchezbretones@gmail.com" aria-label="Enviar correo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.linkedin.com/in/alejandrosanchezbretones/" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v6m0-10v.1m4 9.9v-6m0 2a2 2 0 0 1 4 0v4"/></svg></a></div></header>
@@ -327,15 +343,16 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     </div>
   </section>
   </div>
-  <section class="notes home-portfolio" aria-labelledby="home-portfolio-title">
+  <div class="home-portfolio-band"><section class="notes home-portfolio" aria-labelledby="home-portfolio-title">
     <h2 id="home-portfolio-title" class="scroll-heading"><span lang="es">Así es como el diseño se traduce en <em class="story-accent">resultados</em>.</span><span lang="en">Here’s how design translates into <em class="story-accent">results</em>.</span></h2>
-    <div class="home-case-grid" role="region" aria-label="Casos de estudio" tabindex="0">
+    <div class="home-case-grid" id="home-case-gallery" role="region" aria-label="Casos de estudio" tabindex="0">
     <article class="home-case">
       <div class="home-case-art" aria-hidden="true"><i></i><i></i><i></i></div>
       <div>
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
         <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p>
+        <dl class="home-case-metrics"><div><dt>+33 %</dt><dd><span lang="es">Ventas de la opción intermedia frente a la básica</span><span lang="en">Mid-tier sales compared with basic</span></dd></div><div><dt>+7 %</dt><dd><span lang="es">Ventas de la opción Premium</span><span lang="en">Premium sales</span></dd></div><div><dt>20 %</dt><dd><span lang="es">Cuota diaria de ventas recuperada por la opción intermedia</span><span lang="en">Daily sales share recovered by the mid-tier option</span></dd></div></dl>
         <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -345,6 +362,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
         <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p>
+        <dl class="home-case-metrics"><div><dt>+33 %</dt><dd><span lang="es">Ventas de la opción intermedia frente a la básica</span><span lang="en">Mid-tier sales compared with basic</span></dd></div><div><dt>+7 %</dt><dd><span lang="es">Ventas de la opción Premium</span><span lang="en">Premium sales</span></dd></div><div><dt>20 %</dt><dd><span lang="es">Cuota diaria de ventas recuperada por la opción intermedia</span><span lang="en">Daily sales share recovered by the mid-tier option</span></dd></div></dl>
         <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -354,12 +372,21 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
         <span class="home-case-category">Behavioral design</span>
         <h3><span lang="es">Rediseño de la compra de entradas</span><span lang="en">Redesigning ticket purchases</span></h3>
         <p><span lang="es">Cómo hicimos visibles las diferencias entre tres formas de vivir un evento.</span><span lang="en">How we made the differences between three ways to experience an event visible.</span></p>
+        <dl class="home-case-metrics"><div><dt>+33 %</dt><dd><span lang="es">Ventas de la opción intermedia frente a la básica</span><span lang="en">Mid-tier sales compared with basic</span></dd></div><div><dt>+7 %</dt><dd><span lang="es">Ventas de la opción Premium</span><span lang="en">Premium sales</span></dd></div><div><dt>20 %</dt><dd><span lang="es">Cuota diaria de ventas recuperada por la opción intermedia</span><span lang="en">Daily sales share recovered by the mid-tier option</span></dd></div></dl>
         <a class="home-case-link" href="./portfolio/compra-de-entradas/"><span lang="es">Leer caso</span><span lang="en">Read case study</span><span aria-hidden="true">↗</span></a>
       </div>
     </article>
     </div>
+    <div class="home-case-controls" hidden>
+      <button type="button" data-case-step="-1" aria-controls="home-case-gallery" aria-label="Caso anterior">‹</button>
+      <button type="button" data-case-page="0" aria-controls="home-case-gallery" aria-label="Posición 1"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
+      <button type="button" data-case-page="1" aria-controls="home-case-gallery" aria-label="Posición 2"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
+      <button type="button" data-case-page="2" aria-controls="home-case-gallery" aria-label="Posición 3"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
+      <button type="button" data-case-step="1" aria-controls="home-case-gallery" aria-label="Caso siguiente">›</button>
+      <button type="button" data-case-pause aria-label="Pausar avance automático">Ⅱ</button>
+    </div>
     <a class="career-cta" href="./portfolio/"><span lang="es">Ver portfolio completo</span><span lang="en">View full portfolio</span> <span aria-hidden="true">↗</span></a>
-  </section>
+  </section></div>
   <div class="career-band">
   <section class="notes" id="trayectoria">
     <p><span lang="es">Y es que llevo más de siete años trabajando en proyectos tanto en empresas con producto propio como en consultoría, adaptando mi forma de diseñar a cada proyecto y compartiendo lo aprendido con otros equipos.</span><span lang="en">I’ve spent more than seven years working on projects both in-house and in consulting, adapting how I design to each project and sharing what I’ve learned with other teams.</span></p>
@@ -410,23 +437,70 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 {
   const track = document.querySelector(".home-case-grid");
   const cards = [...track.children];
-  let active;
-  function updateCurrentCase() {
-    const bounds = track.getBoundingClientRect();
-    const center = bounds.left + bounds.width / 2;
-    const nearest = cards.reduce((best, card) => {
-      const box = card.getBoundingClientRect();
-      const distance = Math.abs(box.left + box.width / 2 - center);
-      return distance < best.distance ? {card, distance} : best;
-    }, {distance: Infinity}).card;
-    if (nearest === active) return;
-    active?.removeAttribute("data-current");
-    nearest.setAttribute("data-current", "");
-    active = nearest;
+  const controls = document.querySelector(".home-case-controls");
+  const pages = [...controls.querySelectorAll("[data-case-page]")];
+  const pause = controls.querySelector("[data-case-pause]");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  const duration = 6500;
+  let current = 0, visible = false, paused = false, timer, progress;
+
+  function stop() {
+    clearTimeout(timer);
+    progress?.cancel();
   }
-  track.addEventListener("scroll", updateCurrentCase, {passive:true});
-  new ResizeObserver(updateCurrentCase).observe(track);
-  updateCurrentCase();
+
+  function schedule() {
+    stop();
+    if (!visible || paused || reduced.matches || document.hidden ||
+        track.matches(":hover,:focus-within") || controls.matches(":hover,:focus-within")) return;
+    const fill = pages[current].querySelector(".hero-segment > span");
+    progress = fill.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}], duration);
+    timer = setTimeout(() => select(current + 1), duration);
+  }
+
+  function select(index) {
+    current = (index + cards.length) % cards.length;
+    cards.forEach((card, i) => {
+      const offset = (i - current + cards.length + 1) % cards.length - 1;
+      card.toggleAttribute("data-wrap", Math.abs(Number(card.dataset.offset) - offset) > 1);
+      card.dataset.offset = offset;
+      card.style.setProperty("--case-offset", offset);
+      card.toggleAttribute("data-current", i === current);
+      card.querySelector("a").tabIndex = i === current ? 0 : -1;
+      pages[i].setAttribute("aria-current", String(i === current));
+    });
+    schedule();
+  }
+
+  controls.querySelectorAll("[data-case-step]").forEach(button => {
+    button.addEventListener("click", () => select(current + Number(button.dataset.caseStep)));
+  });
+  pages.forEach((page, index) => page.addEventListener("click", () => select(index)));
+  pause.addEventListener("click", () => {
+    paused = !paused;
+    pause.textContent = paused ? "▶" : "Ⅱ";
+    pause.setAttribute("aria-label", paused ? "Reanudar avance automático" : "Pausar avance automático");
+    schedule();
+  });
+  track.addEventListener("keydown", event => {
+    if (!["ArrowLeft","ArrowRight"].includes(event.key)) return;
+    event.preventDefault();
+    track.focus({preventScroll:true});
+    select(current + (event.key === "ArrowRight" ? 1 : -1));
+  });
+  for (const target of [track, controls]) {
+    for (const event of ["mouseenter","mouseleave","focusin","focusout"]) {
+      target.addEventListener(event, () => requestAnimationFrame(schedule));
+    }
+  }
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    schedule();
+  }, {threshold:.25}).observe(track);
+  reduced.addEventListener("change", schedule);
+  document.addEventListener("visibilitychange", schedule);
+  select(0);
+  controls.hidden = false;
   track.setAttribute("data-ready", "");
 }
 </script>
