@@ -117,8 +117,8 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 .home-case-controls [data-case-step]{font:400 2rem/1 system-ui}
 .home-case-art svg{display:block;width:58.4375%;overflow:visible;pointer-events:none}
 @media(max-width:700px){
-  .home-case-art{aspect-ratio:12 / 5}
-  .home-case-art svg{flex:none;width:auto;height:110%;aspect-ratio:187 / 137}
+  .home-case-art{position:relative;aspect-ratio:12 / 5}
+  .home-case-art svg{position:absolute;top:50%;left:50%;translate:-50% -50%;width:auto;height:110%;aspect-ratio:187 / 137}
 }
 .case-isometric-scene{transform:translateX(calc(var(--case-offset,0) * 32px));transition:transform .6s ease}
 .case-isometric-piece{transform:translate(var(--iso-x,0px),var(--iso-y,0px));transition:transform .18s ease-out}
