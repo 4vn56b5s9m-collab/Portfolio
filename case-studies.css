@@ -88,7 +88,7 @@
   .case-step-copy{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
   .case-mobile-step{display:grid;gap:.35rem;min-height:5rem;margin:.35rem 0 0}
   .ticket-comparison{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(70%,1fr);overflow:auto;scroll-snap-type:x mandatory}
-  .ticket-card{scroll-snap-align:start}
+  .ticket-card{scroll-snap-align:start;scroll-snap-stop:always}
 }
 @media(prefers-reduced-motion:reduce){
   .case-timeline::after,.case-node,.ticket-crowd{transition:none}
