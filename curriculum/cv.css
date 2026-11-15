@@ -47,7 +47,6 @@
 .cv-copy strong{font-weight:600}
 .cv-copy strong a{text-decoration:underline;text-underline-offset:.2em}
 .cv-clients{display:flex;flex-wrap:wrap;gap:.45rem;margin:.9rem 0 0;padding:0;list-style:none}
-.cv-clients li{border:1px solid var(--cv-rule);border-radius:999px;padding:.2rem .65rem;font-size: 1rem}
 @media(max-width:700px){.cv .cv-section h2{font-size:clamp(1.8rem,6vw,2.45rem);padding-inline-end:4.5rem}}
 @media print{.cv .cv-section h2{position:static}}
 
@@ -93,7 +92,6 @@
 .cv:has([data-profile-story]){overflow-x:clip}
 
 .cv-hero-tags{display:flex;flex-wrap:wrap;gap:.45rem;margin:.9rem 0 0;padding:0;list-style:none}
-.cv-hero-tags li{border:1px solid currentColor;border-radius:999px;padding:.2rem .65rem;font-size: 1rem}
 
 .cv .cv-profile h2{position:static}
 .cv-profile-fill:first-child{max-width:none}
