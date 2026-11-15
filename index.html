@@ -83,10 +83,12 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
 }
 .home-case-grid[data-ready] .home-case{
   grid-area:1/1;width:100%;translate:calc(var(--case-offset,0) * (100% + clamp(1.75rem,3vw,2.75rem))) 0;
-  opacity:.78;transition:translate .6s ease,opacity .6s ease,border-color .25s,box-shadow .25s;
+  opacity:.78;transition:translate .6s ease,opacity .6s ease,padding .6s ease,min-height .6s ease,border-radius .6s ease,border-color .25s,box-shadow .25s;
 }
 .home-case-grid[data-ready] .home-case[data-current]{--case-inset:clamp(1.3rem,2.5vw,2.5rem);opacity:1;z-index:1;min-height:clamp(21.5rem,33vw,27rem)}
-.home-case-grid[data-ready] .home-case[data-wrap]{transition-property:opacity,border-color,box-shadow}
+.home-case-grid[data-ready] .home-case[data-repositioning]{transition:none}
+.home-case-grid [data-case-exit]{pointer-events:none;grid-area:1/1}
+@media(min-width:701px){.home-case-grid[data-ready]{min-height:clamp(21.5rem,33vw,27rem)}}
 .home-case-grid[data-ready] .home-case:is(:hover,:focus-within){
   opacity:1;border-color:var(--story-accent);box-shadow:0 0 1.25rem color-mix(in srgb,var(--story-accent) 30%,transparent);
 }
@@ -114,7 +116,10 @@ footer{border-top:1px solid var(--line);padding-top:2rem;padding-bottom:2rem}
   .home-case>.home-case-art,.home-case>div:last-child{grid-column:auto;grid-row:auto}
 }
 .home-case-art{position:relative;aspect-ratio:4 / 3;border-radius:var(--art-radius);background:radial-gradient(ellipse at 55% 90%,#32616a,#192f38 65%)}
-.home-case-controls [data-case-step]{font:400 2rem/1 system-ui}
+.home-case-controls [data-case-step]{display:grid;place-items:center;padding:0}
+.home-case-controls [data-case-step] svg{display:block;width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.home-case-controls [data-case-step="-1"] svg{rotate:90deg}
+.home-case-controls [data-case-step="1"] svg{rotate:-90deg}
 .home-case-art svg{position:absolute;top:50%;left:50%;translate:-50% -50%;width:auto;height:82%;aspect-ratio:112 / 166;overflow:visible;pointer-events:none}
 @media(max-width:700px){
   .home-case-art{aspect-ratio:12 / 5}
@@ -478,11 +483,11 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     </article>
     </div>
     <div class="home-case-controls" hidden>
-      <button type="button" data-case-step="-1" aria-controls="home-case-gallery" aria-label="Caso anterior">‹</button>
+      <button type="button" data-case-step="-1" aria-controls="home-case-gallery" aria-label="Caso anterior"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></button>
       <button type="button" data-case-page="0" aria-controls="home-case-gallery" aria-label="Posición 1"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
       <button type="button" data-case-page="1" aria-controls="home-case-gallery" aria-label="Posición 2"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
       <button type="button" data-case-page="2" aria-controls="home-case-gallery" aria-label="Posición 3"><span class="hero-segment" aria-hidden="true"><span></span></span></button>
-      <button type="button" data-case-step="1" aria-controls="home-case-gallery" aria-label="Caso siguiente">›</button>
+      <button type="button" data-case-step="1" aria-controls="home-case-gallery" aria-label="Caso siguiente"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></button>
     </div>
     <a class="career-cta" href="./portfolio/"><span lang="es">Ver portfolio completo</span><span lang="en">View full portfolio</span> <span aria-hidden="true">↗</span></a>
   </section></div>
@@ -558,11 +563,24 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     timer = setTimeout(() => select(current + 1), duration);
   }
 
-  function setCurrent(index) {
+  function setCurrent(index, direction = 0) {
     current = index;
     cards.forEach((card, i) => {
       const offset = (i - current + cards.length + 1) % cards.length - 1;
-      card.toggleAttribute("data-wrap", Math.abs(Number(card.dataset.offset) - offset) > 1);
+      const previous = Number(card.dataset.offset);
+      if (!mobile.matches && !reduced.matches && direction && Math.abs(previous - offset) > 1) {
+        const exiting = card.cloneNode(true);
+        exiting.setAttribute("data-case-exit", "");
+        exiting.setAttribute("aria-hidden", "true");
+        exiting.inert = true;
+        track.append(exiting);
+        card.setAttribute("data-repositioning", "");
+        card.style.setProperty("--case-offset", offset + direction);
+        track.getBoundingClientRect();
+        card.removeAttribute("data-repositioning");
+        exiting.style.setProperty("--case-offset", previous - direction);
+        setTimeout(() => exiting.remove(), 620);
+      }
       card.dataset.offset = offset;
       card.style.setProperty("--case-offset", offset);
       card.toggleAttribute("data-current", i === current);
@@ -592,7 +610,11 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   }
 
   function select(index, instant = false) {
-    setCurrent((index + cards.length) % cards.length);
+    const next = (index + cards.length) % cards.length;
+    const delta = (next - current + cards.length) % cards.length;
+    const direction = delta === 0 ? 0 : delta === 1 ? 1 : -1;
+    track.querySelectorAll("[data-case-exit]").forEach(card => card.remove());
+    setCurrent(next, instant ? 0 : direction);
     if (mobile.matches) {
       settling = true;
       const distance = centerDistance(cards[current]);
