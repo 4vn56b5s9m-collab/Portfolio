@@ -25,8 +25,10 @@
       if (!box.width || !box.height) continue;
       const footer = heading.closest("#contacto");
       const footerBox = footer?.getBoundingClientRect();
+      const footerSpan = footerBox ? Math.min(footerBox.height * .8, height * .8) : 0;
+      const footerDelay = footerSpan * Number(footer?.dataset.headingRevealDelay || 0);
       const reveal = footerBox
-        ? (height - footerBox.top) / Math.min(footerBox.height * .8, height * .8)
+        ? (height - footerBox.top - footerDelay) / (footerSpan - footerDelay)
         : (.80 * height - box.top - box.height / 2) / (.35 * height);
       const progress = Math.max(0, Math.min(1, reveal));
       const bleed = Math.ceil(parseFloat(getComputedStyle(heading).fontSize) * .35);
