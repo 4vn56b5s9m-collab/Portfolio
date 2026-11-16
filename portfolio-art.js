@@ -479,6 +479,8 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   const footprints=systems?systemFootprints(models):null;
   const parent=canvas.parentElement;
   const tile=parent.closest(".specialty-tile");
+  const portrait=tile?.closest("#especialidades");
+  let playing=false;
   const floor=parent.querySelector(".scene-floor");
   const shadows=[...floor.querySelectorAll(".scene-shadow")];
   const labels=[floor.querySelector(".scene-back"),floor.querySelector(".scene-front")];
@@ -515,7 +517,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
     const {clientWidth:width,clientHeight:height}=parent;
     if (!width||!height) return;
     started ||= now;
-    const elapsed=now-started;
+    const elapsed=portrait&&!playing?duration:now-started;
     const embedded=parent.closest("[data-accordion-branch]")||tile;
     const centerFocus=focus&&compact.matches&&embedded;
     const modelWidth=tile||centerFocus?modelRight-modelLeft:2*Math.max(Math.abs(modelLeft),Math.abs(modelRight));
@@ -524,7 +526,7 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
       : Math.min(width*(embedded?.98:focus?.59:.91)/modelWidth,
         height*(embedded?.86:focus?.31:.57)/(modelBottom-modelTop));
     const sceneOffset=-(modelTop+modelBottom)*scale/2;
-    const horizontalOffset=tile?width*.45-modelRight*scale:centerFocus?-(modelLeft+modelRight)*scale/2:0;
+    const horizontalOffset=portrait?-(modelLeft+modelRight)*scale/2:tile?width*.45-modelRight*scale:centerFocus?-(modelLeft+modelRight)*scale/2:0;
     const project=(x,y,z)=>[
       width/2+horizontalOffset+(x*.808027+z*.589145)*scale,
       height/2+sceneOffset+((-x*.589145+z*.808027)*.548024-y*.836463)*scale
@@ -628,9 +630,12 @@ for (const canvas of document.querySelectorAll("[data-branch-canvas]")) {
   let inViewport=false;
   function updateVisibility() {
     const card=parent.closest("[data-accordion-branch]");
-    const next=inViewport&&(tile?tile.matches(":hover,:focus-visible"):!card||card.classList.contains("is-previewed"));
-    if (next===visible) return;
-    visible=next;
+    const active=tile?.matches(":hover,:focus-visible");
+    const next=inViewport&&(tile?portrait||active:!card||card.classList.contains("is-previewed"));
+    const nextPlaying=Boolean(next&&active);
+    if (Boolean(next)===visible && nextPlaying===playing) return;
+    visible=Boolean(next);
+    playing=nextPlaying;
     parent.toggleAttribute("data-scene-playing",visible);
     if (visible) parent.dispatchEvent(new Event("branch:scene-enter",{bubbles:true}));
     if (visible&&!renderer) {
