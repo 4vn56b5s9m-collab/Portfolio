@@ -191,6 +191,18 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 .training-band .home-training-preview{border-radius:1rem}
 [data-theme=dark] .training-band{background:radial-gradient(ellipse at 79% 15%,#24545c,transparent 72%),radial-gradient(ellipse at 12% 88%,#173e48,transparent 65%),#171719}
 .site-footer#contacto{border-top:1px solid var(--line)}
+.training-band-current .home-training-areas{grid-template-columns:minmax(0,1fr)}
+.training-preview-kind{margin:0 0 .45rem;color:var(--story-accent);font-weight:600}
+#especialidades h2{scroll-margin-top:calc(var(--nav-height,70px) + 1rem)}
+@media(min-width:701px){
+  #especialidades .specialty-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #especialidades .specialty-tile{display:grid;grid-template-rows:1fr minmax(9rem,auto);gap:1rem;min-height:23rem;--tile-padding:clamp(1rem,1.8vw,1.5rem)}
+  #especialidades .specialty-tile h3{font-size:clamp(1.85rem,2.5vw,2.6rem)}
+  #especialidades .specialty-tile p{max-inline-size:32ch}
+  #especialidades .feature-art{position:relative;inset:auto;width:100%;height:100%;min-height:9rem;opacity:.72}
+  #especialidades .specialty-tile:is(:hover,:focus-visible) .feature-art{opacity:1}
+}
+@media(min-width:1050px){#especialidades .specialty-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 <link rel="stylesheet" href="portfolio.css?v=shared-tags">
 <link rel="stylesheet" href="curriculum/cv.css?v=shared-tags">
@@ -231,11 +243,12 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
       <div><dd data-count="6">6</dd><dt>países</dt></div>
     </dl>
     <div class="intro-next">
-      <a class="intro-next-link" href="#perfil">Seguir descubriendo <span aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5 8 5 5 5-5"/></svg></span></a>
+      <a class="intro-next-link" href="#especialidades">Seguir descubriendo <span aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m5 8 5 5 5-5"/></svg></span></a>
     </div>
   </section>
   </div>
-  <div class="cv home-profile">
+  <!-- Bloque narrativo bajo las cifras, conservado para recuperarlo. -->
+  <div class="cv home-profile" hidden>
   <div class="home-profile-inner">
     <section class="cv-profile" aria-labelledby="perfil" data-profile-story>
       <h2 id="perfil" class="scroll-heading" tabindex="-1"><span lang="es">Diseño <em class="story-accent">productos digitales</em> combinando:</span><span lang="en">I design <em class="story-accent">digital products</em> by combining:</span></h2>
@@ -245,8 +258,9 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   </div>
   </div>
   <div id="especialidades">
-  <section class="specialty-selector accordion-specialties mobile-specialties" id="explorar-especialidades" data-specialty-accordion data-lit-piece="0">
+  <section class="specialty-selector accordion-specialties mobile-specialties" id="explorar-especialidades" aria-labelledby="specialty-title-mobile" data-specialty-accordion data-lit-piece="0">
   <div class="specialty-inner">
+    <h2 id="specialty-title-mobile" tabindex="-1"><span lang="es">Cómo diseño productos digitales</span><span lang="en">How I design digital products</span></h2>
 
     <div class="branch-carousel">
     <div class="accordion-branches" id="specialty-gallery" aria-label="Vistas de especialidades" role="group">
@@ -319,8 +333,9 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     </div>
   </div>
 </section>
-  <section class="specialty-selector feature-specialties" id="especialidades-en-detalle" aria-label="Especialidades">
+  <section class="specialty-selector feature-specialties" id="especialidades-en-detalle" aria-labelledby="specialty-title-desktop">
     <div class="specialty-inner">
+      <h2 id="specialty-title-desktop" tabindex="-1"><span lang="es">Cómo diseño productos digitales</span><span lang="en">How I design digital products</span></h2>
 
       <div class="specialty-grid">
         <a class="specialty-tile" href="como-trabajo/?tema=ui-behavioral-design">
@@ -512,8 +527,7 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
   </section></div>
   <div class="career-band">
   <section class="notes" id="trayectoria">
-    <p><span lang="es">Y es que llevo más de siete años trabajando en proyectos tanto en empresas con producto propio como en consultoría, adaptando mi forma de diseñar a cada proyecto y compartiendo lo aprendido con otros equipos.</span><span lang="en">I’ve spent more than seven years working on projects both in-house and in consulting, adapting how I design to each project and sharing what I’ve learned with other teams.</span></p>
-    <h2 class="scroll-heading"><span lang="es">Este ha sido mi camino hasta llegar a <em class="story-accent">experto de diseño</em></span><span lang="en">My path to becoming a <em class="story-accent">design expert</em></span></h2>
+    <h2 class="scroll-heading"><span lang="es">Siete años de experiencia hasta llegar a <em class="story-accent">experto de diseño</em></span><span lang="en">Seven years of experience to become a <em class="story-accent">design expert</em></span></h2>
     <ul class="career-list">
       <li><strong>Flat 101</strong><div><span lang="es">He combinado <strong>sistemas de diseño y Behavioral design</strong> en proyectos de gran escala. Como experto en diseño, acompaño a otros diseñadores y he <strong>formado tanto al equipo interno como a equipos de otras empresas</strong>.</span><span lang="en">I’ve combined <strong>design systems and behavioral design</strong> on large-scale projects. As a design expert, I support other designers and have <strong>trained both our in-house team and teams at other companies</strong>.</span></div></li>
       <li><strong>Zennio</strong><div><span lang="es">Trabajé desde dentro en una <strong>familia de productos propios de domótica</strong>. Diseñé interfaces, contribuí a construir un sistema común para que los productos evolucionaran con coherencia y <strong>formé tanto al equipo interno como a equipos de otras empresas</strong>.</span><span lang="en">I worked in-house on a <strong>family of smart home products</strong>. I designed interfaces, helped build a shared system so the products could evolve consistently, and <strong>trained both in-house and external teams</strong>.</span></div></li>
@@ -524,14 +538,14 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
     <a class="career-cta" href="./curriculum/"><span lang="es">Ver CV completo</span><span lang="en">View full résumé</span><span aria-hidden="true">↗</span></a>
   </section>
   </div>
-  <div class="training-band">
+  <div class="training-band training-band-current">
   <section class="notes home-training" aria-labelledby="home-training-title">
     <h2 id="home-training-title" class="scroll-heading"><span lang="es">Hoy también llevo esa experiencia a otros <em class="story-accent">equipos de diseño</em>.</span><span lang="en">Today I bring that experience to other <em class="story-accent">design teams</em>.</span></h2>
     <p><span lang="es">Trabajo sobre vuestros proyectos para ayudaros a definir criterios y aplicar lo aprendido con autonomía.</span><span lang="en">I work on your projects to help you set shared standards and apply what you learn independently.</span></p>
     <div class="home-training-areas">
-      <a class="home-training-preview" href="./formaciones-a-empresas/?tema=figma-sistemas"><h3><span lang="es">Formación en uso de Figma y sistemas de diseño</span><span lang="en">Training in Figma and design systems</span></h3><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
-      <a class="home-training-preview" href="./formaciones-a-empresas/?tema=microinteracciones"><h3><span lang="es">Formación en behavioral design e integración de microinteracciones</span><span lang="en">Training in behavioral design and integrating microinteractions</span></h3><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
-      <a class="home-training-preview" href="./formaciones-a-empresas/?tema=ia-agentes"><h3><span lang="es">Define un workflow para tu equipo e integra la IA en tu proyecto</span><span lang="en">Define a workflow for your team and integrate AI into your project</span></h3><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
+      <a class="home-training-preview" href="./formaciones-a-empresas/?tema=figma-sistemas"><div><p class="training-preview-kind"><span lang="es">Formación</span><span lang="en">Training</span></p><h3><span lang="es">Uso de Figma y sistemas de diseño</span><span lang="en">Using Figma and design systems</span></h3></div><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
+      <a class="home-training-preview" href="./formaciones-a-empresas/?tema=microinteracciones"><div><p class="training-preview-kind"><span lang="es">Formación</span><span lang="en">Training</span></p><h3><span lang="es">Behavioral design e integración de microinteracciones</span><span lang="en">Behavioral design and integrating microinteractions</span></h3></div><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
+      <a class="home-training-preview" href="./formaciones-a-empresas/?tema=ia-agentes"><div><p class="training-preview-kind"><span lang="es">Auditoría de equipo de diseño</span><span lang="en">Design team audit</span></p><h3><span lang="es">Define un workflow para tu equipo e intégralo en tu proyecto</span><span lang="en">Define a workflow for your team and integrate it into your project</span></h3></div><span class="training-preview-arrow" aria-hidden="true">↗</span></a>
     </div>
     <a class="career-cta" href="./formaciones-a-empresas/#programas"><span lang="es">Ver el programa de las formaciones</span><span lang="en">View the training programme</span> <span aria-hidden="true">↗</span></a>
   </section>
@@ -695,13 +709,12 @@ html[lang=en] main span[lang=es],html:not([lang=en]) main span[lang=en],html[lan
 }
 </script>
 <script type="module">
-import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=specialty-framing";
+import {coarse,createArt,pickHeroPiece,pieces} from "./portfolio-art.js?v=portrait-specialties";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)");
 const header=document.querySelector(".site-header");
 const hero=document.querySelector(".hero");
 const slot=hero.querySelector(".hero-visual");
 const introCue=document.querySelector(".intro-next");
-const profileTitle=document.querySelector("#perfil");
 const cardLayout=matchMedia("(max-width:700px)");
 const specialtySection=document.querySelector(".mobile-specialties");
 const specialtyCards=[...specialtySection.querySelectorAll("[data-accordion-branch]")];
@@ -855,8 +868,9 @@ introCue.querySelector("a").addEventListener("click",event=>{
   if (event.metaKey||event.ctrlKey||event.shiftKey||event.altKey) return;
   event.preventDefault();
   introCue.classList.add("is-away");
-  profileTitle.focus({preventScroll:true});
-  profileTitle.scrollIntoView({behavior:reduced.matches?"instant":"smooth",block:"start"});
+  const title=document.getElementById(cardLayout.matches?"specialty-title-mobile":"specialty-title-desktop");
+  title.focus({preventScroll:true});
+  title.scrollIntoView({behavior:reduced.matches?"instant":"smooth",block:"start"});
 });
 document.addEventListener("visibilitychange",scheduleCycle);
 reduced.addEventListener("change",()=>{
